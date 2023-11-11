@@ -1,6 +1,12 @@
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
+const ROUTES_THAT_DO_NOT_REQUIRE_AUTH = [
+  '/',
+  '/login',
+  '/register',
+]
+
 export default async function middleware(req: NextRequest) {
   // Get the pathname of the request (e.g. /, /protected)
   const path = req.nextUrl.pathname;
@@ -15,7 +21,8 @@ export default async function middleware(req: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  if (!session && path === "/protected") {
+  // if (!session && path=='/protected') {
+  if (!session && !ROUTES_THAT_DO_NOT_REQUIRE_AUTH.includes(path)) {
     return NextResponse.redirect(new URL("/login", req.url));
   } else if (session && (path === "/login" || path === "/register")) {
     return NextResponse.redirect(new URL("/protected", req.url));
