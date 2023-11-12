@@ -28,7 +28,7 @@ export default function Form({ type }: { type: "login" | "register" }) {
               toast.error(error);
             } else {
               router.refresh();
-              router.push("/");
+              router.push("/partner");
             }
           });
         } else {

@@ -5,9 +5,13 @@ import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import AuthStatus from "@/components/auth-status";
 import { Suspense } from "react";
+import { SessionProvider } from 'next-auth/react'
+import { getServerSession } from "next-auth/next"
+import { User } from "@prisma/client"
 
+import { NavBar } from "@/components/nav";
 
-import { Nav } from "@/components/nav";
+import 'bootstrap/dist/css/bootstrap.css';
 
 const inter = Inter({
   variable: "--font-inter",
@@ -35,10 +39,12 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerSession()
   return (
     <html lang="en">
       <body className={inter.variable}>
-        <Nav />
+        <NavBar session={session} />
+
         <Toaster
           position='bottom-left'
         // toastOptions={{

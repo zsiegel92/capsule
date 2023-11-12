@@ -1,57 +1,78 @@
 'use client'
 import Image from "next/image";
 import Link from "next/link";
-// import { useSession, signIn, signOut } from "next-auth/react"
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import { Session } from "next-auth";
+import SignOut from "@/components/sign-out";
 
-export const Nav = () => {
+function NavLink({ href, children }: { href: string, children: any }) {
+	return (
+		<Link href={href}>
+			<Nav.Link as='div' href={href}>{children}</Nav.Link>
+		</Link>
+	)
+}
+
+export const NavBar = ({ session }: { session: Session }) => {
 	return (
 		<>
-			<div className="w-full h-20 bg-cyan-200 hover:bg-cyan-300 sticky top-0">
-				<div className="container mx-auto px-4 h-full">
-					<div className="flex justify-between items-center h-full">
+			<Navbar
+				collapseOnSelect
+				expand="lg"
+				className="bg-body-tertiary text-stone-200"
+			>
+				<Container>
+					<Navbar.Brand href="/partner">
 						<Image
 							// src="/logo.png"
 							src="/bluepill.png"
 							priority
-							alt="RedPill"
+							alt="BluePill"
 							// className="w-10"
-							width={90}
-							height={30}
+							style={{ height: 'auto' }}
+							width={80}
+							height={0}
 						/>
-						<ul className="hidden md:flex gap-x-6 text-white">
-							<LiRoute href="/">Home</LiRoute>
-							<AppLiRoute href="/partner">Partner</AppLiRoute>
-							<LiRoute href="/login"  >Login</LiRoute>
-							<LiRoute href="/protected"  >Protected</LiRoute>
-						</ul>
-					</div>
-				</div>
-			</div>
+					</Navbar.Brand>
+					<Navbar.Toggle aria-controls="responsive-navbar-nav" />
+					<Navbar.Collapse id="responsive-navbar-nav">
+						<Nav className="me-auto">
+							<NavLink href="/">Home</NavLink>
+
+							<NavLink href="/partner">Partner</NavLink>
+
+							<NavDropdown title="Dropdown" id="collapsible-nav-dropdown">
+								<NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
+								<NavDropdown.Item href="#action/3.2">
+									Another action
+								</NavDropdown.Item>
+								<NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
+								<NavDropdown.Divider />
+								<NavDropdown.Item href="#action/3.4">
+									Separated link
+								</NavDropdown.Item>
+							</NavDropdown>
+						</Nav>
+						<Nav>
+							<LoginLogout user={session?.user} />
+						</Nav>
+					</Navbar.Collapse>
+				</Container>
+			</Navbar>
+
 		</>
 	);
 };
 
-function AppLiRoute({ href, children }: { href: string, children: any }) {
-	return (
-		<LiRoute
-			href={`/app${href}`}
-		>
-			{children}
-		</LiRoute>
-	)
+function LoginLogout({ user }: { user: any }) {
+	if (!user?.email) {
+		return <NavLink href="/login">Login</NavLink>
+	}
+	return <span><SignOut /></span>
 }
-
-function LiRoute({ href, children }: { href: string, children: any }) {
-	return (
-		<li>
-			<Link href={href}>
-				<p>{children}</p>
-			</Link>
-		</li>
-	)
-}
-
-
 export function Footer() {
 	return <div>FOOTER</div>
 }
