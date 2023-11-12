@@ -28,19 +28,22 @@ export default function Form({ type }: { type: "login" | "register" }) {
               toast.error(error);
             } else {
               router.refresh();
-              router.push("/protected");
+              router.push("/");
             }
           });
         } else {
+          const createUser = {
+            email: e.currentTarget.email.value,
+            password: e.currentTarget.password.value,
+            firstName: e.currentTarget.firstName.value,
+          };
+          console.log("createUser", createUser)
           fetch("/api/auth/register", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-              email: e.currentTarget.email.value,
-              password: e.currentTarget.password.value,
-            }),
+            body: JSON.stringify(createUser),
           }).then(async (res) => {
             setLoading(false);
             if (res.status === 200) {
@@ -57,6 +60,25 @@ export default function Form({ type }: { type: "login" | "register" }) {
       }}
       className="flex flex-col space-y-4 bg-gray-50 px-4 py-8 sm:px-16"
     >
+      {(type !== "login") &&
+        < div >
+          <label
+            htmlFor="firstName"
+            className="block text-xs text-gray-600 uppercase"
+          >
+            Your first name
+          </label>
+          <input
+            id="firstName"
+            name="firstName"
+            type="text"
+            placeholder="Joe Shmoe"
+            autoComplete="given-name"
+            required
+            className="mt-1 block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
+          />
+        </div>
+      }
       <div>
         <label
           htmlFor="email"
@@ -107,9 +129,8 @@ export default function Form({ type }: { type: "login" | "register" }) {
         <p className="text-center text-sm text-gray-600">
           Don&apos;t have an account?{" "}
           <Link href="/register" className="font-semibold text-gray-800">
-            Sign up
-          </Link>{" "}
-          for free.
+            Sign up!
+          </Link>
         </p>
       ) : (
         <p className="text-center text-sm text-gray-600">

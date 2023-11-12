@@ -6,6 +6,9 @@ import { Toaster } from "react-hot-toast";
 import AuthStatus from "@/components/auth-status";
 import { Suspense } from "react";
 
+
+import { Nav } from "@/components/nav";
+
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
@@ -24,7 +27,7 @@ export const metadata: Metadata = {
     description,
   },
   metadataBase: new URL("https://nextjs-postgres-auth.vercel.app"),
-  themeColor: "#FFF",
+  // themeColor: "#FFF",
 };
 
 export default async function RootLayout({
@@ -35,11 +38,36 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.variable}>
-        <Toaster />
+        <Nav />
+        <Toaster
+          position='bottom-left'
+        // toastOptions={{
+        //   success: {
+        //     // iconTheme: {
+        //     //   primary: 'green',
+        //     //   secondary: 'green',
+        //     // },
+        //     style: {
+        //       // background: 'green',
+        //       border: '10px solid green',
+        //     },
+        //   },
+        //   error: {
+        //     // iconTheme: {
+        //     //   primary: 'red',
+        //     //   secondary: 'red',
+        //     // },
+        //     style: {
+        //       // background: 'red',
+        //       border: '10px solid red',
+        //     },
+        //   },
+        // }}
+        />
         <Suspense fallback="Loading...">
-          {/* @ts-expect-error Async Server Component */}
           <AuthStatus />
         </Suspense>
+
         {children}
       </body>
     </html>

@@ -1,0 +1,3 @@
+redpill.png: Timplaru Emil
+bluepill.png: Timplaru Emil
+purplepill.jpg: SpicyTruffel
