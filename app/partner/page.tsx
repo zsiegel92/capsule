@@ -6,7 +6,11 @@ import { User } from "@prisma/client"
 import prisma from "@/lib/prisma"
 import { revalidatePath } from "next/cache";
 import { CreatePartnerRequest } from "@/components/createPartnerRequest";
+import { AcceptPartnerRequest } from "@/components/acceptPartnerRequest";
+import { sendPartnerRequest, cancelPartnerRequest, acceptPartnerRequest } from "@/lib/partnerRequestServerActions";
 
+import "@/styles/partnerStyles.css";
+import { CancelPartnerRequest } from "@/components/CancelPartnerRequest";
 // TODO:
 // in NoPartner, show a search box to send a partner request.
 // In Partner, show a list of partner requests.
@@ -14,33 +18,7 @@ import { CreatePartnerRequest } from "@/components/createPartnerRequest";
 
 
 
-const sendPartnerRequest = async (sending_user: User, path: string, formData: FormData) => {
-	'use server'
-	const email = formData.get('searchedForPartnerEmail')
-	let partnerRequest
-	try {
-		partnerRequest = await prisma.partnerRequest.create({
-			data: {
-				from: {
-					connect: {
-						id: sending_user.id
-					}
-				},
-				toEmail: email,
-			}
-		})
-		revalidatePath(path)
-		return { message: `Partner request sent to '${email}'!` }
-	} catch (e: any) {
-		if (e instanceof Prisma.PrismaClientKnownRequestError) {
-			return { message: `You have already sent a partner request to '${email}'!` }
-		}
-		else {
-			throw new Error(`Error sending partner request: '${e?.message}'.`)
-		}
 
-	}
-}
 
 
 
@@ -93,7 +71,7 @@ async function NoPartner({ user }: { user: User }) {
 	}
 	// revalidatePath('/app/partner')
 	return (
-		<div style={{ padding: '10px' }}>
+		<div style={{ padding: '10px', width: '30%' }}>
 			<div>
 				You do not have a partner, yet!
 			</div>
@@ -130,21 +108,63 @@ async function IncomingPartnerRequests({ user }: { user: User }) {
 			</div>
 		)
 	}
+
 	return (
-		<ul className="list-disc">
+
+		<table
+			className="table table-hover"
+		>
+			<tbody>
 			{
 				incomingPartnerRequests.map((partnerRequest) => (
-					<li
-						key={partnerRequest.id}
-					>
-						{partnerRequest.from.email} wants to be your partner!
-					</li>
+					<IncomingPartnerRequest
+						key={partnerRequest.id} 
+						partnerRequest={partnerRequest}
+						user={user}
+					/>
 				)
-				)
-			}
-		</ul>
+					)
+				}
+			</tbody>
+		</table>
 	)
 }
+
+// return <li
+// key={partnerRequest.id}
+// >
+// {partnerRequest.from.email} wants to be your partner!
+// </li>
+async function IncomingPartnerRequest({ partnerRequest, user }: { partnerRequest: any, user: User }) {
+
+	const acceptThisPartnerRequest = async () => {
+		'use server'
+		return acceptPartnerRequest('/app/partner', partnerRequest, user)
+		return
+	}
+
+	return (
+
+		<tr>
+			<td>
+				<p
+					style={{
+						border: '1px solid black',
+						padding: '5px',
+						borderRadius: '5px',
+					}}
+				><code>{partnerRequest.from.email}</code> wants to be your partner!</p>
+
+			</td>
+			<td>
+				<AcceptPartnerRequest acceptThisPartnerRequest={acceptThisPartnerRequest} partnerRequest={partnerRequest} user={user} />
+			</td>
+		</tr>
+
+	)
+}
+
+
 
 async function OutgoingPartnerRequests({ user }: { user: User }) {
 	const outgoingPartnerRequests = await prisma.partnerRequest.findMany({
@@ -159,17 +179,49 @@ async function OutgoingPartnerRequests({ user }: { user: User }) {
 	})
 	// console.log('outgoingPartnerRequests', outgoingPartnerRequests)
 	return (
-		<ul className="list-disc">
+		<table
+			className="table table-hover"
+		>
+			<tbody>
 			{
 				outgoingPartnerRequests.map((partnerRequest) => (
-					<li
-						key={partnerRequest.id}
-					>
-						You have invited <code>{partnerRequest.toEmail}</code> to be your partner!
-					</li>
+					<OutgoingPartnerRequest
+						key={partnerRequest.id} 
+						partnerRequest={partnerRequest}
+						user={user}
+					/>
+
 				)
-				)
-			}
-		</ul>
+					)
+				}
+			</tbody>
+		</table>
 	)
 }
+
+function OutgoingPartnerRequest({ partnerRequest, user }: { partnerRequest: any, user: User }) {
+	const cancelThisPartnerRequest = async () => {
+		'use server'
+		return cancelPartnerRequest('/app/partner', partnerRequest)
+	}
+	return (
+
+		<tr>
+			<td>
+				<p
+					style={{
+						border: '1px solid black',
+						padding: '5px',
+						borderRadius: '5px',
+					}}
+				>You have invited <code>{partnerRequest.toEmail}</code> to be your partner!</p>
+
+			</td>
+			<td>
+				<CancelPartnerRequest cancelThisPartnerRequest={cancelThisPartnerRequest} partnerRequest={partnerRequest} user={user} />
+			</td>
+		</tr>
+
+	)
+}
+
