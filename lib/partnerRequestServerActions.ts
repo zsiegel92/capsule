@@ -6,7 +6,7 @@ import prisma from "@/lib/prisma"
 
 
 
-export const accetPartnerRequest = async (path: string, partnerRequest: PartnerRequest, user: User) => {
+export const acceptPartnerRequest = async (path: string, partnerRequest: PartnerRequest, user: User) => {
 	'use server'
 	console.log('partnerRequest', partnerRequest)
 	console.log('user', user)

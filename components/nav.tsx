@@ -7,6 +7,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Session } from "next-auth";
 import SignOut from "@/components/sign-out";
+import bluePill from '../public/bluepill.png'
 
 function NavLink({ href, children }: { href: string, children: any }) {
 	return (
@@ -28,7 +29,7 @@ export const NavBar = ({ session }: { session: Session }) => {
 					<Navbar.Brand href="/partner">
 						<Image
 							// src="/logo.png"
-							src="/bluepill.png"
+							src={bluePill} //"/bluepill.png"
 							priority
 							alt="BluePill"
 							// className="w-10"

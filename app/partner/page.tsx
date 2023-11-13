@@ -131,6 +131,7 @@ async function IncomingPartnerRequests({ user }: { user: User }) {
 			<tbody>
 			{
 				incomingPartnerRequests.map((partnerRequest) => (
+					//@ts-expect-error Server Component
 					<IncomingPartnerRequest
 						key={partnerRequest.id} 
 						partnerRequest={partnerRequest}
@@ -154,7 +155,6 @@ async function IncomingPartnerRequest({ partnerRequest, user }: { partnerRequest
 	const acceptThisPartnerRequest = async () => {
 		'use server'
 		return acceptPartnerRequest('/app/partner', partnerRequest, user)
-		return
 	}
 
 	return (
@@ -168,7 +168,6 @@ async function IncomingPartnerRequest({ partnerRequest, user }: { partnerRequest
 						borderRadius: '5px',
 					}}
 				><code>{partnerRequest.from.email}</code> wants to be your partner!</p>
-
 			</td>
 			<td>
 				<AcceptPartnerRequest acceptThisPartnerRequest={acceptThisPartnerRequest} partnerRequest={partnerRequest} user={user} />

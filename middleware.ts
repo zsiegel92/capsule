@@ -1,11 +1,11 @@
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
-const PROTECTED_ROUTES = ["/partner",]
-const UNPROTECTED_ROUTES = ['/', '/login', '/register']
+const PROTECTED_ROUTES = ["/partner", '/']
+// const UNPROTECTED_ROUTES = ['/', '/login', '/register']
 
-const PROTECTED_ROUTES_SET = new Set(PROTECTED_ROUTES)
-const PROTECTED_PREFIX = '/app'
+// const PROTECTED_ROUTES_SET = new Set(PROTECTED_ROUTES)
+// const PROTECTED_PREFIX = '/app'
 
 export default async function middleware(req: NextRequest) {
   // Get the pathname of the request (e.g. /, /protected)
@@ -32,14 +32,15 @@ export default async function middleware(req: NextRequest) {
 
 // https://nextjs.org/docs/pages/building-your-application/routing/middleware#matcher
 export const config = {
-  matcher: [
-    /*
- * Match all request paths except for the ones starting with:
- * - api (API routes)
- * - _next/static (static files)
- * - _next/image (image optimization files)
- * - favicon.ico (favicon file)
- */
-    '/((?!login|register|_next/static|_next/image|favicon.ico).*)',
-  ]
+  matcher: PROTECTED_ROUTES,
+  //   matcher: [
+  //     /*
+  //  * Match all request paths except for the ones starting with:
+  //  * - api (API routes)
+  //  * - _next/static (static files)
+  //  * - _next/image (image optimization files)
+  //  * - favicon.ico (favicon file)
+  //  */
+  //     '/((?!login|register|_next/static|_next/image|favicon.ico).*)',
+  //   ]
 }
