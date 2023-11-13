@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 const PROTECTED_ROUTES = ["/partner", '/']
 // const UNPROTECTED_ROUTES = ['/', '/login', '/register']
 
-// const PROTECTED_ROUTES_SET = new Set(PROTECTED_ROUTES)
+const PROTECTED_ROUTES_SET = new Set(PROTECTED_ROUTES)
 // const PROTECTED_PREFIX = '/app'
 
 export default async function middleware(req: NextRequest) {
@@ -21,7 +21,8 @@ export default async function middleware(req: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  if (!session) { //&& (path.startsWith(PROTECTED_PREFIX) || PROTECTED_ROUTES_SET.has(path))
+  // if (!session) { //&& (path.startsWith(PROTECTED_PREFIX) || PROTECTED_ROUTES_SET.has(path))
+  if (!session && PROTECTED_ROUTES_SET.has(path)) { //&& (path.startsWith(PROTECTED_PREFIX) || PROTECTED_ROUTES_SET.has(path))
     return NextResponse.redirect(new URL("/login", req.url));
   } 
   // else if (session && (path === "/login" || path === "/register")) {
