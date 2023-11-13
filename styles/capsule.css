@@ -1,0 +1,12 @@
+.capsule:hover {
+	/* filter: hue-rotate(250deg); */
+	filter: invert(30%);
+	cursor: pointer;
+
+}
+
+.capsuleParent:hover {
+	/* transform: matrix();  */
+	transform: rotate(10deg);
+	transition: all 0.1s ease-in-out 0s;
+}

@@ -45,9 +45,8 @@ export function CreatePartnerRequest({
 						type='submit'
 					>
 						Send Partner Request
-
+						<Capsule useRandColor={true} marginAndPadding={0.1} useRandRotate={true} height={14} width={28} strokeWidth={0.5} />
 					</Button>
-					<Capsule useRandColor={true} useRandRotate={true} height={2} width={4} strokeWidth={0.2} />
 				</InputGroup>
 
 

@@ -40,7 +40,7 @@ export default async function RootLayout({
 }) {
   const session = await getServerSession()
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.variable}>
         <NavBar session={session} />
 
@@ -73,8 +73,12 @@ export default async function RootLayout({
           {/* @ts-expect-error Server Component */}
           <AuthStatus />
         </Suspense>
-
+        <div style={{
+          paddingLeft: '15%',
+          paddingRight: '15%'
+        }}>
         {children}
+        </div>
       </body>
     </html>
   );

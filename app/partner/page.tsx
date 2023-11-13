@@ -8,9 +8,10 @@ import { revalidatePath } from "next/cache";
 import { CreatePartnerRequest } from "@/components/createPartnerRequest";
 import { AcceptPartnerRequest } from "@/components/acceptPartnerRequest";
 import { sendPartnerRequest, cancelPartnerRequest, acceptPartnerRequest } from "@/lib/partnerRequestServerActions";
-
 import "@/styles/partnerStyles.css";
 import { CancelPartnerRequest } from "@/components/CancelPartnerRequest";
+import { Capsule } from "@/components/capsule";
+import { CapsuleServer } from "@/components/capsule_server";
 // TODO:
 // in NoPartner, show a search box to send a partner request.
 // In Partner, show a list of partner requests.
@@ -46,6 +47,19 @@ export default async function Partner() {
 			</div>
 
 			<ShowPartner user={user} />
+
+			<div style={{ padding: '25px' }}>
+				{[...Array(20).keys()].map((i) => (
+					//@ts-expect-error Server Component
+					<CapsuleServer
+						key={`capsule-${i}`}
+						useRandRotate={true}
+						useRandColor={true}
+					/>
+				))
+				}
+
+			</div>
 		</div>
 	);
 }
@@ -71,7 +85,7 @@ async function NoPartner({ user }: { user: User }) {
 	}
 	// revalidatePath('/app/partner')
 	return (
-		<div style={{ padding: '10px', width: '40%' }}>
+		<div style={{ padding: '10px', minWidth: '300px', maxWidth: '800px' }}>
 			<div>
 				You do not have a partner, yet!
 			</div>
