@@ -2,7 +2,7 @@
 import { use, useState, useEffect, useCallback } from 'react'
 import { Form, Button, InputGroup } from 'react-bootstrap'
 import { toast } from 'react-hot-toast';
-
+import { Capsule } from "@/components/capsule";
 
 export function CreatePartnerRequest({
 	sendPartnerRequestWithUser,
@@ -33,7 +33,7 @@ export function CreatePartnerRequest({
 				<InputGroup className="mb-3">
 					<Form.Control
 						type="email"
-						placeholder="Normal text"
+						placeholder="Email address"
 						name="searchedForPartnerEmail"
 						size="lg"
 						value={searchedForPartnerEmail}
@@ -45,12 +45,13 @@ export function CreatePartnerRequest({
 						type='submit'
 					>
 						Send Partner Request
+
 					</Button>
+					<Capsule useRandColor={true} useRandRotate={true} height={2} width={4} strokeWidth={0.2} />
 				</InputGroup>
 
 
 			</Form>
-
 		</div>
 	)
 }

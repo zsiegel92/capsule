@@ -71,7 +71,7 @@ async function NoPartner({ user }: { user: User }) {
 	}
 	// revalidatePath('/app/partner')
 	return (
-		<div style={{ padding: '10px', width: '30%' }}>
+		<div style={{ padding: '10px', width: '40%' }}>
 			<div>
 				You do not have a partner, yet!
 			</div>
