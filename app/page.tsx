@@ -21,9 +21,9 @@ export default async function Home() {
                     // height: '100vh',
                     // overflow: 'auto',
                     paddingTop: '50px',
-                    paddingBottom: '50px',
-                    width: '100%,',
-                    // height: '100%',
+                    // paddingBottom: '50px',
+                    // width: '100%,',
+                    // height: '70vh',
                     // flex: '1 1 auto',
                 }}
                 id="scrollableDiv"

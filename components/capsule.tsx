@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
-import InfiniteScroll from 'react-infinite-scroll-component';
+
+import InfiniteScroll from 'react-infinite-scroller';
 
 import { palette, randColor, randRotate } from '@/lib/capsule_utils';
 import '@/styles/capsule.css';
@@ -162,18 +163,24 @@ export function InfiniteCapsules({
     scrollableTarget: string;
     [key: string]: any;
 }) {
-	const [nRows, setNRows] = useState(baseRows);
+    const [nRows, setNRows] = useState(baseRows);
     const [colors, setColors] = useState(getNRandomColors(baseRows * nPerRow));
     const [rotations, setRotations] = useState(
         getNRandomRotations(baseRows * nPerRow),
     );
     return (
         <InfiniteScroll
-            dataLength={nRows}
-            next={() => {
-                setColors(old_colors => old_colors.concat(getNRandomColors(increment*nPerRow)));
-                setRotations(old_rotations => old_rotations.concat(getNRandomRotations(increment*nPerRow)));
-				setNRows(old_nRows => old_nRows + 1)
+            pagestart={0}
+            loadMore={() => {
+                setColors((old_colors) =>
+                    old_colors.concat(getNRandomColors(increment * nPerRow)),
+                );
+                setRotations((old_rotations) =>
+                    old_rotations.concat(
+                        getNRandomRotations(increment * nPerRow),
+                    ),
+                );
+                setNRows((old_nRows) => old_nRows + 1);
                 // setTimeout(() => {
                 //     setColors(colors.concat(getNRandomColors(increment)));
                 //     setRotations(
@@ -185,28 +192,25 @@ export function InfiniteCapsules({
             loader={<div>Loading...</div>}
             scrollableTarget={scrollableTarget}
         >
-			<table>
-				<tbody>
-			{
-				Array.from(Array(nRows).keys()).map(i => (
-					<tr key={`row-${i}`}>
-						{
-							Array.from(Array(nPerRow).keys()).map(j => (
-								<td key={`row-${i}-col-${j}`}>
-									<Capsule
-										key={`capsule-${i}-${j}`}
-										primary={colors[i*nPerRow + j]}
-										rotation={rotations[i*nPerRow + j]}
-										{...capsuleProps}
-									/>
-								</td>
-							))
-						}
-						</tr>
-				))
-			}		
-			</tbody>
-			</table>	
+            <div>
+                {Array.from(Array(nRows).keys()).map((i) => (
+                    <div style={{ display: 'inline-block' }} key={`row-${i}`}>
+                        {Array.from(Array(nPerRow).keys()).map((j) => (
+                            <div
+                                style={{ display: 'inline-block' }}
+                                key={`row-${i}-col-${j}`}
+                            >
+                                <Capsule
+                                    key={`capsule-${i}-${j}`}
+                                    primary={colors[i * nPerRow + j]}
+                                    rotation={rotations[i * nPerRow + j]}
+                                    {...capsuleProps}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                ))}
+            </div>
         </InfiniteScroll>
     );
 }
