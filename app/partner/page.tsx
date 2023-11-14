@@ -49,7 +49,7 @@ export default async function Partner() {
 			<ShowPartner user={user} />
 
 			<div style={{ padding: '25px' }}>
-				{[...Array(20).keys()].map((i) => (
+				{Array.from(Array(20).keys()).map((i) => (
 					//@ts-expect-error Server Component
 					<CapsuleServer
 						key={`capsule-${i}`}
@@ -67,6 +67,7 @@ export default async function Partner() {
 function ShowPartner({ user }: { user: User }) {
 	const partner: User = null; // { email: 'someone special!' } // todo: find partner in database!
 	if (!partner) {
+		//@ts-expect-error Server Component
 		return <NoPartner user={user} />
 	}
 	return (

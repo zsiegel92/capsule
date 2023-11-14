@@ -4,14 +4,12 @@ import { useState, useEffect } from 'react'
 import { palette, randColor, randRotate } from '@/lib/capsule_utils'
 import "@/styles/capsule.css";
 
+
 export function Capsule({
 	primary = palette[0],
 	secondary = 'white',
 	stroke = 'black',
-	height = 25,
-	width = 100,
-	strokeWidth = 2,
-	marginAndPadding = 10,
+	size = 1,
 	useRandColor = false,
 	rotation = 0,
 	useRandRotate = false,
@@ -20,10 +18,7 @@ export function Capsule({
 	primary?: string,
 	secondary?: string,
 	stroke?: string,
-	height?: number,
-	width?: number,
-	strokeWidth?: number,
-	marginAndPadding?: number,
+		size?: number,
 	useRandColor?: boolean,
 	rotation?: number,
 	useRandRotate?: boolean,
@@ -32,25 +27,10 @@ export function Capsule({
 	const [showing, setShowing] = useState(show)
 	const [primaryColor, setPrimaryColor] = useState(useRandColor ? randColor() : primary)
 	const [rotate, setRotate] = useState(useRandRotate ? randRotate() : rotation)
-	// Moving random setting to useEffect prevents SSR "mismatch" warning in Next.js
-	// const [showing, setShowing] = useState(show && !useRandColor && !useRandRotate)
-	// const [primaryColor, setPrimaryColor] = useState(primary)
-	// const [rotate, setRotate] = useState(rotation)
-
-
-	// useEffect(() => {
-	// 	if (useRandColor) {
-	// 		setPrimaryColor(randColor())
-	// 	}
-	// 	if (useRandRotate) {
-	// 		setRotate(Math.random() * 360)
-	// 	}
-	// 	setShowing(true)
-	// }, [
-	// 	useRandColor,
-	// 	useRandRotate,
-	// ])
-
+	const height = 25 * size
+	const width = 100 * size
+	const strokeWidth = 2 * size
+	const marginAndPadding = 10 * size
 	return (
 		<div
 			style={{

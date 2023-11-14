@@ -1,4 +1,5 @@
 'use client'
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Container from 'react-bootstrap/Container';
@@ -18,12 +19,15 @@ function NavLink({ href, children }: { href: string, children: any }) {
 }
 
 export const NavBar = ({ session }: { session: Session }) => {
+	const [expanded, setExpanded] = useState(false)
+	console.log('expanded: ', expanded)
 	return (
 		<>
 			<Navbar
 				collapseOnSelect
 				expand="lg"
 				className="bg-body-tertiary text-stone-200"
+				onToggle={(isExpanded) => setExpanded(isExpanded)}
 			>
 				<Container>
 					<Navbar.Brand href="/partner">
@@ -33,7 +37,10 @@ export const NavBar = ({ session }: { session: Session }) => {
 							priority
 							alt="BluePill"
 							// className="w-10"
-							style={{ height: 'auto' }}
+							style={{
+								height: 'auto',
+								transform: expanded ? 'rotate(0deg)' : 'rotate(5deg)',
+							}}
 							width={80}
 							height={0}
 						/>
@@ -45,7 +52,7 @@ export const NavBar = ({ session }: { session: Session }) => {
 
 							<NavLink href="/partner">Partner</NavLink>
 
-							<NavDropdown title="Dropdown" id="collapsible-nav-dropdown">
+							<NavDropdown title="(Features will be added here)" id="collapsible-nav-dropdown">
 								<NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
 								<NavDropdown.Item href="#action/3.2">
 									Another action

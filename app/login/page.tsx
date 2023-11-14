@@ -12,7 +12,7 @@ export default function Login() {
               // src="/logo.png"
               src="/greenpill.png"
               priority
-              alt="RedPill"
+              alt="GreenPill"
               // className="w-10"
               width={90}
               height={30}

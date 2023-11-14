@@ -73,10 +73,11 @@ export default async function RootLayout({
           {/* @ts-expect-error Server Component */}
           <AuthStatus />
         </Suspense>
-        <div style={{
+        {/* <div style={{
           paddingLeft: '15%',
           paddingRight: '15%'
-        }}>
+        }}> */}
+        <div className="flex h-screen w-screen justify-center">
         {children}
         </div>
       </body>
