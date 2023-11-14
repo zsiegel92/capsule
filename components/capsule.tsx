@@ -33,7 +33,7 @@ export function Capsule({
     useEffect(() => {
         setTimeout(function () {
             setParentInnerClass('capsuleParentInner');
-        }, Math.random() * 1000);
+        }, exponentialSample(4000));
     }, []);
     const height = 25 * size;
     const width = 100 * size;
@@ -153,6 +153,11 @@ export function Capsule({
             </div>
         </div>
     );
+}
+
+// rate 1/mean
+function exponentialSample(mean: number) {
+    return -Math.log(Math.random()) * mean;
 }
 
 function getNRandomFunctionCalls(n: number, f: Function) {
