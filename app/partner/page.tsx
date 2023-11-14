@@ -11,57 +11,41 @@ import { sendPartnerRequest, cancelPartnerRequest, acceptPartnerRequest } from "
 import "@/styles/partnerStyles.css";
 import { CancelPartnerRequest } from "@/components/CancelPartnerRequest";
 import { Capsule } from "@/components/capsule";
-import { CapsuleServer } from "@/components/capsule_server";
+import { CapsuleServer, CapsuleServerGrid } from '@/components/capsule_server';
 // TODO:
 // in NoPartner, show a search box to send a partner request.
 // In Partner, show a list of partner requests.
 // In ShowPartner, show a "Leave Partner" if you have a partner.
 
-
-
-
-
-
-
 export default async function Partner() {
-	const session = await getServerSession()
-	const user = await prisma.user.findUnique({
-		where: {
-			email: session?.user?.email,
-		},
-		select: {
-			id: true,
-			email: true,
-		}
-		// include: {
-		// 	id: true,
-		// 	email: true,
-		// }
-	})
-	// const user = session?.user
+    const session = await getServerSession();
+    const user = await prisma.user.findUnique({
+        where: {
+            email: session?.user?.email,
+        },
+        select: {
+            id: true,
+            email: true,
+        },
+        // include: {
+        // 	id: true,
+        // 	email: true,
+        // }
+    });
+    // const user = session?.user
 
-	return (
-		<div style={{ padding: '10px' }}>
-			<div>
-				Welcome to CAPSULE, {user?.email}
-			</div>
+    return (
+        <div style={{ padding: '10px' }}>
+            <div>Welcome to CAPSULE, {user?.email}</div>
 
-			<ShowPartner user={user} />
+            <ShowPartner user={user} />
 
-			<div style={{ padding: '25px' }}>
-				{Array.from(Array(20).keys()).map((i) => (
-					//@ts-expect-error Server Component
-					<CapsuleServer
-						key={`capsule-${i}`}
-						useRandRotate={true}
-						useRandColor={true}
-					/>
-				))
-				}
-
-			</div>
-		</div>
-	);
+            <div style={{ padding: '25px' }}>
+                {/* @ts-expect-error Server Component */}
+                <CapsuleServerGrid n={100} />
+            </div>
+        </div>
+    );
 }
 
 function ShowPartner({ user }: { user: User }) {
