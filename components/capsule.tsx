@@ -29,6 +29,12 @@ export function Capsule({
     const [rotate, setRotate] = useState(
         useRandRotate ? randRotate() : rotation,
     );
+    const [parentInnerClass, setParentInnerClass] = useState('');
+    useEffect(() => {
+        setTimeout(function () {
+            setParentInnerClass('capsuleParentInner');
+        }, Math.random() * 1000);
+    }, []);
     const height = 25 * size;
     const width = 100 * size;
     const strokeWidth = 2 * size;
@@ -44,97 +50,107 @@ export function Capsule({
             className="capsuleParent"
             suppressHydrationWarning
         >
-            <svg
-                viewBox={`${-marginAndPadding} ${-marginAndPadding} ${
-                    width + 2 * marginAndPadding
-                } ${height + 2 * marginAndPadding}`}
-                xmlns="http://www.w3.org/2000/svg"
-                transform={`rotate(${rotate})`}
-                //@ts-ignore
+            <div
+                style={{
+                    display: 'inline-block',
+                    height: '100%',
+                    width: '100%',
+                }}
                 suppressHydrationWarning
+                className={parentInnerClass}
             >
-                <a className="capsule" suppressHydrationWarning>
-                    <ellipse
-                        cx={width / 4}
-                        cy={height / 2}
-                        rx={height / 2}
-                        ry={height / 2}
-                        style={{
-                            fill: primaryColor,
-                            stroke: stroke,
-                            strokeWidth: strokeWidth,
-                        }}
-                        //@ts-ignore
-                        suppressHydrationWarning
-                    />
-                    <rect
-                        x={width / 4}
-                        y={0}
-                        width={width / 4}
-                        height={height}
-                        style={{
-                            fill: primaryColor,
-                            stroke: stroke,
-                            strokeWidth: strokeWidth,
-                        }}
-                        //@ts-ignore
-                        suppressHydrationWarning
-                    />
-                    <rect
-                        x={width / 4 - strokeWidth / 4}
-                        y={strokeWidth}
-                        width={width / 4 + strokeWidth / 2}
-                        height={height - 2 * strokeWidth}
-                        style={{
-                            fill: primaryColor,
-                            stroke: primaryColor,
-                            strokeWidth: strokeWidth,
-                        }}
-                        //@ts-ignore
-                        suppressHydrationWarning
-                    />
+                <svg
+                    viewBox={`${-marginAndPadding} ${-marginAndPadding} ${
+                        width + 2 * marginAndPadding
+                    } ${height + 2 * marginAndPadding}`}
+                    xmlns="http://www.w3.org/2000/svg"
+                    transform={`rotate(${rotate})`}
+                    //@ts-ignore
+                    suppressHydrationWarning
+                >
+                    <a className="capsule" suppressHydrationWarning>
+                        <ellipse
+                            cx={width / 4}
+                            cy={height / 2}
+                            rx={height / 2}
+                            ry={height / 2}
+                            style={{
+                                fill: primaryColor,
+                                stroke: stroke,
+                                strokeWidth: strokeWidth,
+                            }}
+                            //@ts-ignore
+                            suppressHydrationWarning
+                        />
+                        <rect
+                            x={width / 4}
+                            y={0}
+                            width={width / 4}
+                            height={height}
+                            style={{
+                                fill: primaryColor,
+                                stroke: stroke,
+                                strokeWidth: strokeWidth,
+                            }}
+                            //@ts-ignore
+                            suppressHydrationWarning
+                        />
+                        <rect
+                            x={width / 4 - strokeWidth / 4}
+                            y={strokeWidth}
+                            width={width / 4 + strokeWidth / 2}
+                            height={height - 2 * strokeWidth}
+                            style={{
+                                fill: primaryColor,
+                                stroke: primaryColor,
+                                strokeWidth: strokeWidth,
+                            }}
+                            //@ts-ignore
+                            suppressHydrationWarning
+                        />
 
-                    <rect
-                        x={width / 2}
-                        y={0}
-                        width={width / 4}
-                        height={height}
-                        style={{
-                            fill: secondary,
-                            stroke: stroke,
-                            strokeWidth: strokeWidth,
-                        }}
-                        //@ts-ignore
-                        suppressHydrationWarning
-                    />
-                    <ellipse
-                        cx={(3 * width) / 4}
-                        cy={height / 2}
-                        rx={height / 2}
-                        ry={height / 2}
-                        style={{
-                            fill: secondary,
-                            stroke: stroke,
-                            strokeWidth: strokeWidth,
-                        }}
-                        //@ts-ignore
-                        suppressHydrationWarning
-                    />
-                    <rect
-                        x={width / 2}
-                        y={strokeWidth}
-                        width={width / 4}
-                        height={height - 2 * strokeWidth}
-                        style={{
-                            fill: secondary,
-                            stroke: secondary,
-                            strokeWidth: strokeWidth,
-                        }}
-                        //@ts-ignore
-                        suppressHydrationWarning
-                    />
-                </a>
-            </svg>
+                        <rect
+                            x={width / 2}
+                            y={0}
+                            width={width / 4}
+                            height={height}
+                            style={{
+                                fill: secondary,
+                                stroke: stroke,
+                                strokeWidth: strokeWidth,
+                            }}
+                            //@ts-ignore
+                            suppressHydrationWarning
+                        />
+                        <ellipse
+                            cx={(3 * width) / 4}
+                            cy={height / 2}
+                            rx={height / 2}
+                            ry={height / 2}
+                            style={{
+                                fill: secondary,
+                                stroke: stroke,
+                                strokeWidth: strokeWidth,
+                            }}
+                            //@ts-ignore
+                            suppressHydrationWarning
+                        />
+                        <rect
+                            x={width / 2}
+                            y={strokeWidth}
+                            width={width / 4}
+                            height={height - 2 * strokeWidth}
+                            style={{
+                                fill: secondary,
+                                stroke: secondary,
+                                strokeWidth: strokeWidth,
+                            }}
+                            //@ts-ignore
+                            suppressHydrationWarning
+                        />
+                    </a>
+                </svg>
+            </div>
         </div>
     );
 }
@@ -189,28 +205,25 @@ export function InfiniteCapsules({
                 // }, 20);
             }}
             hasMore={true}
-            loader={<div>Loading...</div>}
-            scrollableTarget={scrollableTarget}
+            loader="Loading..."
         >
-            <div>
-                {Array.from(Array(nRows).keys()).map((i) => (
-                    <div style={{ display: 'inline-block' }} key={`row-${i}`}>
-                        {Array.from(Array(nPerRow).keys()).map((j) => (
-                            <div
-                                style={{ display: 'inline-block' }}
-                                key={`row-${i}-col-${j}`}
-                            >
-                                <Capsule
-                                    key={`capsule-${i}-${j}`}
-                                    primary={colors[i * nPerRow + j]}
-                                    rotation={rotations[i * nPerRow + j]}
-                                    {...capsuleProps}
-                                />
-                            </div>
-                        ))}
-                    </div>
-                ))}
-            </div>
+            {Array.from(Array(nRows).keys()).map((i) => (
+                <div style={{ display: 'inline-block' }} key={`row-${i}`}>
+                    {Array.from(Array(nPerRow).keys()).map((j) => (
+                        <div
+                            style={{ display: 'inline-block' }}
+                            key={`row-${i}-col-${j}`}
+                        >
+                            <Capsule
+                                key={`capsule-${i}-${j}`}
+                                primary={colors[i * nPerRow + j]}
+                                rotation={rotations[i * nPerRow + j]}
+                                {...capsuleProps}
+                            />
+                        </div>
+                    ))}
+                </div>
+            ))}
         </InfiniteScroll>
     );
 }

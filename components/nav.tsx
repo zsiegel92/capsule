@@ -19,8 +19,7 @@ function NavLink({ href, children }: { href: string, children: any }) {
 }
 
 export const NavBar = ({ session }: { session: Session }) => {
-	const [expanded, setExpanded] = useState(false)
-	console.log('expanded: ', expanded)
+	const [expanded, setExpanded] = useState(false);
 	return (
 		<>
 			<Navbar

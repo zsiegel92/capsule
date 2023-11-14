@@ -26,7 +26,6 @@ export default async function Home() {
                     // height: '70vh',
                     // flex: '1 1 auto',
                 }}
-                id="scrollableDiv"
             >
                 <InfiniteCapsules
                     baseRows={5}
