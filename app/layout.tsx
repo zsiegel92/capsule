@@ -40,47 +40,45 @@ export default async function RootLayout({
 }) {
   const session = await getServerSession()
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.variable}>
-        <NavBar session={session} />
+      <html lang="en" suppressHydrationWarning>
+          <body className={inter.variable}>
+              <NavBar session={session} />
 
-        <Toaster
-          position='bottom-left'
-        // toastOptions={{
-        //   success: {
-        //     // iconTheme: {
-        //     //   primary: 'green',
-        //     //   secondary: 'green',
-        //     // },
-        //     style: {
-        //       // background: 'green',
-        //       border: '10px solid green',
-        //     },
-        //   },
-        //   error: {
-        //     // iconTheme: {
-        //     //   primary: 'red',
-        //     //   secondary: 'red',
-        //     // },
-        //     style: {
-        //       // background: 'red',
-        //       border: '10px solid red',
-        //     },
-        //   },
-        // }}
-        />
-        <Suspense fallback="Loading...">
-          {/* @ts-expect-error Server Component */}
-          <AuthStatus />
-        </Suspense>
-        {/* <div style={{
+              <Toaster
+                  position="bottom-left"
+                  // toastOptions={{
+                  //   success: {
+                  //     // iconTheme: {
+                  //     //   primary: 'green',
+                  //     //   secondary: 'green',
+                  //     // },
+                  //     style: {
+                  //       // background: 'green',
+                  //       border: '10px solid green',
+                  //     },
+                  //   },
+                  //   error: {
+                  //     // iconTheme: {
+                  //     //   primary: 'red',
+                  //     //   secondary: 'red',
+                  //     // },
+                  //     style: {
+                  //       // background: 'red',
+                  //       border: '10px solid red',
+                  //     },
+                  //   },
+                  // }}
+              />
+              <Suspense fallback="Loading...">
+                  {/* @ts-expect-error Server Component */}
+                  <AuthStatus />
+              </Suspense>
+              {/* <div style={{
           paddingLeft: '15%',
           paddingRight: '15%'
         }}> */}
-        <div className="flex h-screen w-screen justify-center">
-        {children}
-        </div>
-      </body>
-    </html>
+              {children}
+          </body>
+      </html>
   );
 }

@@ -35,14 +35,16 @@ export default async function Partner() {
     // const user = session?.user
 
     return (
-        <div style={{ padding: '10px' }}>
-            <div>Welcome to CAPSULE, {user?.email}</div>
+        <div className="flex h-screen w-screen justify-center">
+            <div style={{ padding: '10px' }}>
+                <div>Welcome to CAPSULE, {user?.email}</div>
 
-            <ShowPartner user={user} />
+                <ShowPartner user={user} />
 
-            <div style={{ padding: '25px' }}>
-                {/* @ts-expect-error Server Component */}
-                <CapsuleServerGrid n={100} />
+                <div style={{ padding: '25px' }}>
+                    {/* @ts-expect-error Server Component */}
+                    <CapsuleServerGrid n={100} />
+                </div>
             </div>
         </div>
     );

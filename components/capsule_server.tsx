@@ -33,7 +33,6 @@ export async function CapsuleServerGrid({
     return (
         <>
             {Array.from(Array(n).keys()).map((i) => (
-                //@ts-expect-error Server Component
                 <CapsuleServer
                     key={`capsule-${i}`}
                     useRandRotate={useRandRotate}
