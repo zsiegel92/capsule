@@ -5,6 +5,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 
 import { palette, randColor, randRotate } from '@/lib/capsule_utils';
 import '@/styles/capsule.css';
+import { useInterval } from '@/lib/hooks';
 
 export function Capsule({
     primary = palette[0],
@@ -14,6 +15,7 @@ export function Capsule({
     useRandColor = false,
     rotation = 0,
     useRandRotate = false,
+    useRotateInterval = true,
 }: {
     primary?: string;
     secondary?: string;
@@ -22,6 +24,7 @@ export function Capsule({
     useRandColor?: boolean;
     rotation?: number;
     useRandRotate?: boolean;
+    useRotateInterval?: boolean;
 }) {
     const [primaryColor, setPrimaryColor] = useState(
         useRandColor ? randColor() : primary,
@@ -29,12 +32,21 @@ export function Capsule({
     const [rotate, setRotate] = useState(
         useRandRotate ? randRotate() : rotation,
     );
-    const [parentInnerClass, setParentInnerClass] = useState('');
-    useEffect(() => {
-        setTimeout(function () {
-            setParentInnerClass('capsuleParentInner');
-        }, exponentialSample(4000));
-    }, []);
+    const [intervalRotated, setIntervalRotated] = useState(false);
+    const [rotateInterval, setRotateInterval] = useState(
+        useRotateInterval ? exponentialSample(4000) : null,
+    );
+    // useEffect(() => {
+    //     setTimeout(function () {
+    //         setParentInnerClass('capsuleParentInner');
+    //     }, exponentialSample(4000));
+    // }, []);
+
+    useInterval(() => {
+        setIntervalRotated(!intervalRotated);
+        setRotateInterval(useRotateInterval ? exponentialSample(4000) : null);
+    }, rotateInterval);
+
     const height = 25 * size;
     const width = 100 * size;
     const strokeWidth = 2 * size;
@@ -55,9 +67,12 @@ export function Capsule({
                     display: 'inline-block',
                     height: '100%',
                     width: '100%',
+                    transform: intervalRotated
+                        ? 'rotate(10deg)'
+                        : 'rotate(0deg)',
                 }}
+                className="capsuleParentInner"
                 suppressHydrationWarning
-                className={parentInnerClass}
             >
                 <svg
                     viewBox={`${-marginAndPadding} ${-marginAndPadding} ${
