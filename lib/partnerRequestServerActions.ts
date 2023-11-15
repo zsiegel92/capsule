@@ -49,6 +49,7 @@ export const cancelPartnerRequest = async (path: string, partnerRequest: Partner
 
 export const sendPartnerRequest = async (sending_user: User, path: string, formData: FormData) => {
 	'use server'
+	console.log(formData);
 	const email = formData.get('searchedForPartnerEmail')
 	let partnerRequest
 	try {

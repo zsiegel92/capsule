@@ -1,8 +1,40 @@
 'use client';
 import { use, useState, useEffect, useCallback } from 'react';
+import { useFormStatus, useFormState } from 'react-dom';
 import { Form, Button, InputGroup } from 'react-bootstrap';
 import { toast } from 'react-hot-toast';
 import { Capsule } from '@/components/capsule';
+import { wait } from '@/lib/wait';
+
+const initialState = {
+    message: null,
+};
+
+function FormSubmitButton() {
+    const { pending, data, method, action } = useFormStatus();
+    return (
+        <>
+            <Button
+                variant="outline-secondary"
+                type="submit"
+                disabled={pending}
+            >
+                Send Partner Request
+                <Capsule
+                    // marginAndPadding={0.1}
+                    // height={14}
+                    // width={28}
+                    // strokeWidth={0.5}
+                    size={0.4}
+                    useRandColor={true}
+                    useRandRotate={!pending}
+                    useRotateInterval={!pending}
+                    useSpinner={pending}
+                />
+            </Button>
+        </>
+    );
+}
 
 export function CreatePartnerRequest({
     sendPartnerRequestWithUser,
@@ -10,9 +42,10 @@ export function CreatePartnerRequest({
     sendPartnerRequestWithUser: any;
 }) {
     const [searchedForPartnerEmail, setSearchedForPartnerEmail] = useState('');
-    // console.log("CLIENT LOGGING!")
-    let sendPartnerRequestWithUserWithErrorHandlingAndToast = useCallback(
+
+    const sendPartnerRequestWithUserWithErrorHandlingAndToast = useCallback(
         async (formData: any) => {
+            // await wait(5000);
             try {
                 const response = await sendPartnerRequestWithUser(formData);
                 toast.success(response?.message);
@@ -25,8 +58,10 @@ export function CreatePartnerRequest({
                 );
             }
         },
-        [sendPartnerRequestWithUser],
+        [sendPartnerRequestWithUser, setSearchedForPartnerEmail],
     );
+
+    // sendPartnerRequestWithUserWithErrorHandlingAndToast,
     return (
         <div>
             Search for a partner by email to send a partner request:
@@ -43,18 +78,7 @@ export function CreatePartnerRequest({
                         }
                         required
                     />
-                    <Button variant="outline-secondary" type="submit">
-                        Send Partner Request
-                        <Capsule
-                            // marginAndPadding={0.1}
-                            // height={14}
-                            // width={28}
-                            // strokeWidth={0.5}
-                            size={0.4}
-                            useRandColor={true}
-                            useRandRotate={true}
-                        />
-                    </Button>
+                    <FormSubmitButton />
                 </InputGroup>
             </Form>
         </div>

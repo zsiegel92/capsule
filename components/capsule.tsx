@@ -7,6 +7,18 @@ import { palette, randColor, randRotate } from '@/lib/capsule_utils';
 import '@/styles/capsule.css';
 import { useInterval } from '@/lib/hooks';
 
+export function CapsuleSpinner({ size = 0.4 }: { size?: number }) {
+    return (
+        <Capsule
+            size={size}
+            useRandColor={true}
+            useRandRotate={false}
+            useRotateInterval={false}
+            useSpinner={true}
+        />
+    );
+}
+
 export function Capsule({
     primary = palette[0],
     secondary = 'white',
@@ -16,6 +28,7 @@ export function Capsule({
     rotation = 0,
     useRandRotate = false,
     useRotateInterval = true,
+    useSpinner = false,
 }: {
     primary?: string;
     secondary?: string;
@@ -25,6 +38,7 @@ export function Capsule({
     rotation?: number;
     useRandRotate?: boolean;
     useRotateInterval?: boolean;
+    useSpinner?: boolean;
 }) {
     const [primaryColor, setPrimaryColor] = useState(
         useRandColor ? randColor() : primary,
@@ -36,11 +50,6 @@ export function Capsule({
     const [rotateInterval, setRotateInterval] = useState(
         useRotateInterval ? exponentialSample(4000) : null,
     );
-    // useEffect(() => {
-    //     setTimeout(function () {
-    //         setParentInnerClass('capsuleParentInner');
-    //     }, exponentialSample(4000));
-    // }, []);
 
     useInterval(() => {
         setIntervalRotated(!intervalRotated);
@@ -58,8 +67,7 @@ export function Capsule({
                 height: `${height + 2 * marginAndPadding}px`,
                 display: 'inline-block',
             }}
-            // className='capsule'
-            className="capsuleParent"
+            className={`capsuleParent ${useSpinner ? 'capsuleSpinner' : ''}`}
             suppressHydrationWarning
         >
             <div
@@ -217,14 +225,9 @@ export function InfiniteCapsules({
                     ),
                 );
                 setNRows((old_nRows) => old_nRows + 1);
-                // setTimeout(() => {
-                //     setColors(colors.concat(getNRandomColors(increment)));
-                //     setRotations(
-                //         rotations.concat(getNRandomRotations(increment)),
-                //     );
-                // }, 20);
             }}
             hasMore={true}
+            // @ts-ignore
             loader="Loading..."
         >
             {Array.from(Array(nRows).keys()).map((i) => (
