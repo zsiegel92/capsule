@@ -5,13 +5,15 @@
 
 }
 
+.capsuleParent {
+	transition: all 0.1s ease-in-out 0s;
+}
 .capsuleParent:hover {
 	/* transform: matrix();  */
 	transform: rotate(10deg);
-	transition: all 0.1s ease-in-out 0s;
 }
 .capsuleParentInner {
 	/* transform: matrix();  */
-	transform: rotate(10deg);
+	/* transform: rotate(10deg); */
 	transition: all 0.4s ease-in-out 0.4s;
 }
