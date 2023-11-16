@@ -9,6 +9,10 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Session } from "next-auth";
 import SignOut from "@/components/sign-out";
 import bluePill from '../public/bluepill.png'
+// import { useRouter } from "next/navigation";
+// const router = useRouter();
+// router.refresh();
+// router.push("/partner");
 
 function NavLink({ href, children }: { href: string, children: any }) {
 	return (
