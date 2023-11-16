@@ -87,7 +87,10 @@ export function Capsule({
                         width + 2 * marginAndPadding
                     } ${height + 2 * marginAndPadding}`}
                     xmlns="http://www.w3.org/2000/svg"
-                    transform={`rotate(${rotate})`}
+                    // transform={`rotate(${rotate})`}
+                    style={{
+                        transform: `rotate(${rotate}deg)`,
+                    }}
                     //@ts-ignore
                     suppressHydrationWarning
                 >

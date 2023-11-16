@@ -11,4 +11,4 @@ export const palette = [
 ]
 
 export const randColor = () => palette[Math.floor(Math.random() * palette.length)]
-export const randRotate = () => Math.random() * 360
+export const randRotate = () => Math.floor(Math.random() * 360);
