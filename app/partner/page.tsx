@@ -28,22 +28,21 @@ export default async function Partner() {
         where: {
             email: email,
         },
-        // select: {
-        //     id: true,
-        //     email: true,
-        //     firstName: true,
-        // },
     });
     // console.log('user', user);
     if (!user) {
         return <div>Not logged in!</div>;
     }
+
     return (
         <div className="flex h-screen w-screen justify-center">
             <div style={{ padding: '10px' }}>
                 <div>Welcome to CAPSULE, {user?.email}</div>
-                <ShowPartner user={user} />
-
+                {user.partnershipId ? (
+                    <ShowPartner user={user} />
+                ) : (
+                    <NoPartner user={user} />
+                )}
                 <div style={{ padding: '25px' }}>
                     <CapsuleServerGrid n={100} />
                 </div>
@@ -53,11 +52,8 @@ export default async function Partner() {
 }
 
 function ShowPartner({ user }: { user: User }) {
-    // @ts-expect-error
-    const partner: User = null; // { email: 'someone special!' } // todo: find partner in database!
-    if (!partner) {
-        return <NoPartner user={user} />;
-    }
+    const partner: User | null = null;
+
     return (
         <div style={{ padding: '10px' }}>
             <div>Your partner is {partner?.email}!</div>
@@ -74,19 +70,11 @@ async function NoPartner({ user }: { user: User }) {
     return (
         <div style={{ padding: '10px', minWidth: '300px', maxWidth: '800px' }}>
             <div>You do not have a partner, yet!</div>
-            <PartnerRequests user={user} />
+            <IncomingPartnerRequests user={user} />
+            <OutgoingPartnerRequests user={user} />
             <CreatePartnerRequest
                 sendPartnerRequestWithUser={sendPartnerRequestWithUser}
             />
-        </div>
-    );
-}
-
-async function PartnerRequests({ user }: { user: User }) {
-    return (
-        <div>
-            <IncomingPartnerRequests user={user} />
-            <OutgoingPartnerRequests user={user} />
         </div>
     );
 }
@@ -120,36 +108,41 @@ async function IncomingPartnerRequests({ user }: { user: User }) {
     );
 }
 
-// return <li
-// key={partnerRequest.id}
-// >
-// {partnerRequest.from.email} wants to be your partner!
-// </li>
-async function IncomingPartnerRequest({ partnerRequest, user }: { partnerRequest: any, user: User }) {
+async function IncomingPartnerRequest({
+    partnerRequest,
+    user,
+}: {
+    partnerRequest: any;
+    user: User;
+}) {
+    const acceptThisPartnerRequest = async () => {
+        'use server';
+        return acceptPartnerRequest('/app/partner', partnerRequest, user);
+    };
 
-	const acceptThisPartnerRequest = async () => {
-		'use server'
-		return acceptPartnerRequest('/app/partner', partnerRequest, user)
-	}
-
-	return (
-
-		<tr>
-			<td>
-				<p
-					style={{
-						border: '1px solid black',
-						padding: '5px',
-						borderRadius: '5px',
-					}}
-				><code>{partnerRequest.from.email}</code> wants to be your partner!</p>
-			</td>
-			<td>
-				<AcceptPartnerRequest acceptThisPartnerRequest={acceptThisPartnerRequest} partnerRequest={partnerRequest} user={user} />
-			</td>
-		</tr>
-
-	)
+    return (
+        <tr>
+            <td>
+                <p
+                    style={{
+                        border: '1px solid black',
+                        padding: '5px',
+                        borderRadius: '5px',
+                    }}
+                >
+                    <code>{partnerRequest.from.email}</code> wants to be your
+                    partner!
+                </p>
+            </td>
+            <td>
+                <AcceptPartnerRequest
+                    acceptThisPartnerRequest={acceptThisPartnerRequest}
+                    partnerRequest={partnerRequest}
+                    user={user}
+                />
+            </td>
+        </tr>
+    );
 }
 
 

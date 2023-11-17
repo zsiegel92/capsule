@@ -12,17 +12,49 @@ export const acceptPartnerRequest = async (path: string, partnerRequest: Partner
 	console.log('user', user)
 	// ${partnerRequest.from.email} wants to partner with you!
 	try {
-		// const response = await prisma.partnerRequest.delete({
-		// 	where: {
-		// 		id: partnerRequest.id,
-		// 	}
-		// })
-		revalidatePath(path)
-		return { message: `Accepted partner request to '${partnerRequest.toEmail}'!` }
-	}
+        const sendingUser = await prisma.user.findUnique({
+            where: {
+                id: partnerRequest.fromId,
+            },
+        });
+        if (!sendingUser) {
+            throw new Error(
+                `Error accepting partner request: 'No sending user found!'`,
+            );
+        }
+        if (sendingUser.partnershipId) {
+            throw new Error(
+                `Error accepting partner request: 'Sending user already has a partnership!'`,
+            );
+        }
+        if (user.partnershipId) {
+            throw new Error(
+                `Error accepting partner request: 'You already have a partnership!'`,
+            );
+        }
+
+        const partnership = await prisma.partnership.create({
+            data: {
+                partners: {
+                    connect: [
+                        {
+                            id: sendingUser.id,
+                        },
+                        {
+                            id: user.id,
+                        },
+                    ],
+                },
+            },
+        });
+        revalidatePath(path);
+        return {
+            message: `Accepted partner request to '${partnerRequest.toEmail}'!`,
+        };
+    }
 	catch (e: any) {
 
-		throw new Error(`Error cancelling partner request: '${e?.message}'.`)
+		throw new Error(`Error accepting partner request: '${e?.message}'.`);
 		// return { message: `Error cancelling partner request: '${e?.message}'.` }
 	}
 }
