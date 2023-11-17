@@ -6,7 +6,7 @@ import {
     sendPartnerRequest,
     cancelPartnerRequest,
 } from '@/lib/partnerRequestServerActions';
-import { BsXLg } from 'react-icons/bs';
+import { BsXLg, BsFillHeartbreakFill } from 'react-icons/bs';
 import { Capsule, CapsuleSpinner } from '@/components/capsule';
 import { wait } from '@/lib/wait';
 import { UserWithPartnership } from '@/lib/types';
@@ -44,7 +44,7 @@ export function DeletePartnership({
                 marginLeft: '10px',
             }}
         >
-            {submitting ? <CapsuleSpinner /> : <BsXLg />}
+            {submitting ? <CapsuleSpinner /> : <BsFillHeartbreakFill />}
         </button>
     );
 }
