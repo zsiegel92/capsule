@@ -4,6 +4,7 @@ import { Prisma } from '@prisma/client';
 import { User } from '@prisma/client';
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+import { Suspense } from 'react';
 
 import { CreatePartnerRequest } from '@/components/createPartnerRequest';
 import { AcceptPartnerRequest } from '@/components/acceptPartnerRequest';
@@ -42,19 +43,21 @@ export default async function Partner() {
     }
 
     return (
-        <div className="flex h-screen w-screen justify-center">
-            <div style={{ padding: '10px' }}>
-                <div>Welcome to CAPSULE, {user?.email}</div>
-                {user.partnership ? (
-                    <ShowPartner user={user} />
-                ) : (
-                    <NoPartner user={user} />
-                )}
-                <div style={{ padding: '25px' }}>
-                    <CapsuleServerGrid n={100} />
+        <Suspense fallback={<div>Loading...</div>}>
+            <div className="flex h-screen w-screen justify-center">
+                <div style={{ padding: '10px' }}>
+                    <div>Welcome to CAPSULE, {user?.email}</div>
+                    {user.partnership ? (
+                        <ShowPartner user={user} />
+                    ) : (
+                        <NoPartner user={user} />
+                    )}
+                    <div style={{ padding: '25px' }}>
+                        <CapsuleServerGrid n={100} />
+                    </div>
                 </div>
             </div>
-        </div>
+        </Suspense>
     );
 }
 
@@ -76,7 +79,7 @@ async function ShowPartner({ user }: { user: UserWithPartnership }) {
         <div style={{ padding: '10px' }}>
             <table className="table table-hover">
                 <tbody>
-                    <tr>
+                    <tr style={{ backgroundColor: 'rgba(0,0,0,0,0.5)' }}>
                         <td>
                             <p
                                 style={{
@@ -161,7 +164,7 @@ async function IncomingPartnerRequest({
     };
 
     return (
-        <tr>
+        <tr style={{ backgroundColor: 'rgba(0,0,0,0,0.5)' }}>
             <td>
                 <p
                     style={{
