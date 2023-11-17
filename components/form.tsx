@@ -27,9 +27,9 @@ export default function Form({ type }: { type: "login" | "register" }) {
               setLoading(false);
               toast.error(error);
             } else {
-              router.refresh();
-              console.log("LOGGED IN!")
-              router.push("/partner");
+                // router.refresh();
+                console.log('LOGGED IN!');
+                router.push('/partner');
             }
           });
         } else {
