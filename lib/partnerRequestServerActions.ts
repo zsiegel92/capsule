@@ -5,6 +5,7 @@ import { User, PartnerRequest } from '@prisma/client';
 import prisma from '@/lib/prisma';
 
 import { UserWithPartnership } from '@/lib/types';
+import { getPartnerFromUser } from '@/lib/db_utils';
 
 export async function getUserWithPartnershipByEmail(email: string) {
     const user: UserWithPartnership | null = await prisma.user.findUnique({
@@ -80,13 +81,14 @@ export const deletePartnership = async (
     'use server';
     console.log('user', user);
     try {
+        const partner = getPartnerFromUser(user);
         const partnership = await prisma.partnership.delete({
             where: {
                 id: user.partnershipId,
             },
         });
         revalidatePath(path);
-        return { message: `Deleted partnership with '${user.partnershipId}'!` };
+        return { message: `Deleted partnership with '${partner.firstName}'!` };
     } catch (e: any) {
         throw new Error(`Error deleting partnership: '${e?.message}'.`);
         // return { message: `Error cancelling partner request: '${e?.message}'.` }
