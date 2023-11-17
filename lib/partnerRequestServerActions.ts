@@ -47,31 +47,37 @@ export const cancelPartnerRequest = async (path: string, partnerRequest: Partner
 	}
 }
 
-export const sendPartnerRequest = async (sending_user: User, path: string, formData: FormData) => {
-	'use server'
-	console.log(formData);
-	const email = formData.get('searchedForPartnerEmail')
-	let partnerRequest
-	try {
-		partnerRequest = await prisma.partnerRequest.create({
-			data: {
-				from: {
-					connect: {
-						id: sending_user.id
-					}
-				},
-				toEmail: email,
-			}
-		})
-		revalidatePath(path)
-		return { message: `Partner request sent to '${email}'!` }
-	} catch (e: any) {
-		if (e instanceof Prisma.PrismaClientKnownRequestError) {
-			return { message: `You have already sent a partner request to '${email}'!` }
-		}
-		else {
-			throw new Error(`Error sending partner request: '${e?.message}'.`)
-		}
-
-	}
-}
+export const sendPartnerRequest = async (
+    sending_user: User,
+    path: string,
+    formData: FormData,
+) => {
+    'use server';
+    const email = formData.get('searchedForPartnerEmail') as string;
+    if (!email) {
+        throw new Error(`Error sending partner request: 'No email provided!'`);
+    }
+    let partnerRequest;
+    try {
+        partnerRequest = await prisma.partnerRequest.create({
+            data: {
+                from: {
+                    connect: {
+                        id: sending_user.id,
+                    },
+                },
+                toEmail: email,
+            },
+        });
+        revalidatePath(path);
+        return { message: `Partner request sent to '${email}'!` };
+    } catch (e: any) {
+        if (e instanceof Prisma.PrismaClientKnownRequestError) {
+            return {
+                message: `You have already sent a partner request to '${email}'!`,
+            };
+        } else {
+            throw new Error(`Error sending partner request: '${e?.message}'.`);
+        }
+    }
+};

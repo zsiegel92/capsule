@@ -19,30 +19,32 @@ import { CapsuleServer, CapsuleServerGrid } from '@/components/capsule_server';
 
 export default async function Partner() {
     const session = await getServerSession();
-    const user = await prisma.user.findUnique({
-        where: {
-            email: session?.user?.email,
-        },
-        select: {
-            id: true,
-            email: true,
-        },
-        // include: {
-        // 	id: true,
-        // 	email: true,
-        // }
-    });
-    // const user = session?.user
+    const email = session?.user?.email;
+    if (!email) {
+        return <div>Not logged in!</div>;
+    }
 
+    const user: User | null = await prisma.user.findUnique({
+        where: {
+            email: email,
+        },
+        // select: {
+        //     id: true,
+        //     email: true,
+        //     firstName: true,
+        // },
+    });
+    // console.log('user', user);
+    if (!user) {
+        return <div>Not logged in!</div>;
+    }
     return (
         <div className="flex h-screen w-screen justify-center">
             <div style={{ padding: '10px' }}>
                 <div>Welcome to CAPSULE, {user?.email}</div>
-
                 <ShowPartner user={user} />
 
                 <div style={{ padding: '25px' }}>
-                    {/* @ts-expect-error Server Component */}
                     <CapsuleServerGrid n={100} />
                 </div>
             </div>
@@ -51,85 +53,71 @@ export default async function Partner() {
 }
 
 function ShowPartner({ user }: { user: User }) {
-	const partner: User = null; // { email: 'someone special!' } // todo: find partner in database!
-	if (!partner) {
-		//@ts-expect-error Server Component
-		return <NoPartner user={user} />
-	}
-	return (
-		<div style={{ padding: '10px' }}>
-			<div>
-				Your partner is {partner?.email}!
-			</div>
-		</div>
-	)
+    // @ts-expect-error
+    const partner: User = null; // { email: 'someone special!' } // todo: find partner in database!
+    if (!partner) {
+        return <NoPartner user={user} />;
+    }
+    return (
+        <div style={{ padding: '10px' }}>
+            <div>Your partner is {partner?.email}!</div>
+        </div>
+    );
 }
 
 async function NoPartner({ user }: { user: User }) {
-	const sendPartnerRequestWithUser = async (formData: FormData) => {
-		'use server'
-		return sendPartnerRequest(user, '/app/partner', formData)
-	}
-	// revalidatePath('/app/partner')
-	return (
-		<div style={{ padding: '10px', minWidth: '300px', maxWidth: '800px' }}>
-			<div>
-				You do not have a partner, yet!
-			</div>
-			<PartnerRequests user={user} />
-			<CreatePartnerRequest sendPartnerRequestWithUser={sendPartnerRequestWithUser} />
-		</div>
-	)
+    const sendPartnerRequestWithUser = async (formData: FormData) => {
+        'use server';
+        return sendPartnerRequest(user, '/app/partner', formData);
+    };
+    // revalidatePath('/app/partner')
+    return (
+        <div style={{ padding: '10px', minWidth: '300px', maxWidth: '800px' }}>
+            <div>You do not have a partner, yet!</div>
+            <PartnerRequests user={user} />
+            <CreatePartnerRequest
+                sendPartnerRequestWithUser={sendPartnerRequestWithUser}
+            />
+        </div>
+    );
 }
 
 async function PartnerRequests({ user }: { user: User }) {
-	return (
-		<div>
-			<IncomingPartnerRequests user={user} />
-			<OutgoingPartnerRequests user={user} />
-		</div>
-
-	)
+    return (
+        <div>
+            <IncomingPartnerRequests user={user} />
+            <OutgoingPartnerRequests user={user} />
+        </div>
+    );
 }
 
 async function IncomingPartnerRequests({ user }: { user: User }) {
-	const incomingPartnerRequests = await prisma.partnerRequest.findMany({
-		where: {
-			toEmail: user.email,
-		},
-		include: {
-			from: true,
-		}
-	})
-	// console.log('incomingPartnerRequests', incomingPartnerRequests)
-	if (incomingPartnerRequests.length === 0) {
-		return (
-			<div>
-				No incoming partner requests.
-			</div>
-		)
-	}
+    const incomingPartnerRequests = await prisma.partnerRequest.findMany({
+        where: {
+            toEmail: user.email,
+        },
+        include: {
+            from: true,
+        },
+    });
+    // console.log('incomingPartnerRequests', incomingPartnerRequests)
+    if (incomingPartnerRequests.length === 0) {
+        return <div>No incoming partner requests.</div>;
+    }
 
-	return (
-
-		<table
-			className="table table-hover"
-		>
-			<tbody>
-			{
-				incomingPartnerRequests.map((partnerRequest) => (
-					//@ts-expect-error Server Component
-					<IncomingPartnerRequest
-						key={partnerRequest.id} 
-						partnerRequest={partnerRequest}
-						user={user}
-					/>
-				)
-					)
-				}
-			</tbody>
-		</table>
-	)
+    return (
+        <table className="table table-hover">
+            <tbody>
+                {incomingPartnerRequests.map((partnerRequest) => (
+                    <IncomingPartnerRequest
+                        key={partnerRequest.id}
+                        partnerRequest={partnerRequest}
+                        user={user}
+                    />
+                ))}
+            </tbody>
+        </table>
+    );
 }
 
 // return <li
