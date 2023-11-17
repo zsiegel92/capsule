@@ -14,7 +14,6 @@ export default async function Home() {
     return (
         <div>
             <h1>Welcome to CAPSULE, {session?.user.email}</h1>
-            {/* @ts-expect-error Server Component */}
             {/* <CapsuleServerGrid n={100} /> */}
             <div
                 style={{
@@ -28,7 +27,9 @@ export default async function Home() {
                 }}
             >
                 <InfiniteCapsules
-                    baseRows={5}
+                    baseRows={50}
+                    increment={20}
+                    nPerRow={10}
                     scrollableTarget="scrollableDiv"
                 />
             </div>

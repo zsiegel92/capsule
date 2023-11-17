@@ -1,17 +1,33 @@
 'use server'
 import { revalidatePath } from "next/cache";
-import { Prisma } from '@prisma/client';
-import { User, PartnerRequest } from "@prisma/client"
-import prisma from "@/lib/prisma"
 
+import { User, PartnerRequest } from '@prisma/client';
+import prisma from '@/lib/prisma';
 
+import { UserWithPartnership } from '@/lib/types';
 
-export const acceptPartnerRequest = async (path: string, partnerRequest: PartnerRequest, user: User) => {
-	'use server'
-	console.log('partnerRequest', partnerRequest)
-	console.log('user', user)
-	// ${partnerRequest.from.email} wants to partner with you!
-	try {
+export async function getUserWithPartnershipByEmail(email: string) {
+    const user: UserWithPartnership | null = await prisma.user.findUnique({
+        where: {
+            email: email,
+        },
+        include: {
+            partnership: { include: { partners: true } },
+        },
+    });
+    return user;
+}
+
+export const acceptPartnerRequest = async (
+    path: string,
+    partnerRequest: PartnerRequest,
+    user: User,
+) => {
+    'use server';
+    // console.log('partnerRequest', partnerRequest)
+    // console.log('user', user)
+    // ${partnerRequest.from.email} wants to partner with you!
+    try {
         const sendingUser = await prisma.user.findUnique({
             where: {
                 id: partnerRequest.fromId,
@@ -51,14 +67,31 @@ export const acceptPartnerRequest = async (path: string, partnerRequest: Partner
         return {
             message: `Accepted partner request to '${partnerRequest.toEmail}'!`,
         };
+    } catch (e: any) {
+        throw new Error(`Error accepting partner request: '${e?.message}'.`);
+        // return { message: `Error cancelling partner request: '${e?.message}'.` }
     }
-	catch (e: any) {
+};
 
-		throw new Error(`Error accepting partner request: '${e?.message}'.`);
-		// return { message: `Error cancelling partner request: '${e?.message}'.` }
-	}
-}
-
+export const deletePartnership = async (
+    path: string,
+    user: UserWithPartnership,
+) => {
+    'use server';
+    console.log('user', user);
+    try {
+        const partnership = await prisma.partnership.delete({
+            where: {
+                id: user.partnershipId,
+            },
+        });
+        revalidatePath(path);
+        return { message: `Deleted partnership with '${user.partnershipId}'!` };
+    } catch (e: any) {
+        throw new Error(`Error deleting partnership: '${e?.message}'.`);
+        // return { message: `Error cancelling partner request: '${e?.message}'.` }
+    }
+};
 
 export const cancelPartnerRequest = async (path: string, partnerRequest: PartnerRequest) => {
 	'use server'

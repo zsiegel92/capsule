@@ -36,3 +36,12 @@
 		transform: rotate(360deg);
 	}
 }
+.capsuleNavbar {
+	transition: all 0.1s ease-in-out 0s;
+}
+
+.capsuleNavbar:hover {
+	filter: invert(30%);
+	transform: rotate(10deg);
+	cursor: pointer;
+}

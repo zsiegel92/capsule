@@ -1,17 +1,27 @@
 import { getServerSession } from "next-auth/next"
 import { toast } from 'react-hot-toast';
 import { Prisma } from '@prisma/client';
-import { User } from "@prisma/client"
+import { User } from '@prisma/client';
+import prisma from '@/lib/prisma';
+import { revalidatePath } from 'next/cache';
 
-import prisma from "@/lib/prisma"
-import { revalidatePath } from "next/cache";
-import { CreatePartnerRequest } from "@/components/createPartnerRequest";
-import { AcceptPartnerRequest } from "@/components/acceptPartnerRequest";
-import { sendPartnerRequest, cancelPartnerRequest, acceptPartnerRequest } from "@/lib/partnerRequestServerActions";
-import "@/styles/partnerStyles.css";
-import { CancelPartnerRequest } from "@/components/CancelPartnerRequest";
-import { Capsule } from "@/components/capsule";
+import { CreatePartnerRequest } from '@/components/createPartnerRequest';
+import { AcceptPartnerRequest } from '@/components/acceptPartnerRequest';
+import { getPartnerFromUser } from '@/lib/db_utils';
+import { UserWithPartnership } from '@/lib/types';
+import '@/styles/partnerStyles.css';
+import { CancelPartnerRequest } from '@/components/CancelPartnerRequest';
+import { DeletePartnership } from '@/components/DeletePartnership';
+import { Capsule } from '@/components/capsule';
 import { CapsuleServer, CapsuleServerGrid } from '@/components/capsule_server';
+import {
+    sendPartnerRequest,
+    cancelPartnerRequest,
+    acceptPartnerRequest,
+    getUserWithPartnershipByEmail,
+    deletePartnership,
+} from '@/lib/partnerRequestServerActions';
+
 // TODO:
 // in NoPartner, show a search box to send a partner request.
 // In Partner, show a list of partner requests.
@@ -23,12 +33,9 @@ export default async function Partner() {
     if (!email) {
         return <div>Not logged in!</div>;
     }
+    const user: UserWithPartnership | null =
+        await getUserWithPartnershipByEmail(email);
 
-    const user: User | null = await prisma.user.findUnique({
-        where: {
-            email: email,
-        },
-    });
     // console.log('user', user);
     if (!user) {
         return <div>Not logged in!</div>;
@@ -38,7 +45,7 @@ export default async function Partner() {
         <div className="flex h-screen w-screen justify-center">
             <div style={{ padding: '10px' }}>
                 <div>Welcome to CAPSULE, {user?.email}</div>
-                {user.partnershipId ? (
+                {user.partnership ? (
                     <ShowPartner user={user} />
                 ) : (
                     <NoPartner user={user} />
@@ -51,12 +58,45 @@ export default async function Partner() {
     );
 }
 
-function ShowPartner({ user }: { user: User }) {
-    const partner: User | null = null;
+async function ShowPartner({ user }: { user: UserWithPartnership }) {
+    const partner = getPartnerFromUser(user);
+
+    if (!partner) {
+        return <div>Partner not found! (this is an error)</div>;
+    }
+
+    const deleteThisPartnership = async () => {
+        'use server';
+        return deletePartnership('/app/partner', user);
+    };
+
+    // console.log(partner);
 
     return (
         <div style={{ padding: '10px' }}>
-            <div>Your partner is {partner?.email}!</div>
+            <table className="table table-hover">
+                <tbody>
+                    <tr>
+                        <td>
+                            <p
+                                style={{
+                                    border: '1px solid black',
+                                    padding: '5px',
+                                    borderRadius: '5px',
+                                }}
+                            >
+                                Your partner is {partner.firstName}!
+                            </p>
+                        </td>
+                        <td>
+                            <DeletePartnership
+                                deleteThisPartnership={deleteThisPartnership}
+                                user={user}
+                            />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     );
 }
