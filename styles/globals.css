@@ -8,7 +8,7 @@ body {
 	/* background-image: linear-gradient(to bottom right, #efefef82, rgba(233, 233, 233, 0.78)); */
 	background-color: #4158D0;
 	/* background-image: linear-gradient(120deg, #4158D0 0%, #f5d2f5 46%, #f0c513 100%); */
-		background-image: linear-gradient(45deg, #4158D0 0%, #f5d2f5 75%, #f0c513 100%);
+		background-image: linear-gradient(60deg, #4158D0 15%, #f5d2f5 65%, #f0c513 90%);
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	/* font-family: 'Roboto', sans-serif; */
