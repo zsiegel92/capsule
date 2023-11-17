@@ -6,13 +6,14 @@
 body {
 	/* background-color: #e9e9e982; */
 	/* background-image: linear-gradient(to bottom right, #efefef82, rgba(233, 233, 233, 0.78)); */
-	background-color: #4158D0;
-	/* background-image: linear-gradient(120deg, #4158D0 0%, #f5d2f5 46%, #f0c513 100%); */
-		background-image: linear-gradient(60deg, #4158D0 15%, #f5d2f5 65%, #f0c513 90%);
+	/* background-color: #4158D0; */
+		/* background-image: linear-gradient(60deg, #4158D0 15%, #f5d2f5 65%, #f0c513 90%); */
+	background: linear-gradient(60deg, #4158D0 15%, #f5d2f5 65%, #f0c513 90%);
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	/* font-family: 'Roboto', sans-serif; */
 	/* font-size: 16px; */
 	/* line-height: 1.5; */
 	/* color: #333; */
+	/* background-image: linear-gradient(80deg, #4158D0 0% 10%, #f5d2f5 20% 80%, #f0c513 90% 100%); */
 }
