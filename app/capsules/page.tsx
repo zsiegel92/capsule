@@ -36,17 +36,19 @@ export default async function Capsules() {
     if (!email) {
         return <div>Not logged in!</div>;
     }
-    const user: UserWithPartnership | null =
-        await getUserWithPartnershipByEmail(email);
+    const user = await getUserWithPartnershipByEmail(email);
 
     // console.log('user', user);
     if (!user) {
         return <div>Not logged in!</div>;
     }
+
+    const authoredCapsules = user.authoredCapsules;
+
     const partnership = user.partnership;
     const partner = getPartnerFromUser(user);
-    const authoredPosts = user.authoredPosts;
-    const partnershipPosts = user.partnership.posts;
+    const partnershipCapsules = user?.partnership?.capsules || [];
+
     // TODO:
     // - Component to edit authored posts that are not associated with their partnership, and add posts to their partnership
     // posts not associated with a partnership can be deleted by the author
@@ -72,13 +74,13 @@ export default async function Capsules() {
             </h3>
             <pre>{JSON.stringify(partner, null, 2)}</pre>
             <h3>
-                <pre>authoredPosts</pre>
+                <pre>authoredCapsules</pre>
             </h3>
-            <pre>{JSON.stringify(authoredPosts, null, 2)}</pre>
+            <pre>{JSON.stringify(authoredCapsules, null, 2)}</pre>
             <h3>
-                <pre>partnershipPosts</pre>
+                <pre>partnershipCapsules</pre>
             </h3>
-            <pre>{JSON.stringify(partnershipPosts, null, 2)}</pre>
+            <pre>{JSON.stringify(partnershipCapsules, null, 2)}</pre>
         </Suspense>
     );
 }

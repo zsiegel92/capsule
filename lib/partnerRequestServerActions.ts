@@ -8,10 +8,12 @@ import { Prisma } from '@prisma/client';
 import { UserWithPartnership, PartnershipIncludePayload } from '@/lib/types';
 import { getPartnerFromUser } from '@/lib/db_utils';
 
-export async function getUserWithPartnershipByEmail(email: string) {
+export async function getUserWithPartnershipByEmail(
+    email: string,
+): Promise<UserWithPartnership | null> {
     const user: UserWithPartnership | null = await prisma.user.findUnique({
         where: {
-            email: email,
+            email,
         },
         ...PartnershipIncludePayload,
     });
