@@ -104,7 +104,7 @@ async function ShowPartner({ user }: { user: UserWithPartnership }) {
     );
 }
 
-async function NoPartner({ user }: { user: User }) {
+async function NoPartner({ user }: { user: UserWithPartnership }) {
     const sendPartnerRequestWithUser = async (formData: FormData) => {
         'use server';
         return sendPartnerRequest(user, '/app/partner', formData);
@@ -122,7 +122,11 @@ async function NoPartner({ user }: { user: User }) {
     );
 }
 
-async function IncomingPartnerRequests({ user }: { user: User }) {
+async function IncomingPartnerRequests({
+    user,
+}: {
+    user: UserWithPartnership;
+}) {
     const incomingPartnerRequests = await prisma.partnerRequest.findMany({
         where: {
             toEmail: user.email,
@@ -156,7 +160,7 @@ async function IncomingPartnerRequest({
     user,
 }: {
     partnerRequest: any;
-    user: User;
+    user: UserWithPartnership;
 }) {
     const acceptThisPartnerRequest = async () => {
         'use server';
@@ -188,64 +192,70 @@ async function IncomingPartnerRequest({
     );
 }
 
-
-
-async function OutgoingPartnerRequests({ user }: { user: User }) {
-	const outgoingPartnerRequests = await prisma.partnerRequest.findMany({
-		where: {
-			from: {
-				email: user.email,
-			}
-		}
-		// include: {
-		// 	toEmail: true,
-		// }
-	})
-	// console.log('outgoingPartnerRequests', outgoingPartnerRequests)
-	return (
-		<table
-			className="table table-hover"
-		>
-			<tbody>
-			{
-				outgoingPartnerRequests.map((partnerRequest) => (
-					<OutgoingPartnerRequest
-						key={partnerRequest.id} 
-						partnerRequest={partnerRequest}
-						user={user}
-					/>
-
-				)
-					)
-				}
-			</tbody>
-		</table>
-	)
+async function OutgoingPartnerRequests({
+    user,
+}: {
+    user: UserWithPartnership;
+}) {
+    const outgoingPartnerRequests = await prisma.partnerRequest.findMany({
+        where: {
+            from: {
+                email: user.email,
+            },
+        },
+        // include: {
+        // 	toEmail: true,
+        // }
+    });
+    // console.log('outgoingPartnerRequests', outgoingPartnerRequests)
+    return (
+        <table className="table table-hover">
+            <tbody>
+                {outgoingPartnerRequests.map((partnerRequest) => (
+                    <OutgoingPartnerRequest
+                        key={partnerRequest.id}
+                        partnerRequest={partnerRequest}
+                        user={user}
+                    />
+                ))}
+            </tbody>
+        </table>
+    );
 }
 
-function OutgoingPartnerRequest({ partnerRequest, user }: { partnerRequest: any, user: User }) {
-	const cancelThisPartnerRequest = async () => {
-		'use server'
-		return cancelPartnerRequest('/app/partner', partnerRequest)
-	}
-	return (
-
-		<tr>
-			<td>
-				<p
-					style={{
-						border: '1px solid black',
-						padding: '5px',
-						borderRadius: '5px',
-					}}
-				>You have invited <code>{partnerRequest.toEmail}</code> to be your partner!</p>
-
-			</td>
-			<td>
-				<CancelPartnerRequest cancelThisPartnerRequest={cancelThisPartnerRequest} partnerRequest={partnerRequest} user={user} />
-			</td>
-		</tr>
-
-	)
+function OutgoingPartnerRequest({
+    partnerRequest,
+    user,
+}: {
+    partnerRequest: any;
+    user: UserWithPartnership;
+}) {
+    const cancelThisPartnerRequest = async () => {
+        'use server';
+        return cancelPartnerRequest('/app/partner', partnerRequest);
+    };
+    return (
+        <tr>
+            <td>
+                <p
+                    style={{
+                        border: '1px solid black',
+                        padding: '5px',
+                        borderRadius: '5px',
+                    }}
+                >
+                    You have invited <code>{partnerRequest.toEmail}</code> to be
+                    your partner!
+                </p>
+            </td>
+            <td>
+                <CancelPartnerRequest
+                    cancelThisPartnerRequest={cancelThisPartnerRequest}
+                    partnerRequest={partnerRequest}
+                    user={user}
+                />
+            </td>
+        </tr>
+    );
 }
 

@@ -23,7 +23,7 @@ export async function getUserWithPartnershipByEmail(
 export const acceptPartnerRequest = async (
     path: string,
     partnerRequest: PartnerRequest,
-    user: User,
+    user: UserWithPartnership,
 ) => {
     'use server';
     // console.log('partnerRequest', partnerRequest)
@@ -99,27 +99,30 @@ export const deletePartnership = async (
     }
 };
 
-export const cancelPartnerRequest = async (path: string, partnerRequest: PartnerRequest) => {
-	'use server'
-	console.log('partnerRequest', partnerRequest)
-	try {
-		const response = await prisma.partnerRequest.delete({
-			where: {
-				id: partnerRequest.id,
-			}
-		})
-		revalidatePath(path)
-		return { message: `Deleted partner request to '${partnerRequest.toEmail}'!` }
-	}
-	catch (e: any) {
-
-		throw new Error(`Error cancelling partner request: '${e?.message}'.`)
-		// return { message: `Error cancelling partner request: '${e?.message}'.` }
-	}
-}
+export const cancelPartnerRequest = async (
+    path: string,
+    partnerRequest: PartnerRequest,
+) => {
+    'use server';
+    console.log('partnerRequest', partnerRequest);
+    try {
+        const response = await prisma.partnerRequest.delete({
+            where: {
+                id: partnerRequest.id,
+            },
+        });
+        revalidatePath(path);
+        return {
+            message: `Deleted partner request to '${partnerRequest.toEmail}'!`,
+        };
+    } catch (e: any) {
+        throw new Error(`Error cancelling partner request: '${e?.message}'.`);
+        // return { message: `Error cancelling partner request: '${e?.message}'.` }
+    }
+};
 
 export const sendPartnerRequest = async (
-    sending_user: User,
+    sending_user: UserWithPartnership,
     path: string,
     formData: FormData,
 ) => {

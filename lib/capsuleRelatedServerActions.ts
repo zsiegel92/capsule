@@ -7,4 +7,4 @@ import { Prisma } from '@prisma/client';
 
 import { UserWithPartnership } from '@/lib/types';
 import { getPartnerFromUser } from '@/lib/db_utils';
-import { getUserWithPartnershipByEmail } from '@/lib/capsuleRelatedServerActions';
+// import { getUserWithPartnershipByEmail } from '@/lib/capsuleRelatedServerActions';

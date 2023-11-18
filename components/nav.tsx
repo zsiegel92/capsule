@@ -27,7 +27,7 @@ function NavLink({ href, children }: { href: string; children: any }) {
     // );
 }
 
-export const NavBar = ({ session }: { session: Session }) => {
+export const NavBar = ({ session }: { session: Session | null }) => {
     const [expanded, setExpanded] = useState(false);
     return (
         <>

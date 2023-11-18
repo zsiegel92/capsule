@@ -71,7 +71,6 @@ export default async function RootLayout({
                     // }}
                 />
                 <Suspense fallback="Loading...">
-                    {/* @ts-expect-error Server Component */}
                     <AuthStatus />
                 </Suspense>
                 {/* <div style={{
