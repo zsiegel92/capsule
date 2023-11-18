@@ -17,26 +17,26 @@ export default function Form({ type }: { type: "login" | "register" }) {
         e.preventDefault();
         setLoading(true);
         if (type === "login") {
-          signIn("credentials", {
-            redirect: false,
-            email: e.currentTarget.email.value,
-            password: e.currentTarget.password.value,
-            // @ts-ignore
+          signIn('credentials', {
+              redirect: false,
+              email: e.currentTarget.email.value.toLowerCase(),
+              password: e.currentTarget.password.value,
+              // @ts-ignore
           }).then(({ error }) => {
-            if (error) {
-              setLoading(false);
-              toast.error(error);
-            } else {
-                // router.refresh();
-                console.log('LOGGED IN!');
-                router.push('/partner');
-            }
+              if (error) {
+                  setLoading(false);
+                  toast.error(error);
+              } else {
+                  // router.refresh();
+                  console.log('LOGGED IN!');
+                  router.push('/partner');
+              }
           });
         } else {
           const createUser = {
-            email: e.currentTarget.email.value,
-            password: e.currentTarget.password.value,
-            firstName: e.currentTarget.firstName.value,
+              email: e.currentTarget.email.value.toLowerCase(),
+              password: e.currentTarget.password.value,
+              firstName: e.currentTarget.firstName.value,
           };
           console.log("createUser", createUser)
           fetch("/api/auth/register", {

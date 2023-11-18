@@ -3,8 +3,9 @@ import { revalidatePath } from "next/cache";
 
 import { User, PartnerRequest } from '@prisma/client';
 import prisma from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
 
-import { UserWithPartnership } from '@/lib/types';
+import { UserWithPartnership, PartnershipIncludePayload } from '@/lib/types';
 import { getPartnerFromUser } from '@/lib/db_utils';
 
 export async function getUserWithPartnershipByEmail(email: string) {
@@ -12,9 +13,7 @@ export async function getUserWithPartnershipByEmail(email: string) {
         where: {
             email: email,
         },
-        include: {
-            partnership: { include: { partners: true } },
-        },
+        ...PartnershipIncludePayload,
     });
     return user;
 }
@@ -80,8 +79,11 @@ export const deletePartnership = async (
 ) => {
     'use server';
     console.log('user', user);
+    if (!user.partnershipId) {
+        throw new Error(`Error deleting partnership: 'No partnership found!'`);
+    }
     try {
-        const partner = getPartnerFromUser(user);
+        const partner = getPartnerFromUser(user)!;
         const partnership = await prisma.partnership.delete({
             where: {
                 id: user.partnershipId,

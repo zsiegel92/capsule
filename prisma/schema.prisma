@@ -17,6 +17,7 @@ model User {
   partnerRequests PartnerRequest[] @relation("PartnerRequest")
   partnershipId   Int?
   partnership    Partnership?    @relation("Partnership", fields: [partnershipId], references: [id])
+  authoredPosts           Post[] @relation("AuthoredPosts")
 }
 
 model PartnerRequest {
@@ -43,4 +44,16 @@ model Partnership {
   id        Int      @id @default(autoincrement())
   partners  User[]   @relation("Partnership")
   createdAt DateTime @default(now())
+  posts     Post[]   @relation("PartnershipOfPost")
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+  authorId  Int
+  author    User     @relation("AuthoredPosts", fields: [authorId], references: [id])
+  partnership Partnership @relation("PartnershipOfPost", fields: [partnershipId], references: [id])
+  partnershipId Int
 }

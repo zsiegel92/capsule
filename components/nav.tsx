@@ -62,8 +62,9 @@ export const NavBar = ({ session }: { session: Session }) => {
                             {/* <NavLink href="/">Home</NavLink> */}
 
                             <NavLink href="/partner">Partner</NavLink>
+                            <NavLink href="/capsules">Capsules</NavLink>
 
-                            <NavDropdown
+                            {/* <NavDropdown
                                 title="(Features will be added here)"
                                 id="collapsible-nav-dropdown"
                             >
@@ -80,7 +81,7 @@ export const NavBar = ({ session }: { session: Session }) => {
                                 <NavDropdown.Item href="#action/3.4">
                                     Separated link
                                 </NavDropdown.Item>
-                            </NavDropdown>
+                            </NavDropdown> */}
                         </Nav>
                         <Nav>
                             <LoginLogout user={session?.user} />
