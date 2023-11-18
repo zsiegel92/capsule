@@ -8,77 +8,79 @@ import { Suspense } from "react";
 import { SessionProvider } from 'next-auth/react'
 import { getServerSession } from "next-auth/next"
 import { User } from "@prisma/client"
+import { Analytics } from '@vercel/analytics/react';
 
-import { NavBar } from "@/components/nav";
+import { NavBar } from '@/components/nav';
 
 import 'bootstrap/dist/css/bootstrap.css';
 
 const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
+    variable: '--font-inter',
+    subsets: ['latin'],
 });
 
-const title = "💊";
-const description = "Create and commit to experiences with your partner.";
+const title = '💊';
+const description = 'Create and commit to experiences with your partner.';
 
 export const metadata: Metadata = {
-  title,
-  description,
-  twitter: {
-    card: "summary_large_image",
     title,
     description,
-  },
-  // metadataBase: new URL("https://nextjs-postgres-auth.vercel.app"),
-  // themeColor: "#FFF",
+    twitter: {
+        card: 'summary_large_image',
+        title,
+        description,
+    },
+    // metadataBase: new URL("https://nextjs-postgres-auth.vercel.app"),
+    // themeColor: "#FFF",
 };
 
 export default async function RootLayout({
-  children,
+    children,
 }: {
-  children: React.ReactNode;
+    children: React.ReactNode;
 }) {
-  const session = await getServerSession()
-  return (
-      <html lang="en" suppressHydrationWarning>
-          <body className={inter.variable}>
-              <NavBar session={session} />
+    const session = await getServerSession();
+    return (
+        <html lang="en" suppressHydrationWarning>
+            <body className={inter.variable}>
+                <NavBar session={session} />
 
-              <Toaster
-                  position="bottom-left"
-                  // toastOptions={{
-                  //   success: {
-                  //     // iconTheme: {
-                  //     //   primary: 'green',
-                  //     //   secondary: 'green',
-                  //     // },
-                  //     style: {
-                  //       // background: 'green',
-                  //       border: '10px solid green',
-                  //     },
-                  //   },
-                  //   error: {
-                  //     // iconTheme: {
-                  //     //   primary: 'red',
-                  //     //   secondary: 'red',
-                  //     // },
-                  //     style: {
-                  //       // background: 'red',
-                  //       border: '10px solid red',
-                  //     },
-                  //   },
-                  // }}
-              />
-              <Suspense fallback="Loading...">
-                  {/* @ts-expect-error Server Component */}
-                  <AuthStatus />
-              </Suspense>
-              {/* <div style={{
+                <Toaster
+                    position="bottom-left"
+                    // toastOptions={{
+                    //   success: {
+                    //     // iconTheme: {
+                    //     //   primary: 'green',
+                    //     //   secondary: 'green',
+                    //     // },
+                    //     style: {
+                    //       // background: 'green',
+                    //       border: '10px solid green',
+                    //     },
+                    //   },
+                    //   error: {
+                    //     // iconTheme: {
+                    //     //   primary: 'red',
+                    //     //   secondary: 'red',
+                    //     // },
+                    //     style: {
+                    //       // background: 'red',
+                    //       border: '10px solid red',
+                    //     },
+                    //   },
+                    // }}
+                />
+                <Suspense fallback="Loading...">
+                    {/* @ts-expect-error Server Component */}
+                    <AuthStatus />
+                </Suspense>
+                {/* <div style={{
           paddingLeft: '15%',
           paddingRight: '15%'
         }}> */}
-              {children}
-          </body>
-      </html>
-  );
+                {children}
+                <Analytics />
+            </body>
+        </html>
+    );
 }
