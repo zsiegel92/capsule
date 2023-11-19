@@ -1,6 +1,6 @@
 "use client";
-import { useState, useEffect } from "react";
-
+import { useState, useEffect, MouseEventHandler } from 'react';
+// import { MouseEventHandler } from 'dom';
 import InfiniteScroll from 'react-infinite-scroller';
 
 import { palette, randColor, randRotate } from '@/lib/capsule_utils';
@@ -29,6 +29,8 @@ export function Capsule({
     useRandRotate = false,
     useRotateInterval = true,
     useSpinner = false,
+    open = false,
+    onClick = (e) => {},
 }: {
     primary?: string;
     secondary?: string;
@@ -39,6 +41,8 @@ export function Capsule({
     useRandRotate?: boolean;
     useRotateInterval?: boolean;
     useSpinner?: boolean;
+    open?: boolean;
+    onClick?: MouseEventHandler<SVGAElement>;
 }) {
     const [primaryColor, setPrimaryColor] = useState(
         useRandColor ? randColor() : primary,
@@ -51,6 +55,10 @@ export function Capsule({
         useRotateInterval ? exponentialSample(4000) : null,
     );
 
+    useEffect(()=>{
+        setPrimaryColor(primary)
+    }, [primary])
+    
     useInterval(() => {
         setIntervalRotated(!intervalRotated);
         setRotateInterval(useRotateInterval ? exponentialSample(4000) : null);
@@ -59,7 +67,8 @@ export function Capsule({
     const height = 25 * size;
     const width = 100 * size;
     const strokeWidth = 2 * size;
-    const marginAndPadding = 10 * size;
+    const marginAndPadding = 15 * size;
+    const openOffset = open ? marginAndPadding / 2 : 0;
     return (
         <div
             style={{
@@ -91,12 +100,31 @@ export function Capsule({
                     style={{
                         transform: `rotate(${rotate}deg)`,
                     }}
+                    // @ts-ignore
+                    onClick={onClick}
                     //@ts-ignore
                     suppressHydrationWarning
                 >
                     <a className="capsule" suppressHydrationWarning>
+                        {open && (
+                            <ellipse
+                                cx={width / 2}
+                                cy={height / 2}
+                                rx={height / 2 + marginAndPadding}
+                                ry={height / 2 + marginAndPadding}
+                                style={{
+                                    fill: 'none',
+                                    stroke: 'gray',
+                                    strokeWidth: strokeWidth / 2,
+                                    strokeDasharray: '5,5',
+                                }}
+                                //@ts-ignore
+                                suppressHydrationWarning
+                            />
+                        )}
+
                         <ellipse
-                            cx={width / 4}
+                            cx={width / 4 - openOffset}
                             cy={height / 2}
                             rx={height / 2}
                             ry={height / 2}
@@ -109,7 +137,7 @@ export function Capsule({
                             suppressHydrationWarning
                         />
                         <rect
-                            x={width / 4}
+                            x={width / 4 - openOffset}
                             y={0}
                             width={width / 4}
                             height={height}
@@ -122,7 +150,7 @@ export function Capsule({
                             suppressHydrationWarning
                         />
                         <rect
-                            x={width / 4 - strokeWidth / 4}
+                            x={width / 4 - strokeWidth / 4 - openOffset}
                             y={strokeWidth}
                             width={width / 4 + strokeWidth / 2}
                             height={height - 2 * strokeWidth}
@@ -136,7 +164,7 @@ export function Capsule({
                         />
 
                         <rect
-                            x={width / 2}
+                            x={width / 2 + openOffset}
                             y={0}
                             width={width / 4}
                             height={height}
@@ -149,7 +177,7 @@ export function Capsule({
                             suppressHydrationWarning
                         />
                         <ellipse
-                            cx={(3 * width) / 4}
+                            cx={(3 * width) / 4 + openOffset}
                             cy={height / 2}
                             rx={height / 2}
                             ry={height / 2}
@@ -162,7 +190,7 @@ export function Capsule({
                             suppressHydrationWarning
                         />
                         <rect
-                            x={width / 2}
+                            x={width / 2 + openOffset}
                             y={strokeWidth}
                             width={width / 4}
                             height={height - 2 * strokeWidth}

@@ -29,6 +29,14 @@ import {
 // In ShowPartner, show a "Leave Partner" if you have a partner.
 
 export default async function Partner() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <UserPartner />
+        </Suspense>
+    );
+}
+
+async function UserPartner() {
     const session = await getServerSession();
     const email = session?.user?.email;
     if (!email) {
@@ -41,23 +49,20 @@ export default async function Partner() {
     if (!user) {
         return <div>Not logged in!</div>;
     }
-
     return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <div className="flex h-screen w-screen justify-center">
-                <div style={{ padding: '10px' }}>
-                    <div>Welcome to CAPSULE, {user?.email}</div>
-                    {user.partnership ? (
-                        <ShowPartner user={user} />
-                    ) : (
-                        <NoPartner user={user} />
-                    )}
-                    <div style={{ padding: '25px' }}>
-                        <CapsuleServerGrid n={100} />
-                    </div>
+        <div className="flex h-screen w-screen justify-center">
+            <div style={{ padding: '10px' }}>
+                <div>Welcome to CAPSULE, {user?.email}</div>
+                {user.partnership ? (
+                    <ShowPartner user={user} />
+                ) : (
+                    <NoPartner user={user} />
+                )}
+                <div style={{ padding: '25px' }}>
+                    <CapsuleServerGrid n={100} />
                 </div>
             </div>
-        </Suspense>
+        </div>
     );
 }
 

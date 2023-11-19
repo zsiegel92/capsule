@@ -18,6 +18,7 @@ model User {
   authoredCapsules Capsule[]        @relation("AuthoredCapsules")
   partnerRequests  PartnerRequest[] @relation("PartnerRequest")
   partnership      Partnership?     @relation("Partnership", fields: [partnershipId], references: [id])
+  openedCapsules   Capsule[]        @relation("OpenedCapsules")
 }
 
 model PartnerRequest {
@@ -39,13 +40,16 @@ model Partnership {
 
 model Capsule {
   id            Int         @id @default(autoincrement())
-  title         String
-  open          Boolean
   createdAt     DateTime    @default(now())
-  authorId      Int
-  partnershipId Int
+  open          Boolean
+  openedBy      User?      @relation("OpenedCapsules", fields: [openedById], references: [id])
+  openedById    Int?
   color         String
   message       String
+  authorId      Int
+  partnershipId Int?
+  lastOpened    DateTime?
+  nTimesOpened  Int         @default(0)
   author        User        @relation("AuthoredCapsules", fields: [authorId], references: [id])
-  partnership   Partnership @relation("CapsulePartnership", fields: [partnershipId], references: [id])
+  partnership   Partnership? @relation("CapsulePartnership", fields: [partnershipId], references: [id])
 }

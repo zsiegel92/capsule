@@ -22,10 +22,33 @@ import {
     getUserWithPartnershipByEmail,
     deletePartnership,
 } from '@/lib/partnerRequestServerActions';
-
+import { AuthoredCapsules } from '@/components/AuthoredCapsules';
 import {} from '@/lib/capsuleRelatedServerActions';
 
-export default async function Connect({}: {}) {
+// TODO:
+// in NoPartner, show a search box to send a partner request.
+// In Partner, show a list of partner requests.
+// In ShowPartner, show a "Leave Partner" if you have a partner.
+
+export default async function Author() {
+    // TODO:
+    // - Component to edit authored posts that are not associated with their partnership, and add posts to their partnership
+    // posts not associated with a partnership can be deleted by the author
+    // "open" field on post - i.e., whether it is visible to the partners
+    // A mini to-do app!
+    // Button to close an opened capsule
+    // opened posts can be edited by the author before they are put back.
+    // posts that are disassociated from a partnership via cascade become opened
+
+    // component to draw a capsule with a post! For the partnership. Time restriction?
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <UserAuthoredCapsules />
+        </Suspense>
+    );
+}
+
+async function UserAuthoredCapsules() {
     const session = await getServerSession();
     const email = session?.user?.email;
     if (!email) {
@@ -43,29 +66,9 @@ export default async function Connect({}: {}) {
     const partnership = user.partnership;
     const partner = getPartnerFromUser(user);
     const partnershipCapsules = user?.partnership?.capsules || [];
-
     return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <h3>
-                <pre>user</pre>
-            </h3>
-            <pre>{JSON.stringify(user, null, 2)}</pre>
-            <h3>
-                <pre>partnership</pre>
-            </h3>
-            <pre>{JSON.stringify(partnership, null, 2)}</pre>
-            <h3>
-                <pre>partner</pre>
-            </h3>
-            <pre>{JSON.stringify(partner, null, 2)}</pre>
-            <h3>
-                <pre>authoredCapsules</pre>
-            </h3>
-            <pre>{JSON.stringify(authoredCapsules, null, 2)}</pre>
-            <h3>
-                <pre>partnershipCapsules</pre>
-            </h3>
-            <pre>{JSON.stringify(partnershipCapsules, null, 2)}</pre>
-        </Suspense>
+        <>
+            <AuthoredCapsules user={user} />{' '}
+        </>
     );
 }

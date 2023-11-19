@@ -6,8 +6,3 @@ export function getPartnerFromUser(user: UserWithPartnership) {
     );
     return partner;
 }
-
-export function getPostsFromUser(user: UserWithPartnership) {
-    const posts = user?.partnership?.posts;
-    return posts;
-}

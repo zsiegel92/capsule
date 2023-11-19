@@ -22,6 +22,11 @@ export function DeletePartnership({
 
     let deleteThisPartnershipWithErrorHandlingAndToast =
         useCallback(async () => {
+            if (
+                !confirm('Are you sure you want to delete this partnership? 💔')
+            ) {
+                return;
+            }
             setSubmitting(true);
             try {
                 const response = await deleteThisPartnership();
@@ -44,7 +49,8 @@ export function DeletePartnership({
                 marginLeft: '10px',
             }}
         >
-            {submitting ? <CapsuleSpinner /> : <BsFillHeartbreakFill />}
+            {submitting ? <CapsuleSpinner /> : '💔'}
+            {/* <BsFillHeartbreakFill /> */}
         </button>
     );
 }

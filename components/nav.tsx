@@ -62,6 +62,7 @@ export const NavBar = ({ session }: { session: Session | null }) => {
                             {/* <NavLink href="/">Home</NavLink> */}
 
                             <NavLink href="/partner">Partner</NavLink>
+                            <NavLink href="/author">Author</NavLink>
                             <NavLink href="/capsules">Capsules</NavLink>
 
                             {/* <NavDropdown

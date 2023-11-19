@@ -1,0 +1,359 @@
+'use client';
+import { use, useEffect, useState, useCallback } from 'react';
+import { Form, Button, Table, Modal, Row, Col } from 'react-bootstrap';
+import { toast } from 'react-hot-toast';
+import {
+    BsFillEmojiHeartEyesFill,
+    BsFillHeartFill,
+    BsLink45Deg,
+} from 'react-icons/bs';
+import { Spinner } from 'react-bootstrap';
+
+import '@/styles/partnerStyles.css';
+import LoadingDots from '@/components/loading-dots';
+import { Capsule, CapsuleSpinner } from '@/components/capsule';
+import { wait } from '@/lib/wait';
+import { getPartnerFromUser } from '@/lib/db_utils';
+import { UserWithPartnership } from '@/lib/types';
+import { Capsule as CapsuleType } from '@prisma/client';
+
+import { CapsuleServer, CapsuleServerGrid } from '@/components/capsule_server';
+import { palette, randColor, randRotate } from '@/lib/capsule_utils';
+
+import {
+    sendPartnerRequest,
+    cancelPartnerRequest,
+} from '@/lib/partnerRequestServerActions';
+import {
+    editCapsuleOpen,
+    editCapsuleMessage,
+    deleteCapsule,
+    updateCapsule,
+} from '@/lib/capsuleRelatedServerActions';
+
+export function AuthoredCapsules({ user }: { user: UserWithPartnership }) {
+    const partner = getPartnerFromUser(user);
+    // const authoredCapsulesWithPartnership = user.authoredCapsules.filter(
+    //     (capsule) => capsule.partnershipId === user.partnershipId,
+    // );
+    // const authoredCapsulesWithoutPartnership = user.authoredCapsules.filter(
+    //     (capsule) => capsule.partnershipId !== user.partnershipId,
+    // );
+    const nonAuthoredCapsulesInPartnership = user.partnership?.capsules.filter(
+        (capsule) => capsule.authorId !== user.id,
+    );
+
+    return (
+        <>
+            <Table striped hover>
+                <thead>
+                    <tr>
+                        <th>Color</th>
+                        <th>Message</th>
+                        <th>
+                            {partner ? (
+                                <>
+                                    Partnership <br />
+                                    with {partner.firstName}
+                                </>
+                            ) : (
+                                <>(No partner)</>
+                            )}
+                        </th>
+                        <th colSpan={2}>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <CreateCapsuleRow user={user} />
+                    {user.authoredCapsules.map((capsule) => (
+                        <CapsuleRow
+                            key={capsule.id}
+                            capsule={capsule}
+                            user={user}
+                        />
+                    ))}
+                </tbody>
+            </Table>
+        </>
+    );
+}
+
+function CapsuleRow({
+    capsule,
+    user,
+}: {
+    capsule: CapsuleType;
+    user: UserWithPartnership;
+}) {
+    const [editedCapsuleColor, setEditedCapsuleColor] = useState(capsule.color);
+    const [editedCapsuleMessage, setEditedCapsuleMessage] = useState(
+        capsule.message,
+    );
+    const [editedCapsulePartnershipStatus, setEditedCapsulePartnershipStatus] =
+        useState(!!capsule.partnershipId);
+    const [showColorPicker, setShowColorPicker] = useState(false);
+
+    const dirty =
+        editedCapsuleMessage !== capsule.message ||
+        editedCapsulePartnershipStatus !== !!capsule.partnershipId ||
+        editedCapsuleColor !== capsule.color;
+
+    const sealed = !capsule.open && !!capsule.partnershipId;
+    const canEdit = !sealed && dirty;
+    const editMessage = sealed ? 'Sealed!' : 'Update';
+    useState(false);
+    return (
+        <tr>
+            <td>
+                <Capsule
+                    primary={editedCapsuleColor}
+                    size={0.5}
+                    open={!sealed}
+                    onClick={() => {
+                        if (sealed) {
+                            alert('This capsule is sealed!');
+                            return;
+                        }
+                        setShowColorPicker(true);
+                    }}
+                />
+                {/* {JSON.stringify(capsule, null, 2)} */}
+            </td>
+            <td>
+                {!sealed ? (
+                    <Form.Control
+                        as="textarea"
+                        rows={3}
+                        value={editedCapsuleMessage}
+                        onChange={(e) =>
+                            setEditedCapsuleMessage(e.target.value)
+                        }
+                        placeholder={`Edit: "${capsule.message}"`}
+                    />
+                ) : (
+                    <>...</>
+                )}
+            </td>
+            <td>
+                <CapsulePartneringButton
+                    user={user}
+                    capsule={capsule}
+                    editedCapsulePartnershipStatus={
+                        editedCapsulePartnershipStatus
+                    }
+                    setEditedCapsulePartnershipStatus={
+                        setEditedCapsulePartnershipStatus
+                    }
+                />
+            </td>
+            <td>
+                <Button
+                    variant="outline-secondary"
+                    disabled={!canEdit}
+                    onClick={() => {
+                        const x = {
+                            capsule: capsule,
+                            color: editedCapsuleColor,
+                            message: editedCapsuleMessage,
+                            partnershipId: editedCapsulePartnershipStatus
+                                ? user.partnershipId
+                                : null,
+                        };
+                        console.log(x);
+                        updateCapsule(
+                            '/author',
+                            capsule,
+                            editedCapsuleColor,
+                            editedCapsuleMessage,
+                            editedCapsulePartnershipStatus
+                                ? user.partnershipId
+                                : null,
+                        ).then((response) => {
+                            console.log('Updated capsule: ', capsule);
+                        });
+                    }}
+                >
+                    {editMessage}
+                </Button>
+            </td>
+            <td>
+                <DeleteCapsuleButton capsule={capsule} />
+            </td>
+            <UpdateColorModal
+                color={editedCapsuleColor}
+                setColor={setEditedCapsuleColor}
+                show={showColorPicker}
+                setShow={setShowColorPicker}
+            />
+        </tr>
+    );
+}
+
+function DeleteCapsuleButton({ capsule }: { capsule: CapsuleType }) {
+    if (capsule.partnershipId) {
+        return <></>;
+    }
+    return (
+        <Button
+            variant="outline-danger"
+            onClick={() => {
+                if (
+                    !window.confirm(
+                        'Are you sure you want to delete this capsule?',
+                    )
+                ) {
+                    return;
+                }
+                deleteCapsule('/author', capsule).then((response) => {
+                    console.log('DELETED CAPSULE!');
+                });
+            }}
+        >
+            DELETE
+        </Button>
+    );
+}
+
+function CreateCapsuleRow({ user }: { user: UserWithPartnership }) {
+    const [newCapsuleColor, setNewCapsuleColor] = useState(randColor());
+    const [newCapsuleMessage, setNewCapsuleMessage] = useState('');
+    const [newCapsuleAddToPartnership, setNewCapsuleAddToPartnership] =
+        useState(true);
+    const [showColorPicker, setShowColorPicker] = useState(false);
+    const partner = getPartnerFromUser(user);
+
+    useEffect(() => {
+        setNewCapsuleAddToPartnership(user.partnershipId ? true : false);
+    }, [user.partnershipId]);
+    return (
+        <>
+            <tr>
+                <td>
+                    <Capsule
+                        primary={newCapsuleColor}
+                        size={0.5}
+                        open={true}
+                        onClick={() => {
+                            setShowColorPicker(true);
+                        }}
+                    />
+                </td>
+                <td>
+                    <Form.Control
+                        as="textarea"
+                        rows={3}
+                        value={newCapsuleMessage}
+                        onChange={(e) => setNewCapsuleMessage(e.target.value)}
+                        placeholder="Write a message for your partner :)"
+                    />
+                </td>
+                <td>
+                    <Form.Check
+                        type="checkbox"
+                        label={
+                            partner
+                                ? `Seal and share with ${partner.firstName}?`
+                                : ''
+                        }
+                        checked={newCapsuleAddToPartnership}
+                        onChange={(e) =>
+                            setNewCapsuleAddToPartnership(e.target.checked)
+                        }
+                        disabled={user.partnershipId ? false : true}
+                    />
+                </td>
+                <td colSpan={2}>
+                    <Button
+                        variant="outline-primary"
+                        onClick={() => {
+                            window.alert('TODO: CREATE CAPSULE');
+                        }}
+                    >
+                        CREATE (TODO)
+                    </Button>
+                </td>
+            </tr>
+            <UpdateColorModal
+                color={newCapsuleColor}
+                setColor={setNewCapsuleColor}
+                show={showColorPicker}
+                setShow={setShowColorPicker}
+            />
+        </>
+    );
+}
+
+function UpdateColorModal({
+    color,
+    setColor,
+    show,
+    setShow,
+}: {
+    color: string;
+    setColor: any;
+    show: boolean;
+    setShow: any;
+}) {
+    return (
+        <Modal show={show} onHide={() => setShow(false)}>
+            <Modal.Header closeButton>
+                <Modal.Title>Update Color</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                {palette.map((newColor) => (
+                    <div
+                        key={newColor}
+                        onClick={() => {
+                            setColor(newColor);
+                            setShow(false);
+                        }}
+                    >
+                        <Capsule primary={newColor} size={0.5} open={true} />
+                    </div>
+                ))}
+            </Modal.Body>
+        </Modal>
+    );
+}
+
+function CapsulePartneringButton({
+    user,
+    capsule,
+    editedCapsulePartnershipStatus,
+    setEditedCapsulePartnershipStatus,
+}: {
+    user: UserWithPartnership;
+    capsule: CapsuleType;
+    editedCapsulePartnershipStatus: boolean;
+    setEditedCapsulePartnershipStatus: any;
+}) {
+    if (!user.partnershipId) {
+        return (
+            <Form.Check
+                type="checkbox"
+                // label="Add to partnership?"
+                checked={false}
+                // onChange={}
+                disabled={true}
+            />
+        );
+    }
+    let partneringMessage;
+    if (!!capsule.partnershipId) {
+        partneringMessage = capsule.open ? 'Keep in partnership?' : '';
+    } else {
+        partneringMessage = 'Seal and add to partnership?';
+    }
+
+    return (
+        <Form.Check
+            type="checkbox"
+            label={partneringMessage}
+            checked={!!editedCapsulePartnershipStatus}
+            onChange={(e) =>
+                setEditedCapsulePartnershipStatus(e.target.checked)
+            }
+            disabled={!!capsule.partnershipId && !capsule.open}
+        />
+    );
+}
