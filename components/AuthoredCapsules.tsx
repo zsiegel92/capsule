@@ -68,13 +68,15 @@ export function AuthoredCapsules({ user }: { user: UserWithPartnership }) {
                 </thead>
                 <tbody>
                     <CreateCapsuleRow user={user} />
-                    {user.authoredCapsules.map((capsule) => (
-                        <CapsuleRow
-                            key={capsule.id}
-                            capsule={capsule}
-                            user={user}
-                        />
-                    ))}
+                    {user.authoredCapsules
+                        .sort((capsule) => Number(!capsule.partnershipId))
+                        .map((capsule) => (
+                            <CapsuleRow
+                                key={capsule.id}
+                                capsule={capsule}
+                                user={user}
+                            />
+                        ))}
                 </tbody>
             </Table>
         </>
@@ -104,7 +106,7 @@ function CapsuleRow({
 
     const sealed = !capsule.open && !!capsule.partnershipId;
     const canEdit = !sealed && dirty;
-    const editMessage = sealed ? 'Sealed!' : ''
+    const editMessage = sealed ? 'Sealed!' : '';
     useState(false);
     return (
         <tr>
@@ -266,6 +268,7 @@ function CreateCapsuleRow({ user }: { user: UserWithPartnership }) {
         useState(true);
     const [showColorPicker, setShowColorPicker] = useState(false);
     const [submitting, setSubmitting] = useState(false);
+    const [touched, setTouched] = useState(false);
 
     const partner = getPartnerFromUser(user);
 
@@ -282,33 +285,48 @@ function CreateCapsuleRow({ user }: { user: UserWithPartnership }) {
                         open={true}
                         onClick={() => {
                             setShowColorPicker(true);
+                            setTouched(true);
                         }}
                     />
                 </td>
                 <td>
-                    <Form.Control
-                        as="textarea"
-                        rows={3}
-                        value={newCapsuleMessage}
-                        onChange={(e) => setNewCapsuleMessage(e.target.value)}
-                        placeholder="Write a message for your partner :)"
-                    />
+                    <Form.Group className="position-relative mb-3">
+                        <Form.Control
+                            as="textarea"
+                            rows={3}
+                            value={newCapsuleMessage}
+                            onChange={(e) => {
+                                setTouched(true);
+                                setNewCapsuleMessage(e.target.value);
+                            }}
+                            isInvalid={touched && newCapsuleMessage.length == 0}
+                            placeholder="Write a message for your partner :)"
+                        />
+                        <Form.Control.Feedback type="invalid" tooltip>
+                            Please enter a message.
+                        </Form.Control.Feedback>
+                    </Form.Group>
                 </td>
                 <td>
                     <Form.Check
                         type="checkbox"
                         label={partner ? `Seal & share?` : ''}
                         checked={newCapsuleAddToPartnership}
-                        onChange={(e) =>
-                            setNewCapsuleAddToPartnership(e.target.checked)
-                        }
+                        onChange={(e) => {
+                            setNewCapsuleAddToPartnership(e.target.checked);
+                            setTouched(true);
+                        }}
                         disabled={user.partnershipId ? false : true}
                     />
                 </td>
                 <td colSpan={2}>
                     <Button
-                        variant="outline-primary"
+                        variant="outline-success"
                         onClick={() => {
+                            setTouched(true);
+                            if (newCapsuleMessage.length == 0) {
+                                return;
+                            }
                             setSubmitting(true);
                             createCapsule(
                                 '/author',
@@ -320,6 +338,7 @@ function CreateCapsuleRow({ user }: { user: UserWithPartnership }) {
                                     : null,
                             )
                                 .then((response) => {
+                                    setTouched(false);
                                     setSubmitting(false);
                                     console.log('Created capsule!');
                                     setNewCapsuleAddToPartnership(true);
@@ -328,6 +347,7 @@ function CreateCapsuleRow({ user }: { user: UserWithPartnership }) {
                                 })
                                 .catch((e) => {
                                     setSubmitting(false);
+                                    setTouched(false);
                                     console.error(
                                         'Error creating capsule: ',
                                         e,
@@ -335,14 +355,13 @@ function CreateCapsuleRow({ user }: { user: UserWithPartnership }) {
                                 });
                         }}
                     >
-                        Create!{' '}
                         <Capsule
                             // marginAndPadding={0.1}
                             // height={14}
                             // width={28}
                             // strokeWidth={0.5}
                             size={0.4}
-                            primary={newCapsuleColor}
+                            primary={'green'}
                             useRandColor={false}
                             useRandRotate={!submitting}
                             useRotateInterval={!submitting}

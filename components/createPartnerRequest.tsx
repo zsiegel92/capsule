@@ -3,7 +3,7 @@ import { use, useState, useEffect, useCallback } from 'react';
 import { useFormStatus, useFormState } from 'react-dom';
 import { Form, Button, InputGroup } from 'react-bootstrap';
 import { toast } from 'react-hot-toast';
-import { BsXLg } from 'react-icons/bs';
+
 import { Capsule } from '@/components/capsule';
 import { wait } from '@/lib/wait';
 import { User } from '@prisma/client';

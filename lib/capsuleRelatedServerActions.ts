@@ -55,7 +55,6 @@ export async function createCapsule(
 ) {
     const data = {
         message: message,
-        open: true,
         color: color || randColor(),
         nTimesOpened: 0,
         // lastOpened:  null,
@@ -65,14 +64,15 @@ export async function createCapsule(
                 id: user.id,
             },
         },
-    };
-    if (partnershipId) {
-        data['partnership'] = {
-            connect: {
-                id: partnershipId,
+        ...(partnershipId && {
+            partnership: {
+                connect: {
+                    id: partnershipId,
+                },
             },
-        };
-    }
+        }),
+        open: partnershipId == null, // "Seal & share"
+    };
     const capsule = await prisma.capsule.create({
         data: data,
     });
@@ -99,6 +99,9 @@ export async function updateCapsule(
 ) {
     let data: any = {};
     data['partnershipId'] = partnershipId;
+    if (!!partnershipId) {
+        data['open'] = false; // If editing a capsule in a partnership, seal it! This should only happen in "Capsules", not "Author"
+    }
     if (color) {
         data['color'] = color;
     }
