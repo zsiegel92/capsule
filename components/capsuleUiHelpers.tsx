@@ -37,7 +37,7 @@ export function CreateOrUpdateButton(props: any) {
             variant="outline-success"
             primary="green"
             icon={<BsFillSendPlusFill />}
-            text="Create/Update"
+            text="Save"
             {...props}
         />
     );
@@ -126,7 +126,7 @@ function LowerRightIcon({ children }: { children: any }) {
                 position: 'absolute',
                 bottom: 0,
                 right: 0,
-                fontSize: '0.9em',
+                fontSize: '0.75em',
                 // display: 'block',
             }}
         >

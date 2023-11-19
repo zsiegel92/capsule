@@ -68,7 +68,7 @@ export function AuthoredCapsules({
                         <th>Color</th>
                         <th>Message</th>
                         <th>
-                            <ButtonGroup>
+                            <ButtonGroup size="sm">
                                 <CreateOrUpdateButton
                                     useText={true}
                                     disabled={true}
@@ -135,15 +135,19 @@ function CapsuleRow({
                     <CapsuleForButton primary="green" submitting={false} />
                     to save
                     <blockquote>
-                        <p
+                        <div
                             style={{
                                 padding: '15px',
                                 background: '#eee',
                                 borderRadius: '5px',
                             }}
                         >
-                             <CapsuleForButton primary={editedCapsuleColor} submitting={false} />{editedCapsuleMessage}
-                        </p>
+                            <CapsuleForButton
+                                primary={editedCapsuleColor}
+                                submitting={false}
+                            />
+                            {editedCapsuleMessage}
+                        </div>
                     </blockquote>
                 </div>
             );
@@ -158,7 +162,7 @@ function CapsuleRow({
                 setToastId(null);
             }
         }
-    }, [dirty, editedCapsuleMessage,editedCapsuleColor, toastId, setToastId]);
+    }, [dirty, editedCapsuleMessage, editedCapsuleColor, toastId, setToastId]);
     const sealed = !capsule.open && !!capsule.partnershipId;
 
     return (
@@ -341,7 +345,7 @@ function CreateCapsuleRow({
                                 setNewCapsuleMessage(e.target.value);
                             }}
                             isInvalid={touched && newCapsuleMessage.length == 0}
-                            placeholder="Write a message for your partner :)"
+                            placeholder="New message :)"
                         />
                         <Form.Control.Feedback type="invalid" tooltip>
                             Please enter a message.
