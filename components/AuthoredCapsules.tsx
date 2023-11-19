@@ -98,7 +98,7 @@ export function AuthoredCapsules({
 }
 
 const compareCapsulesByCreatedAt = (a: CapsuleWithUsers, b: CapsuleWithUsers) =>
-    a.createdAt > b.createdAt ? 1 : -1;
+    a.createdAt < b.createdAt ? 1 : -1;
 
 function CapsuleRow({
     capsule,
