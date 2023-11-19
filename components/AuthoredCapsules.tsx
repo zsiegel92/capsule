@@ -46,6 +46,7 @@ import {
     CreateOrUpdateButton,
     DeleteButton,
     CapsuleOrTextButton,
+    CapsuleForButton,
     SealButton,
 } from '@/components/capsuleUiHelpers';
 
@@ -111,11 +112,53 @@ function CapsuleRow({
         capsule.message,
     );
     const [showColorPicker, setShowColorPicker] = useState(false);
+    const [dirty, setDirty] = useState(false);
+    const [toastId, setToastId] = useState<string | null>(null);
 
-    const dirty =
-        editedCapsuleMessage !== capsule.message ||
-        editedCapsuleColor !== capsule.color;
+    useEffect(() => {
+        setDirty(
+            editedCapsuleMessage !== capsule.message ||
+                editedCapsuleColor !== capsule.color,
+        );
+    }, [
+        editedCapsuleMessage,
+        editedCapsuleColor,
+        capsule.message,
+        capsule.color,
+    ]);
 
+    useEffect(() => {
+        if (dirty) {
+            const content = (
+                <div>
+                    Click the
+                    <CapsuleForButton primary="green" submitting={false} />
+                    to save
+                    <blockquote>
+                        <p
+                            style={{
+                                padding: '15px',
+                                background: '#eee',
+                                borderRadius: '5px',
+                            }}
+                        >
+                             <CapsuleForButton primary={editedCapsuleColor} submitting={false} />{editedCapsuleMessage}
+                        </p>
+                    </blockquote>
+                </div>
+            );
+            if (!!toastId) {
+                toast.loading(content, { id: toastId });
+            } else {
+                setToastId(toast.loading(content));
+            }
+        } else {
+            if (toastId) {
+                toast.dismiss(toastId);
+                setToastId(null);
+            }
+        }
+    }, [dirty, editedCapsuleMessage,editedCapsuleColor, toastId, setToastId]);
     const sealed = !capsule.open && !!capsule.partnershipId;
 
     return (
@@ -175,10 +218,14 @@ function SealCapsuleButton({ capsule }: { capsule: CapsuleWithUsers }) {
                     .then((response) => {
                         setSubmitting(false);
                         console.log('Sealed capsule: ', capsule);
+                        toast.success(
+                            'Sealed capsule! Visit "Capsules" to interact with it.',
+                        );
                     })
                     .catch((e) => {
                         setSubmitting(false);
                         console.error('Error sealing capsule: ', e);
+                        toast.error('Error sealing capsule');
                     });
             }}
             submitting={submitting}
@@ -211,10 +258,12 @@ function UpdateCapsuleButton({
                     .then((response) => {
                         setSubmitting(false);
                         console.log('Updated capsule: ', capsule);
+                        toast.success('Updated capsule!');
                     })
                     .catch((e) => {
                         setSubmitting(false);
                         console.error('Error updating capsule: ', e);
+                        toast.error('Error updating capsule');
                     });
             }}
             submitting={submitting}
@@ -241,12 +290,12 @@ function DeleteCapsuleButton({ capsule }: { capsule: CapsuleWithUsers }) {
                 deleteCapsule('/author', capsule)
                     .then((response) => {
                         console.log('DELETED CAPSULE!');
-                    })
-                    .then((response) => {
                         setSubmitting(false);
+                        toast.success('Deleted capsule!');
                     })
                     .catch((e) => {
                         console.error('Error deleting capsule: ', e);
+                        toast.error('Error deleting capsule');
                     });
             }}
             submitting={submitting}
@@ -299,18 +348,6 @@ function CreateCapsuleRow({
                         </Form.Control.Feedback>
                     </Form.Group>
                 </td>
-                {/* <td>
-                    <Form.Check
-                        type="checkbox"
-                        label={partner ? `Seal & share?` : ''}
-                        checked={newCapsuleAddToPartnership}
-                        onChange={(e) => {
-                            setNewCapsuleAddToPartnership(e.target.checked);
-                            setTouched(true);
-                        }}
-                        disabled={user.partnershipId ? false : true}
-                    />
-                </td> */}
                 <td>
                     <CreateCapsuleButton
                         submitting={submitting}
@@ -332,6 +369,7 @@ function CreateCapsuleRow({
                                     console.log('Created capsule!');
                                     setNewCapsuleColor(randColor());
                                     setNewCapsuleMessage('');
+                                    toast.success('Created capsule!');
                                 })
                                 .catch((e) => {
                                     setSubmitting(false);
@@ -340,6 +378,7 @@ function CreateCapsuleRow({
                                         'Error creating capsule: ',
                                         e,
                                     );
+                                    toast.error('Error creating capsule');
                                 });
                         }}
                     />
@@ -395,47 +434,5 @@ function UpdateColorModal({
                 ))}
             </Modal.Body>
         </Modal>
-    );
-}
-
-function CapsulePartneringButton({
-    user,
-    capsule,
-    editedCapsulePartnershipStatus,
-    setEditedCapsulePartnershipStatus,
-}: {
-    user: UserWithPartnershipAndAuthoredCapsules;
-    capsule: CapsuleWithUsers;
-    editedCapsulePartnershipStatus: boolean;
-    setEditedCapsulePartnershipStatus: any;
-}) {
-    if (!user.partnershipId) {
-        return (
-            <Form.Check
-                type="checkbox"
-                // label="Add to partnership?"
-                checked={false}
-                // onChange={}
-                disabled={true}
-            />
-        );
-    }
-    let partneringMessage;
-    if (!!capsule.partnershipId) {
-        partneringMessage = capsule.open ? 'Shared?' : '';
-    } else {
-        partneringMessage = 'Seal & Share?';
-    }
-
-    return (
-        <Form.Check
-            type="checkbox"
-            label={partneringMessage}
-            checked={!!editedCapsulePartnershipStatus}
-            onChange={(e) =>
-                setEditedCapsulePartnershipStatus(e.target.checked)
-            }
-            disabled={!!capsule.partnershipId && !capsule.open}
-        />
     );
 }

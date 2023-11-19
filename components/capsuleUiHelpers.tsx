@@ -89,14 +89,7 @@ export function CapsuleOrTextButton({
         children = text;
     } else {
         children = (
-            <Capsule
-                size={0.4}
-                primary={primary}
-                useRandColor={false}
-                useRandRotate={!submitting}
-                useRotateInterval={!submitting}
-                useSpinner={submitting}
-            />
+            <CapsuleForButton submitting={submitting} primary={primary} />
         );
     }
     return (
@@ -104,6 +97,25 @@ export function CapsuleOrTextButton({
             {children}
             {!!icon ? <LowerRightIcon>{icon}</LowerRightIcon> : <></>}
         </Button>
+    );
+}
+
+export function CapsuleForButton({
+    submitting = false,
+    primary = 'green',
+}: {
+    submitting?: boolean;
+    primary?: string;
+}) {
+    return (
+        <Capsule
+            size={0.3}
+            primary={primary}
+            useRandColor={false}
+            useRandRotate={!submitting}
+            useRotateInterval={!submitting}
+            useSpinner={submitting}
+        />
     );
 }
 
