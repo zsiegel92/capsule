@@ -49,24 +49,32 @@ export async function editCapsuleMessage(
 export async function createCapsule(
     path: string,
     user: UserWithPartnership,
-    message: string,
     color: string | null,
-    addToPartnership: boolean = false,
+    message: string,
+    partnershipId: number | null,
 ) {
-    const capsule = await prisma.capsule.create({
-        data: {
-            message: message,
-            open: true,
-            color: color || randColor(),
-            nTimesOpened: 0,
-            // lastOpened:  null,
-            // authorId: user.id, // not necessary with connect
-            author: {
-                connect: {
-                    id: user.id,
-                },
+    const data = {
+        message: message,
+        open: true,
+        color: color || randColor(),
+        nTimesOpened: 0,
+        // lastOpened:  null,
+        // authorId: user.id, // not necessary with connect
+        author: {
+            connect: {
+                id: user.id,
             },
         },
+    };
+    if (partnershipId) {
+        data['partnership'] = {
+            connect: {
+                id: partnershipId,
+            },
+        };
+    }
+    const capsule = await prisma.capsule.create({
+        data: data,
     });
     revalidatePath(path);
 }

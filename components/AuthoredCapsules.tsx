@@ -6,6 +6,8 @@ import {
     BsFillEmojiHeartEyesFill,
     BsFillHeartFill,
     BsLink45Deg,
+    BsXLg,
+    BsArrowUpRight,
 } from 'react-icons/bs';
 import { Spinner } from 'react-bootstrap';
 
@@ -29,6 +31,7 @@ import {
     editCapsuleMessage,
     deleteCapsule,
     updateCapsule,
+    createCapsule,
 } from '@/lib/capsuleRelatedServerActions';
 
 export function AuthoredCapsules({ user }: { user: UserWithPartnership }) {
@@ -92,6 +95,7 @@ function CapsuleRow({
     const [editedCapsulePartnershipStatus, setEditedCapsulePartnershipStatus] =
         useState(!!capsule.partnershipId);
     const [showColorPicker, setShowColorPicker] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
 
     const dirty =
         editedCapsuleMessage !== capsule.message ||
@@ -100,7 +104,7 @@ function CapsuleRow({
 
     const sealed = !capsule.open && !!capsule.partnershipId;
     const canEdit = !sealed && dirty;
-    const editMessage = sealed ? 'Sealed!' : 'Update';
+    const editMessage = sealed ? 'Sealed!' : ''
     useState(false);
     return (
         <tr>
@@ -151,6 +155,7 @@ function CapsuleRow({
                     variant="outline-secondary"
                     disabled={!canEdit}
                     onClick={() => {
+                        setSubmitting(true);
                         const x = {
                             capsule: capsule,
                             color: editedCapsuleColor,
@@ -168,12 +173,32 @@ function CapsuleRow({
                             editedCapsulePartnershipStatus
                                 ? user.partnershipId
                                 : null,
-                        ).then((response) => {
-                            console.log('Updated capsule: ', capsule);
-                        });
+                        )
+                            .then((response) => {
+                                setSubmitting(false);
+                                console.log('Updated capsule: ', capsule);
+                            })
+                            .catch((e) => {
+                                setSubmitting(false);
+                                console.error('Error updating capsule: ', e);
+                            });
                     }}
                 >
                     {editMessage}
+                    {!sealed && (
+                        <Capsule
+                            // marginAndPadding={0.1}
+                            // height={14}
+                            // width={28}
+                            // strokeWidth={0.5}
+                            size={0.4}
+                            primary={editedCapsuleColor}
+                            useRandColor={false}
+                            useRandRotate={!submitting}
+                            useRotateInterval={!submitting}
+                            useSpinner={submitting}
+                        />
+                    )}
                 </Button>
             </td>
             <td>
@@ -190,6 +215,7 @@ function CapsuleRow({
 }
 
 function DeleteCapsuleButton({ capsule }: { capsule: CapsuleType }) {
+    const [submitting, setSubmitting] = useState(false);
     if (capsule.partnershipId) {
         return <></>;
     }
@@ -204,12 +230,31 @@ function DeleteCapsuleButton({ capsule }: { capsule: CapsuleType }) {
                 ) {
                     return;
                 }
-                deleteCapsule('/author', capsule).then((response) => {
-                    console.log('DELETED CAPSULE!');
-                });
+                setSubmitting(true);
+                deleteCapsule('/author', capsule)
+                    .then((response) => {
+                        console.log('DELETED CAPSULE!');
+                    })
+                    .then((response) => {
+                        setSubmitting(false);
+                    })
+                    .catch((e) => {
+                        console.error('Error deleting capsule: ', e);
+                    });
             }}
         >
-            DELETE
+            <Capsule
+                // marginAndPadding={0.1}
+                // height={14}
+                // width={28}
+                // strokeWidth={0.5}
+                size={0.4}
+                primary={'red'}
+                useRandColor={false}
+                useRandRotate={!submitting}
+                useRotateInterval={!submitting}
+                useSpinner={submitting}
+            />
         </Button>
     );
 }
@@ -220,6 +265,8 @@ function CreateCapsuleRow({ user }: { user: UserWithPartnership }) {
     const [newCapsuleAddToPartnership, setNewCapsuleAddToPartnership] =
         useState(true);
     const [showColorPicker, setShowColorPicker] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+
     const partner = getPartnerFromUser(user);
 
     useEffect(() => {
@@ -266,10 +313,45 @@ function CreateCapsuleRow({ user }: { user: UserWithPartnership }) {
                     <Button
                         variant="outline-primary"
                         onClick={() => {
-                            window.alert('TODO: CREATE CAPSULE');
+                            setSubmitting(true);
+                            createCapsule(
+                                '/author',
+                                user,
+                                newCapsuleColor,
+                                newCapsuleMessage,
+                                newCapsuleAddToPartnership
+                                    ? user.partnershipId
+                                    : null,
+                            )
+                                .then((response) => {
+                                    setSubmitting(false);
+                                    console.log('Created capsule!');
+                                    setNewCapsuleAddToPartnership(true);
+                                    setNewCapsuleColor(randColor());
+                                    setNewCapsuleMessage('');
+                                })
+                                .catch((e) => {
+                                    setSubmitting(false);
+                                    console.error(
+                                        'Error creating capsule: ',
+                                        e,
+                                    );
+                                });
                         }}
                     >
-                        CREATE (TODO)
+                        Create!{' '}
+                        <Capsule
+                            // marginAndPadding={0.1}
+                            // height={14}
+                            // width={28}
+                            // strokeWidth={0.5}
+                            size={0.4}
+                            primary={newCapsuleColor}
+                            useRandColor={false}
+                            useRandRotate={!submitting}
+                            useRotateInterval={!submitting}
+                            useSpinner={submitting}
+                        />
                     </Button>
                 </td>
             </tr>
