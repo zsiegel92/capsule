@@ -297,11 +297,7 @@ function CreateCapsuleRow({ user }: { user: UserWithPartnership }) {
                 <td>
                     <Form.Check
                         type="checkbox"
-                        label={
-                            partner
-                                ? `Seal and share with ${partner.firstName}?`
-                                : ''
-                        }
+                        label={partner ? `Seal & share?` : ''}
                         checked={newCapsuleAddToPartnership}
                         onChange={(e) =>
                             setNewCapsuleAddToPartnership(e.target.checked)
@@ -422,9 +418,9 @@ function CapsulePartneringButton({
     }
     let partneringMessage;
     if (!!capsule.partnershipId) {
-        partneringMessage = capsule.open ? 'Keep in partnership?' : '';
+        partneringMessage = capsule.open ? 'Shared?' : '';
     } else {
-        partneringMessage = 'Seal and add to partnership?';
+        partneringMessage = 'Seal & Share?';
     }
 
     return (
