@@ -5,25 +5,29 @@ import { User, PartnerRequest } from '@prisma/client';
 import prisma from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
 
-import { UserWithPartnership, PartnershipIncludePayload } from '@/lib/types';
+import {
+    UserWithPartnershipAndAuthoredCapsules,
+    PartnershipIncludePayload,
+} from '@/lib/types';
 import { getPartnerFromUser } from '@/lib/db_utils';
 
 export async function getUserWithPartnershipByEmail(
     email: string,
-): Promise<UserWithPartnership | null> {
-    const user: UserWithPartnership | null = await prisma.user.findUnique({
-        where: {
-            email,
-        },
-        ...PartnershipIncludePayload,
-    });
+): Promise<UserWithPartnershipAndAuthoredCapsules | null> {
+    const user: UserWithPartnershipAndAuthoredCapsules | null =
+        await prisma.user.findUnique({
+            where: {
+                email,
+            },
+            ...PartnershipIncludePayload,
+        });
     return user;
 }
 
 export const acceptPartnerRequest = async (
     path: string,
     partnerRequest: PartnerRequest,
-    user: UserWithPartnership,
+    user: UserWithPartnershipAndAuthoredCapsules,
 ) => {
     'use server';
     // console.log('partnerRequest', partnerRequest)
@@ -77,7 +81,7 @@ export const acceptPartnerRequest = async (
 
 export const deletePartnership = async (
     path: string,
-    user: UserWithPartnership,
+    user: UserWithPartnershipAndAuthoredCapsules,
 ) => {
     'use server';
     console.log('user', user);
@@ -122,7 +126,7 @@ export const cancelPartnerRequest = async (
 };
 
 export const sendPartnerRequest = async (
-    sending_user: UserWithPartnership,
+    sending_user: UserWithPartnershipAndAuthoredCapsules,
     path: string,
     formData: FormData,
 ) => {

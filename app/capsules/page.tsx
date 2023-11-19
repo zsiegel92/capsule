@@ -9,7 +9,6 @@ import { Suspense } from 'react';
 import { CreatePartnerRequest } from '@/components/createPartnerRequest';
 import { AcceptPartnerRequest } from '@/components/acceptPartnerRequest';
 import { getPartnerFromUser } from '@/lib/db_utils';
-import { UserWithPartnership } from '@/lib/types';
 import '@/styles/partnerStyles.css';
 import { CancelPartnerRequest } from '@/components/CancelPartnerRequest';
 import { DeletePartnership } from '@/components/DeletePartnership';

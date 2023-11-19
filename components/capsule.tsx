@@ -19,6 +19,8 @@ export function CapsuleSpinner({ size = 0.4 }: { size?: number }) {
     );
 }
 
+const EXTRA_HOVER_SEPARATION_OFFSET = 2;
+
 export function Capsule({
     primary = palette[0],
     secondary = 'white',
@@ -54,11 +56,12 @@ export function Capsule({
     const [rotateInterval, setRotateInterval] = useState(
         useRotateInterval ? exponentialSample(4000) : null,
     );
+    const [hoverOpenOffset, setHoverOpenOffset] = useState(0);
 
-    useEffect(()=>{
-        setPrimaryColor(primary)
-    }, [primary])
-    
+    useEffect(() => {
+        setPrimaryColor(primary);
+    }, [primary]);
+
     useInterval(() => {
         setIntervalRotated(!intervalRotated);
         setRotateInterval(useRotateInterval ? exponentialSample(4000) : null);
@@ -68,7 +71,7 @@ export function Capsule({
     const width = 100 * size;
     const strokeWidth = 2 * size;
     const marginAndPadding = 15 * size;
-    const openOffset = open ? marginAndPadding / 2 : 0;
+    const openOffset = open ? hoverOpenOffset + marginAndPadding / 2 : 0;
     return (
         <div
             style={{
@@ -76,6 +79,10 @@ export function Capsule({
                 height: `${height + 2 * marginAndPadding}px`,
                 display: 'inline-block',
             }}
+            onMouseEnter={() =>
+                setHoverOpenOffset(EXTRA_HOVER_SEPARATION_OFFSET)
+            }
+            onMouseLeave={() => setHoverOpenOffset(0)}
             className={`capsuleParent ${useSpinner ? 'capsuleSpinner' : ''}`}
             suppressHydrationWarning
         >

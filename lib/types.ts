@@ -26,8 +26,26 @@ export function prismaExclude<T extends Entity, K extends Keys<T>>(
 
 const scalarsExcludingPassword = prismaExclude(Prisma.ModelName.User, [Prisma.UserScalarFieldEnum.password]);
 
+
+
+
+const capsuleIncludes = {
+    include: {
+        author: {
+            select: {
+                ...scalarsExcludingPassword,
+            },
+        },
+        openedBy: {
+            select: {
+                ...scalarsExcludingPassword,
+            },
+        },
+    },
+};
+export type CapsuleWithUsers = Prisma.CapsuleGetPayload<typeof capsuleIncludes>;
+
 const partnershipIncludes = {
-    authoredCapsules: true,
     partnership: {
         include: {
             partners: {
@@ -35,19 +53,21 @@ const partnershipIncludes = {
                     ...scalarsExcludingPassword,
                 },
             },
-            capsules: true,
+            capsules: capsuleIncludes,
         },
     },
 };
+
 export const PartnershipIncludePayload = {
     select: {
+        authoredCapsules: capsuleIncludes,
         ...scalarsExcludingPassword,
         ...partnershipIncludes,
     },
     // include: partnershipIncludes
 };
 
-export type UserWithPartnership = Prisma.UserGetPayload<
+export type UserWithPartnershipAndAuthoredCapsules = Prisma.UserGetPayload<
     typeof PartnershipIncludePayload
 >;
 

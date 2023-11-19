@@ -9,13 +9,13 @@ import {
 import { BsXLg, BsFillHeartbreakFill } from 'react-icons/bs';
 import { Capsule, CapsuleSpinner } from '@/components/capsule';
 import { wait } from '@/lib/wait';
-import { UserWithPartnership } from '@/lib/types';
+import { UserWithPartnershipAndAuthoredCapsules } from '@/lib/types';
 
 export function DeletePartnership({
     user,
     deleteThisPartnership,
 }: {
-    user: UserWithPartnership;
+    user: UserWithPartnershipAndAuthoredCapsules;
     deleteThisPartnership: any;
 }) {
     const [submitting, setSubmitting] = useState(false);

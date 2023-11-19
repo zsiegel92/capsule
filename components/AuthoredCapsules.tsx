@@ -1,6 +1,14 @@
 'use client';
 import { use, useEffect, useState, useCallback } from 'react';
-import { Form, Button, Table, Modal, Row, Col } from 'react-bootstrap';
+import {
+    Form,
+    Button,
+    Table,
+    Modal,
+    Row,
+    Col,
+    ButtonGroup,
+} from 'react-bootstrap';
 import { toast } from 'react-hot-toast';
 import {
     BsFillEmojiHeartEyesFill,
@@ -16,10 +24,11 @@ import LoadingDots from '@/components/loading-dots';
 import { Capsule, CapsuleSpinner } from '@/components/capsule';
 import { wait } from '@/lib/wait';
 import { getPartnerFromUser } from '@/lib/db_utils';
-import { UserWithPartnership } from '@/lib/types';
-import { Capsule as CapsuleType } from '@prisma/client';
+import {
+    UserWithPartnershipAndAuthoredCapsules,
+    CapsuleWithUsers,
+} from '@/lib/types';
 
-import { CapsuleServer, CapsuleServerGrid } from '@/components/capsule_server';
 import { palette, randColor, randRotate } from '@/lib/capsule_utils';
 
 import {
@@ -27,24 +36,28 @@ import {
     cancelPartnerRequest,
 } from '@/lib/partnerRequestServerActions';
 import {
-    editCapsuleOpen,
-    editCapsuleMessage,
+    // updateCapsuleOpen,
     deleteCapsule,
-    updateCapsule,
+    updateCapsuleScalars,
     createCapsule,
+    sealCapsule,
 } from '@/lib/capsuleRelatedServerActions';
+import {
+    CreateOrUpdateButton,
+    DeleteButton,
+    CapsuleOrTextButton,
+    SealButton,
+} from '@/components/capsuleUiHelpers';
 
-export function AuthoredCapsules({ user }: { user: UserWithPartnership }) {
-    const partner = getPartnerFromUser(user);
-    // const authoredCapsulesWithPartnership = user.authoredCapsules.filter(
-    //     (capsule) => capsule.partnershipId === user.partnershipId,
+export function AuthoredCapsules({
+    user,
+}: {
+    user: UserWithPartnershipAndAuthoredCapsules;
+}) {
+    // const partner = getPartnerFromUser(user);
+    // const nonAuthoredCapsulesInPartnership = user.partnership?.capsules.filter(
+    //     (capsule) => capsule.authorId !== user.id,
     // );
-    // const authoredCapsulesWithoutPartnership = user.authoredCapsules.filter(
-    //     (capsule) => capsule.partnershipId !== user.partnershipId,
-    // );
-    const nonAuthoredCapsulesInPartnership = user.partnership?.capsules.filter(
-        (capsule) => capsule.authorId !== user.id,
-    );
 
     return (
         <>
@@ -54,22 +67,22 @@ export function AuthoredCapsules({ user }: { user: UserWithPartnership }) {
                         <th>Color</th>
                         <th>Message</th>
                         <th>
-                            {partner ? (
-                                <>
-                                    Partnership <br />
-                                    with {partner.firstName}
-                                </>
-                            ) : (
-                                <>(No partner)</>
-                            )}
+                            <ButtonGroup>
+                                <CreateOrUpdateButton
+                                    useText={true}
+                                    disabled={true}
+                                />
+                                <SealButton useText={true} disabled={true} />
+                                <DeleteButton useText={true} disabled={true} />
+                            </ButtonGroup>
                         </th>
-                        <th colSpan={2}>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <CreateCapsuleRow user={user} />
                     {user.authoredCapsules
-                        .sort((capsule) => Number(!capsule.partnershipId))
+                        .filter((capsule) => !capsule.partnershipId)
+                        .sort(compareCapsulesByCreatedAt)
                         .map((capsule) => (
                             <CapsuleRow
                                 key={capsule.id}
@@ -83,128 +96,64 @@ export function AuthoredCapsules({ user }: { user: UserWithPartnership }) {
     );
 }
 
+const compareCapsulesByCreatedAt = (a: CapsuleWithUsers, b: CapsuleWithUsers) =>
+    a.createdAt > b.createdAt ? 1 : -1;
+
 function CapsuleRow({
     capsule,
     user,
 }: {
-    capsule: CapsuleType;
-    user: UserWithPartnership;
+    capsule: CapsuleWithUsers;
+    user: UserWithPartnershipAndAuthoredCapsules;
 }) {
     const [editedCapsuleColor, setEditedCapsuleColor] = useState(capsule.color);
     const [editedCapsuleMessage, setEditedCapsuleMessage] = useState(
         capsule.message,
     );
-    const [editedCapsulePartnershipStatus, setEditedCapsulePartnershipStatus] =
-        useState(!!capsule.partnershipId);
     const [showColorPicker, setShowColorPicker] = useState(false);
-    const [submitting, setSubmitting] = useState(false);
 
     const dirty =
         editedCapsuleMessage !== capsule.message ||
-        editedCapsulePartnershipStatus !== !!capsule.partnershipId ||
         editedCapsuleColor !== capsule.color;
 
     const sealed = !capsule.open && !!capsule.partnershipId;
-    const canEdit = !sealed && dirty;
-    const editMessage = sealed ? 'Sealed!' : '';
-    useState(false);
+
     return (
         <tr>
             <td>
                 <Capsule
                     primary={editedCapsuleColor}
                     size={0.5}
-                    open={!sealed}
+                    open={true}
                     onClick={() => {
-                        if (sealed) {
-                            alert('This capsule is sealed!');
-                            return;
-                        }
                         setShowColorPicker(true);
                     }}
                 />
                 {/* {JSON.stringify(capsule, null, 2)} */}
             </td>
             <td>
-                {!sealed ? (
-                    <Form.Control
-                        as="textarea"
-                        rows={3}
-                        value={editedCapsuleMessage}
-                        onChange={(e) =>
-                            setEditedCapsuleMessage(e.target.value)
-                        }
-                        placeholder={`Edit: "${capsule.message}"`}
-                    />
-                ) : (
-                    <>...</>
-                )}
-            </td>
-            <td>
-                <CapsulePartneringButton
-                    user={user}
-                    capsule={capsule}
-                    editedCapsulePartnershipStatus={
-                        editedCapsulePartnershipStatus
-                    }
-                    setEditedCapsulePartnershipStatus={
-                        setEditedCapsulePartnershipStatus
-                    }
+                <Form.Control
+                    as="textarea"
+                    rows={3}
+                    value={editedCapsuleMessage}
+                    onChange={(e) => setEditedCapsuleMessage(e.target.value)}
+                    placeholder={`Edit: "${capsule.message}"`}
                 />
             </td>
             <td>
-                <Button
-                    variant="outline-secondary"
-                    disabled={!canEdit}
-                    onClick={() => {
-                        setSubmitting(true);
-                        const x = {
-                            capsule: capsule,
-                            color: editedCapsuleColor,
-                            message: editedCapsuleMessage,
-                            partnershipId: editedCapsulePartnershipStatus
-                                ? user.partnershipId
-                                : null,
-                        };
-                        console.log(x);
-                        updateCapsule(
-                            '/author',
-                            capsule,
-                            editedCapsuleColor,
-                            editedCapsuleMessage,
-                            editedCapsulePartnershipStatus
-                                ? user.partnershipId
-                                : null,
-                        )
-                            .then((response) => {
-                                setSubmitting(false);
-                                console.log('Updated capsule: ', capsule);
-                            })
-                            .catch((e) => {
-                                setSubmitting(false);
-                                console.error('Error updating capsule: ', e);
-                            });
-                    }}
-                >
-                    {editMessage}
-                    {!sealed && (
-                        <Capsule
-                            // marginAndPadding={0.1}
-                            // height={14}
-                            // width={28}
-                            // strokeWidth={0.5}
-                            size={0.4}
-                            primary={editedCapsuleColor}
-                            useRandColor={false}
-                            useRandRotate={!submitting}
-                            useRotateInterval={!submitting}
-                            useSpinner={submitting}
+                <ButtonGroup>
+                    {dirty && (
+                        <UpdateCapsuleButton
+                            capsule={capsule}
+                            color={editedCapsuleColor}
+                            message={editedCapsuleMessage}
                         />
                     )}
-                </Button>
-            </td>
-            <td>
-                <DeleteCapsuleButton capsule={capsule} />
+                    {!dirty && !!user.partnershipId && (
+                        <SealCapsuleButton capsule={capsule} />
+                    )}
+                    {!dirty && <DeleteCapsuleButton capsule={capsule} />}
+                </ButtonGroup>
             </td>
             <UpdateColorModal
                 color={editedCapsuleColor}
@@ -216,14 +165,70 @@ function CapsuleRow({
     );
 }
 
-function DeleteCapsuleButton({ capsule }: { capsule: CapsuleType }) {
+function SealCapsuleButton({ capsule }: { capsule: CapsuleWithUsers }) {
+    const [submitting, setSubmitting] = useState(false);
+    return (
+        <SealButton
+            onClick={() => {
+                setSubmitting(true);
+                sealCapsule('/author', capsule)
+                    .then((response) => {
+                        setSubmitting(false);
+                        console.log('Sealed capsule: ', capsule);
+                    })
+                    .catch((e) => {
+                        setSubmitting(false);
+                        console.error('Error sealing capsule: ', e);
+                    });
+            }}
+            submitting={submitting}
+        />
+    );
+}
+
+function UpdateCapsuleButton({
+    capsule,
+    color,
+    message,
+}: {
+    capsule: CapsuleWithUsers;
+    color: string;
+    message: string;
+}) {
+    const [submitting, setSubmitting] = useState(false);
+
+    return (
+        <CreateOrUpdateButton
+            onClick={() => {
+                setSubmitting(true);
+                const x = {
+                    capsule: capsule,
+                    color: color,
+                    message: message,
+                };
+                console.log(x);
+                updateCapsuleScalars('/author', capsule, color, message)
+                    .then((response) => {
+                        setSubmitting(false);
+                        console.log('Updated capsule: ', capsule);
+                    })
+                    .catch((e) => {
+                        setSubmitting(false);
+                        console.error('Error updating capsule: ', e);
+                    });
+            }}
+            submitting={submitting}
+        />
+    );
+}
+
+function DeleteCapsuleButton({ capsule }: { capsule: CapsuleWithUsers }) {
     const [submitting, setSubmitting] = useState(false);
     if (capsule.partnershipId) {
         return <></>;
     }
     return (
-        <Button
-            variant="outline-danger"
+        <DeleteButton
             onClick={() => {
                 if (
                     !window.confirm(
@@ -244,37 +249,24 @@ function DeleteCapsuleButton({ capsule }: { capsule: CapsuleType }) {
                         console.error('Error deleting capsule: ', e);
                     });
             }}
-        >
-            <Capsule
-                // marginAndPadding={0.1}
-                // height={14}
-                // width={28}
-                // strokeWidth={0.5}
-                size={0.4}
-                primary={'red'}
-                useRandColor={false}
-                useRandRotate={!submitting}
-                useRotateInterval={!submitting}
-                useSpinner={submitting}
-            />
-        </Button>
+            submitting={submitting}
+        />
     );
 }
 
-function CreateCapsuleRow({ user }: { user: UserWithPartnership }) {
+function CreateCapsuleRow({
+    user,
+}: {
+    user: UserWithPartnershipAndAuthoredCapsules;
+}) {
     const [newCapsuleColor, setNewCapsuleColor] = useState(randColor());
     const [newCapsuleMessage, setNewCapsuleMessage] = useState('');
-    const [newCapsuleAddToPartnership, setNewCapsuleAddToPartnership] =
-        useState(true);
     const [showColorPicker, setShowColorPicker] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [touched, setTouched] = useState(false);
 
     const partner = getPartnerFromUser(user);
 
-    useEffect(() => {
-        setNewCapsuleAddToPartnership(user.partnershipId ? true : false);
-    }, [user.partnershipId]);
     return (
         <>
             <tr>
@@ -307,7 +299,7 @@ function CreateCapsuleRow({ user }: { user: UserWithPartnership }) {
                         </Form.Control.Feedback>
                     </Form.Group>
                 </td>
-                <td>
+                {/* <td>
                     <Form.Check
                         type="checkbox"
                         label={partner ? `Seal & share?` : ''}
@@ -318,10 +310,10 @@ function CreateCapsuleRow({ user }: { user: UserWithPartnership }) {
                         }}
                         disabled={user.partnershipId ? false : true}
                     />
-                </td>
-                <td colSpan={2}>
-                    <Button
-                        variant="outline-success"
+                </td> */}
+                <td>
+                    <CreateCapsuleButton
+                        submitting={submitting}
                         onClick={() => {
                             setTouched(true);
                             if (newCapsuleMessage.length == 0) {
@@ -333,15 +325,11 @@ function CreateCapsuleRow({ user }: { user: UserWithPartnership }) {
                                 user,
                                 newCapsuleColor,
                                 newCapsuleMessage,
-                                newCapsuleAddToPartnership
-                                    ? user.partnershipId
-                                    : null,
                             )
                                 .then((response) => {
                                     setTouched(false);
                                     setSubmitting(false);
                                     console.log('Created capsule!');
-                                    setNewCapsuleAddToPartnership(true);
                                     setNewCapsuleColor(randColor());
                                     setNewCapsuleMessage('');
                                 })
@@ -354,20 +342,7 @@ function CreateCapsuleRow({ user }: { user: UserWithPartnership }) {
                                     );
                                 });
                         }}
-                    >
-                        <Capsule
-                            // marginAndPadding={0.1}
-                            // height={14}
-                            // width={28}
-                            // strokeWidth={0.5}
-                            size={0.4}
-                            primary={'green'}
-                            useRandColor={false}
-                            useRandRotate={!submitting}
-                            useRotateInterval={!submitting}
-                            useSpinner={submitting}
-                        />
-                    </Button>
+                    />
                 </td>
             </tr>
             <UpdateColorModal
@@ -378,6 +353,16 @@ function CreateCapsuleRow({ user }: { user: UserWithPartnership }) {
             />
         </>
     );
+}
+
+function CreateCapsuleButton({
+    onClick,
+    submitting,
+}: {
+    submitting: boolean;
+    onClick: any;
+}) {
+    return <CreateOrUpdateButton onClick={onClick} submitting={submitting} />;
 }
 
 function UpdateColorModal({
@@ -419,8 +404,8 @@ function CapsulePartneringButton({
     editedCapsulePartnershipStatus,
     setEditedCapsulePartnershipStatus,
 }: {
-    user: UserWithPartnership;
-    capsule: CapsuleType;
+    user: UserWithPartnershipAndAuthoredCapsules;
+    capsule: CapsuleWithUsers;
     editedCapsulePartnershipStatus: boolean;
     setEditedCapsulePartnershipStatus: any;
 }) {

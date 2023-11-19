@@ -9,7 +9,7 @@ import { Suspense } from 'react';
 import { CreatePartnerRequest } from '@/components/createPartnerRequest';
 import { AcceptPartnerRequest } from '@/components/acceptPartnerRequest';
 import { getPartnerFromUser } from '@/lib/db_utils';
-import { UserWithPartnership } from '@/lib/types';
+import { UserWithPartnershipAndAuthoredCapsules } from '@/lib/types';
 import '@/styles/partnerStyles.css';
 import { CancelPartnerRequest } from '@/components/CancelPartnerRequest';
 import { DeletePartnership } from '@/components/DeletePartnership';
@@ -42,7 +42,7 @@ async function UserPartner() {
     if (!email) {
         return <div>Not logged in!</div>;
     }
-    const user: UserWithPartnership | null =
+    const user: UserWithPartnershipAndAuthoredCapsules | null =
         await getUserWithPartnershipByEmail(email);
 
     // console.log('user', user);
@@ -66,7 +66,11 @@ async function UserPartner() {
     );
 }
 
-async function ShowPartner({ user }: { user: UserWithPartnership }) {
+async function ShowPartner({
+    user,
+}: {
+    user: UserWithPartnershipAndAuthoredCapsules;
+}) {
     const partner = getPartnerFromUser(user);
 
     if (!partner) {
@@ -109,7 +113,11 @@ async function ShowPartner({ user }: { user: UserWithPartnership }) {
     );
 }
 
-async function NoPartner({ user }: { user: UserWithPartnership }) {
+async function NoPartner({
+    user,
+}: {
+    user: UserWithPartnershipAndAuthoredCapsules;
+}) {
     const sendPartnerRequestWithUser = async (formData: FormData) => {
         'use server';
         return sendPartnerRequest(user, '/app/partner', formData);
@@ -130,7 +138,7 @@ async function NoPartner({ user }: { user: UserWithPartnership }) {
 async function IncomingPartnerRequests({
     user,
 }: {
-    user: UserWithPartnership;
+    user: UserWithPartnershipAndAuthoredCapsules;
 }) {
     const incomingPartnerRequests = await prisma.partnerRequest.findMany({
         where: {
@@ -165,7 +173,7 @@ async function IncomingPartnerRequest({
     user,
 }: {
     partnerRequest: any;
-    user: UserWithPartnership;
+    user: UserWithPartnershipAndAuthoredCapsules;
 }) {
     const acceptThisPartnerRequest = async () => {
         'use server';
@@ -200,7 +208,7 @@ async function IncomingPartnerRequest({
 async function OutgoingPartnerRequests({
     user,
 }: {
-    user: UserWithPartnership;
+    user: UserWithPartnershipAndAuthoredCapsules;
 }) {
     const outgoingPartnerRequests = await prisma.partnerRequest.findMany({
         where: {
@@ -233,7 +241,7 @@ function OutgoingPartnerRequest({
     user,
 }: {
     partnerRequest: any;
-    user: UserWithPartnership;
+    user: UserWithPartnershipAndAuthoredCapsules;
 }) {
     const cancelThisPartnerRequest = async () => {
         'use server';

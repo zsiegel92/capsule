@@ -6,52 +6,18 @@ import prisma from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
 
 import { palette, randColor, randRotate } from '@/lib/capsule_utils';
-import { UserWithPartnership } from '@/lib/types';
+import {
+    UserWithPartnershipAndAuthoredCapsules,
+    CapsuleWithUsers,
+} from '@/lib/types';
 import { getPartnerFromUser } from '@/lib/db_utils';
 // import { getUserWithPartnershipByEmail } from '@/lib/capsuleRelatedServerActions';
 
-export async function editCapsuleOpen(
-    path: string,
-    capsule: Capsule,
-    open: boolean = true,
-) {
-    prisma.capsule.update({
-        where: {
-            id: capsule.id,
-        },
-        data: {
-            open: true,
-            nTimesOpened: {
-                increment: open ? 1 : 0,
-            },
-            lastOpened: open ? new Date() : null,
-        },
-    });
-    revalidatePath(path);
-}
-
-export async function editCapsuleMessage(
-    path: string,
-    capsule: Capsule,
-    message: string,
-) {
-    prisma.capsule.update({
-        where: {
-            id: capsule.id,
-        },
-        data: {
-            message: message,
-        },
-    });
-    revalidatePath(path);
-}
-
 export async function createCapsule(
     path: string,
-    user: UserWithPartnership,
+    user: UserWithPartnershipAndAuthoredCapsules,
     color: string | null,
     message: string,
-    partnershipId: number | null,
 ) {
     const data = {
         message: message,
@@ -64,14 +30,14 @@ export async function createCapsule(
                 id: user.id,
             },
         },
-        ...(partnershipId && {
-            partnership: {
-                connect: {
-                    id: partnershipId,
-                },
-            },
-        }),
-        open: partnershipId == null, // "Seal & share"
+        // ...(partnershipId && {
+        //     partnership: {
+        //         connect: {
+        //             id: partnershipId,
+        //         },
+        //     },
+        // }),
+        open: true, //partnershipId == null, // "Seal & share"
     };
     const capsule = await prisma.capsule.create({
         data: data,
@@ -90,31 +56,60 @@ export async function deleteCapsule(path: string, capsule: Capsule) {
     revalidatePath(path);
 }
 
-export async function updateCapsule(
+export async function updateCapsuleScalars(
     path: string,
     capsule: Capsule,
     color: string | null,
     message: string,
-    partnershipId: number | null,
 ) {
-    let data: any = {};
-    data['partnershipId'] = partnershipId;
-    if (!!partnershipId) {
-        data['open'] = false; // If editing a capsule in a partnership, seal it! This should only happen in "Capsules", not "Author"
-    }
-    if (color) {
-        data['color'] = color;
-    }
-    if (message) {
-        data['message'] = message;
-    }
-
     const response = await prisma.capsule.update({
         where: {
             id: capsule.id,
         },
-        data: data,
+        data: { color: color, message: message },
     });
-    console.log('UPDATED WITH: ', data);
+    console.log('UPDATED WITH RESPONSE: ', response);
+    revalidatePath(path);
+}
+
+export async function updateCapsuleOpen(
+    path: string,
+    capsule: Capsule,
+    open: boolean = true,
+) {
+    const response = await prisma.capsule.update({
+        where: {
+            id: capsule.id,
+        },
+        data: {
+            open: true,
+            nTimesOpened: {
+                increment: open ? 1 : 0,
+            },
+            lastOpened: open ? new Date() : null,
+        },
+    });
+    console.log('UPDATED WITH RESPONSE: ', response);
+    revalidatePath(path);
+}
+
+export async function sealCapsule(path: string, capsule: CapsuleWithUsers) {
+    if (!capsule.author.partnershipId) {
+        throw new Error('Cannot seal a capsule without a partnership');
+    }
+    const response = await prisma.capsule.update({
+        where: {
+            id: capsule.id,
+        },
+        data: {
+            open: false,
+            partnership: {
+                connect: {
+                    id: capsule.author.partnershipId,
+                },
+            },
+        },
+    });
+    console.log('UPDATED WITH RESPONSE: ', response);
     revalidatePath(path);
 }
