@@ -44,7 +44,7 @@ export function CapsuleTodoList({
     }
     return (
         <>
-            <h2>Open Capsules</h2>
+            <h1>Open Capsules</h1>
             <Table striped hover>
                 <thead>
                     <tr>
