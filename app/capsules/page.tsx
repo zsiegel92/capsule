@@ -62,7 +62,6 @@ async function ShowPartnershipCapsules() {
     return (
         <>
             <div>
-                <h1>Partnership Capsules</h1>
                 <div>
                     <OpenCapsules capsules={sealedCapsules} user={user} />
                     <div>

@@ -44,7 +44,7 @@ export function CapsuleTodoList({
     }
     return (
         <>
-            <h3>Open Capsules</h3>
+            <h2>Open Capsules</h2>
             <Table striped hover>
                 <thead>
                     <tr>
@@ -117,6 +117,7 @@ export function OpenCapsules({
     }
     return (
         <>
+            <h1>Sealed Capsules</h1>
             {capsules.map((capsule) => (
                 <ShowCapsule key={capsule.id} capsule={capsule} user={user} />
             ))}
