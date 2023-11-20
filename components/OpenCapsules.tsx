@@ -92,9 +92,7 @@ function CapsuleTodoListRow({ capsule }: { capsule: CapsuleWithUsers }) {
                     onClickRotatingCapsule={() => setShowModal(true)}
                 />
                 <LowerRightIcon>
-                    <span style={{ margin: '10px', padding: '5px' }}>
-                        Opened by {capsule.openedBy!.firstName}
-                    </span>
+                    <span>Opened by {capsule.openedBy!.firstName}</span>
                 </LowerRightIcon>
             </td>
             <td>
@@ -233,7 +231,13 @@ function CapsuleMessageTable({
         </td>
     );
     return (
-        <table style={{ width: '100%' }}>
+        <table
+            style={{
+                width: '100%',
+                marginBottom: '3px',
+                paddingBottom: '3px',
+            }}
+        >
             <tbody>
                 <tr>
                     {!capsuleOnRight && capsuleTD}
