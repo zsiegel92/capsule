@@ -92,7 +92,7 @@ function CapsuleTodoListRow({ capsule }: { capsule: CapsuleWithUsers }) {
                     onClickRotatingCapsule={() => setShowModal(true)}
                 />
                 <LowerRightIcon>
-                    <span style={{ margin: '5px' }}>
+                    <span style={{ margin: '10px', padding: '5px' }}>
                         Opened by {capsule.openedBy!.firstName}
                     </span>
                 </LowerRightIcon>
