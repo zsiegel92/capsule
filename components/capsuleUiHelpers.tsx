@@ -186,11 +186,13 @@ export function UpdateCapsuleButton({
     color,
     message,
     path,
+    ...buttonProps
 }: {
     capsule: CapsuleWithUsers;
     color: string;
     message: string;
     path: string;
+    buttonProps: { [x: string]: any };
 }) {
     const [submitting, setSubmitting] = useState(false);
 
@@ -217,6 +219,7 @@ export function UpdateCapsuleButton({
                     });
             }}
             submitting={submitting}
+            {...buttonProps}
         />
     );
 }

@@ -198,7 +198,7 @@ function CapsuleRow({
             }
         }
     }, [dirty, editedCapsuleMessage, editedCapsuleColor, toastId, setToastId]);
-
+    const formInvalid = dirty && editedCapsuleMessage.length == 0;
     return (
         <tr>
             <td>
@@ -213,13 +213,21 @@ function CapsuleRow({
                 {/* {JSON.stringify(capsule, null, 2)} */}
             </td>
             <td>
-                <Form.Control
-                    as="textarea"
-                    rows={3}
-                    value={editedCapsuleMessage}
-                    onChange={(e) => setEditedCapsuleMessage(e.target.value)}
-                    placeholder={`Edit: "${capsule.message}"`}
-                />
+                <Form.Group className="position-relative mb-3">
+                    <Form.Control
+                        as="textarea"
+                        rows={3}
+                        value={editedCapsuleMessage}
+                        onChange={(e) => {
+                            setEditedCapsuleMessage(e.target.value);
+                        }}
+                        isInvalid={formInvalid}
+                        placeholder={`Edit: "${capsule.message}"`}
+                    />
+                    <Form.Control.Feedback type="invalid" tooltip>
+                        Please enter a message to save!
+                    </Form.Control.Feedback>
+                </Form.Group>
             </td>
             <td>
                 <ButtonGroup>
@@ -229,6 +237,8 @@ function CapsuleRow({
                             color={editedCapsuleColor}
                             message={editedCapsuleMessage}
                             path="/author"
+                            // @ts-ignore
+                            disabled={formInvalid}
                         />
                     )}
                     {!dirty && !!user.partnershipId && (
@@ -259,8 +269,6 @@ function CreateCapsuleRow({
     const [showColorPicker, setShowColorPicker] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [touched, setTouched] = useState(false);
-
-    const partner = getPartnerFromUser(user);
 
     return (
         <>

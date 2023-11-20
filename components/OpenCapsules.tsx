@@ -219,13 +219,13 @@ function CapsuleMessageTable({
     capsuleOnRight = true,
     capsuleSize = 1,
     onClickRotatingCapsule = () => {},
-    onClickTable = null,
+    onClickTable = undefined,
 }: {
     capsule: CapsuleWithUsers;
     capsuleOnRight?: boolean;
     capsuleSize?: number;
     onClickRotatingCapsule?: () => void;
-    onClickTable?: (() => void) | null;
+    onClickTable?: (() => void) | undefined;
 }) {
     const capsuleTD = (
         <td>
