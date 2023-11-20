@@ -31,6 +31,7 @@ import {
     DeleteCapsuleButton,
     CreateCapsuleButton,
 } from '@/components/capsuleUiHelpers';
+import { getPartnerFromUser } from '@/lib/db_utils';
 
 export function CapsuleTodoList({
     user,
@@ -44,9 +45,9 @@ export function CapsuleTodoList({
     }
     return (
         <>
-            <h1 className="mb-4 text-4xl leading-none tracking-tight text-gray-900 md:text-4xl lg:text-5xl">
+            <h2 className="mb-3 text-3xl leading-none tracking-tight text-gray-900 md:text-3xl lg:text-4xl">
                 Open Capsules
-            </h1>
+            </h2>
             <Table striped hover>
                 <thead>
                     <tr>
@@ -118,11 +119,15 @@ export function OpenCapsules({
     if (capsules.length === 0) {
         return <></>;
     }
+    const partner = getPartnerFromUser(user);
+    if (!partner) {
+        return <></>;
+    }
     return (
         <>
-            <h1 className="mb-4 text-4xl leading-none tracking-tight text-gray-900 md:text-4xl lg:text-5xl">
+            <h2 className="mb-3 text-3xl leading-none tracking-tight text-gray-900 md:text-3xl lg:text-4xl">
                 Sealed Capsules
-            </h1>
+            </h2>
             {capsules.map((capsule) => (
                 <ShowCapsule key={capsule.id} capsule={capsule} user={user} />
             ))}

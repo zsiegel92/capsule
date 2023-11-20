@@ -51,6 +51,14 @@ async function UserAuthoredCapsules() {
     const partnershipCapsules = user?.partnership?.capsules || [];
     return (
         <>
+            <h2 className="mb-3 text-3xl leading-none tracking-tight text-gray-900 md:text-3xl lg:text-4xl">
+                Author Capsules
+            </h2>
+            {partner && (
+                <h3 className="mb-2 text-2xl leading-none tracking-tight text-gray-900 md:text-2xl lg:text-3xl">
+                    Seal a capsule to share it with {partner.firstName}!
+                </h3>
+            )}
             <AuthoredCapsules user={user} />{' '}
         </>
     );

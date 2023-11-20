@@ -74,7 +74,7 @@ export const acceptPartnerRequest = async (
             message: `Accepted partner request to '${partnerRequest.toEmail}'!`,
         };
     } catch (e: any) {
-        throw new Error(`Error accepting partner request: '${e?.message}'.`);
+        throw new Error(e.message);
         // return { message: `Error cancelling partner request: '${e?.message}'.` }
     }
 };
@@ -98,7 +98,7 @@ export const deletePartnership = async (
         revalidatePath(path);
         return { message: `Deleted partnership with '${partner.firstName}'!` };
     } catch (e: any) {
-        throw new Error(`Error deleting partnership: '${e?.message}'.`);
+        throw new Error(e.message);
         // return { message: `Error cancelling partner request: '${e?.message}'.` }
     }
 };
@@ -120,7 +120,7 @@ export const cancelPartnerRequest = async (
             message: `Deleted partner request to '${partnerRequest.toEmail}'!`,
         };
     } catch (e: any) {
-        throw new Error(`Error cancelling partner request: '${e?.message}'.`);
+        throw new Error(e.message);
         // return { message: `Error cancelling partner request: '${e?.message}'.` }
     }
 };
@@ -155,7 +155,7 @@ export const sendPartnerRequest = async (
                 message: `You have already sent a partner request to '${email}'!`,
             };
         } else {
-            throw new Error(`Error sending partner request: '${e?.message}'.`);
+            throw new Error(e.message);
         }
     }
 };

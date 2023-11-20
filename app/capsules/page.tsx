@@ -49,14 +49,15 @@ async function ShowPartnershipCapsules() {
     if (!user) {
         return <div>Not logged in!</div>;
     }
-    if (!user.partner) {
+    const partner = getPartnerFromUser(user);
+    if (!partner) {
         // redirect('/author');
         return <div>Without a partnership, you can only author capsules!</div>;
     }
     // const authoredCapsules = user.authoredCapsules;
 
     // const partnership = user.partnership;
-    // const partner = getPartnerFromUser(user);
+
     const partnershipCapsules = shuffleArray(user?.partnership?.capsules || []);
     const sealedCapsules = partnershipCapsules.filter(
         (capsule) => !capsule.open,
@@ -64,8 +65,12 @@ async function ShowPartnershipCapsules() {
     const unSealedCapsules = partnershipCapsules.filter(
         (capsule) => capsule.open,
     );
+
     return (
         <div>
+            <h1 className="mb-4 text-4xl leading-none tracking-tight text-gray-900 md:text-4xl lg:text-5xl">
+                Capsules Shared by you and {partner.firstName}{' '}
+            </h1>
             <div>
                 <OpenCapsules capsules={sealedCapsules} user={user} />
                 <div>
