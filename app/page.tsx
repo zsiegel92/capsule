@@ -23,7 +23,9 @@ async function UserHome() {
     }
     return (
         <div>
-            <h1>Welcome to CAPSULE, {session?.user.email}</h1>
+            <h1 className="mb-4 text-4xl leading-none tracking-tight text-gray-900 md:text-4xl lg:text-5xl">
+                Welcome to CAPSULE, {session?.user.email}
+            </h1>
             {/* <CapsuleServerGrid n={100} /> */}
             <div
                 style={{

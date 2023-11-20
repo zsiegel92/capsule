@@ -10,6 +10,7 @@ import { CreatePartnerRequest } from '@/components/createPartnerRequest';
 import { AcceptPartnerRequest } from '@/components/acceptPartnerRequest';
 import { getPartnerFromUser } from '@/lib/db_utils';
 import '@/styles/partnerStyles.css';
+import '@/styles/globals.css';
 import { CancelPartnerRequest } from '@/components/CancelPartnerRequest';
 import { DeletePartnership } from '@/components/DeletePartnership';
 import { Capsule } from '@/components/capsule';
@@ -63,19 +64,14 @@ async function ShowPartnershipCapsules() {
         `Showing ${sealedCapsules.length} sealed capsules and ${unSealedCapsules.length} unsealed capsules`,
     );
     return (
-        <>
+        <div>
             <div>
+                <OpenCapsules capsules={sealedCapsules} user={user} />
                 <div>
-                    <OpenCapsules capsules={sealedCapsules} user={user} />
-                    <div>
-                        <CapsuleTodoList
-                            capsules={unSealedCapsules}
-                            user={user}
-                        />
-                    </div>
+                    <CapsuleTodoList capsules={unSealedCapsules} user={user} />
                 </div>
             </div>
-        </>
+        </div>
     );
 }
 
