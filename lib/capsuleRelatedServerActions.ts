@@ -62,11 +62,15 @@ export async function updateCapsuleScalars(
     color: string | null,
     message: string,
 ) {
+    const data: any = {
+        message: message,
+        ...(!!color && { color: color }),
+    };
     const response = await prisma.capsule.update({
         where: {
             id: capsule.id,
         },
-        data: { color: color, message: message },
+        data: data,
     });
     console.log('UPDATED WITH RESPONSE: ', response);
     revalidatePath(path);
@@ -75,7 +79,9 @@ export async function updateCapsuleScalars(
 export async function updateCapsuleOpen(
     path: string,
     capsule: Capsule,
+    user: UserWithPartnershipAndAuthoredCapsules,
     open: boolean = true,
+    revalidate: boolean = true,
 ) {
     const response = await prisma.capsule.update({
         where: {
@@ -87,10 +93,17 @@ export async function updateCapsuleOpen(
                 increment: open ? 1 : 0,
             },
             lastOpened: open ? new Date() : null,
+            openedBy: {
+                connect: {
+                    id: user.id,
+                },
+            },
         },
     });
     console.log('UPDATED WITH RESPONSE: ', response);
-    revalidatePath(path);
+    if (revalidate) {
+        revalidatePath(path);
+    }
 }
 
 export async function sealCapsule(path: string, capsule: CapsuleWithUsers) {

@@ -19,7 +19,6 @@ export function CapsuleSpinner({ size = 0.4 }: { size?: number }) {
     );
 }
 
-const EXTRA_HOVER_SEPARATION_OFFSET = 2;
 
 export function Capsule({
     primary = palette[0],
@@ -31,8 +30,10 @@ export function Capsule({
     useRandRotate = false,
     useRotateInterval = true,
     useSpinner = false,
+    spinnerSlow = false,
     open = false,
     onClick = (e) => {},
+    hoverSeparationOffset = 2, // Make it negative to open less than the default
 }: {
     primary?: string;
     secondary?: string;
@@ -43,8 +44,10 @@ export function Capsule({
     useRandRotate?: boolean;
     useRotateInterval?: boolean;
     useSpinner?: boolean;
+    spinnerSlow?: boolean;
     open?: boolean;
     onClick?: MouseEventHandler<SVGAElement>;
+    hoverSeparationOffset?: number;
 }) {
     const [primaryColor, setPrimaryColor] = useState(
         useRandColor ? randColor() : primary,
@@ -79,11 +82,15 @@ export function Capsule({
                 height: `${height + 2 * marginAndPadding}px`,
                 display: 'inline-block',
             }}
-            onMouseEnter={() =>
-                setHoverOpenOffset(EXTRA_HOVER_SEPARATION_OFFSET)
-            }
+            onMouseEnter={() => setHoverOpenOffset(hoverSeparationOffset)}
             onMouseLeave={() => setHoverOpenOffset(0)}
-            className={`capsuleParent ${useSpinner ? 'capsuleSpinner' : ''}`}
+            className={`capsuleParent ${
+                useSpinner
+                    ? spinnerSlow
+                        ? 'capsuleSpinnerSlow'
+                        : 'capsuleSpinner'
+                    : ''
+            }`}
             suppressHydrationWarning
         >
             <div

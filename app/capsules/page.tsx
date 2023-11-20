@@ -13,7 +13,7 @@ import '@/styles/partnerStyles.css';
 import { CancelPartnerRequest } from '@/components/CancelPartnerRequest';
 import { DeletePartnership } from '@/components/DeletePartnership';
 import { Capsule } from '@/components/capsule';
-import { CapsuleServer, CapsuleServerGrid } from '@/components/capsule_server';
+import { CapsuleServer } from '@/components/capsule_server';
 import {
     sendPartnerRequest,
     cancelPartnerRequest,
@@ -21,10 +21,21 @@ import {
     getUserWithPartnershipByEmail,
     deletePartnership,
 } from '@/lib/partnerRequestServerActions';
+import { shuffleArray } from '@/lib/utils';
+
+import { OpenCapsules, CapsuleTodoList } from '@/components/OpenCapsules';
 
 import {} from '@/lib/capsuleRelatedServerActions';
 
 export default async function Connect({}: {}) {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <ShowPartnershipCapsules />
+        </Suspense>
+    );
+}
+
+async function ShowPartnershipCapsules() {
     const session = await getServerSession();
     const email = session?.user?.email;
     if (!email) {
@@ -37,34 +48,37 @@ export default async function Connect({}: {}) {
         return <div>Not logged in!</div>;
     }
 
-    const authoredCapsules = user.authoredCapsules;
+    // const authoredCapsules = user.authoredCapsules;
 
-    const partnership = user.partnership;
-    const partner = getPartnerFromUser(user);
-    const partnershipCapsules = user?.partnership?.capsules || [];
-
+    // const partnership = user.partnership;
+    // const partner = getPartnerFromUser(user);
+    const partnershipCapsules = shuffleArray(user?.partnership?.capsules || []);
+    const sealedCapsules = partnershipCapsules.filter(
+        (capsule) => !capsule.open,
+    );
+    const unSealedCapsules = partnershipCapsules.filter(
+        (capsule) => capsule.open,
+    );
     return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <h3>
-                <pre>user</pre>
-            </h3>
-            <pre>{JSON.stringify(user, null, 2)}</pre>
-            <h3>
-                <pre>partnership</pre>
-            </h3>
-            <pre>{JSON.stringify(partnership, null, 2)}</pre>
-            <h3>
-                <pre>partner</pre>
-            </h3>
-            <pre>{JSON.stringify(partner, null, 2)}</pre>
-            <h3>
-                <pre>authoredCapsules</pre>
-            </h3>
-            <pre>{JSON.stringify(authoredCapsules, null, 2)}</pre>
-            <h3>
-                <pre>partnershipCapsules</pre>
-            </h3>
-            <pre>{JSON.stringify(partnershipCapsules, null, 2)}</pre>
-        </Suspense>
+        <>
+            <div style={{ padding: '20px' }} className="partnership-capsules">
+                <h1 className="partnership-capsules-header">
+                    Partnership Capsules
+                </h1>
+                <div
+                    style={{ padding: '10px' }}
+                    className="partnership-capsules-container"
+                >
+                    <OpenCapsules capsules={sealedCapsules} user={user} />
+                    <div style={{ padding: '50px' }}>
+                        <CapsuleTodoList
+                            capsules={unSealedCapsules}
+                            user={user}
+                        />
+                    </div>
+                </div>
+            </div>
+        </>
     );
 }
+

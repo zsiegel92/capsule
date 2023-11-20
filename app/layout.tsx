@@ -45,40 +45,18 @@ export default async function RootLayout({
             <body className={inter.variable}>
                 <NavBar session={session} />
 
-                <Toaster
-                    position="bottom-left"
-                    // toastOptions={{
-                    //   success: {
-                    //     // iconTheme: {
-                    //     //   primary: 'green',
-                    //     //   secondary: 'green',
-                    //     // },
-                    //     style: {
-                    //       // background: 'green',
-                    //       border: '10px solid green',
-                    //     },
-                    //   },
-                    //   error: {
-                    //     // iconTheme: {
-                    //     //   primary: 'red',
-                    //     //   secondary: 'red',
-                    //     // },
-                    //     style: {
-                    //       // background: 'red',
-                    //       border: '10px solid red',
-                    //     },
-                    //   },
-                    // }}
-                />
+                <Toaster position="bottom-left" />
+                <div
+                    style={{
+                        minHeight: 'calc(100vh - 95px)',
+                    }}
+                >
+                    {children}
+                </div>
+                <Analytics />
                 <Suspense fallback="Loading...">
                     <AuthStatus />
                 </Suspense>
-                {/* <div style={{
-          paddingLeft: '15%',
-          paddingRight: '15%'
-        }}> */}
-                {children}
-                <Analytics />
             </body>
         </html>
     );

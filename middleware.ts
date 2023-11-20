@@ -1,7 +1,7 @@
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
-const PROTECTED_ROUTES = ["/partner", '/']
+const PROTECTED_ROUTES = ['/partner', '/', '/author', 'capsules'];
 // const UNPROTECTED_ROUTES = ['/', '/login', '/register']
 
 const PROTECTED_ROUTES_SET = new Set(PROTECTED_ROUTES)

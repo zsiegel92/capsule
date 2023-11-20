@@ -48,6 +48,11 @@ import {
     CapsuleOrTextButton,
     CapsuleForButton,
     SealButton,
+    compareCapsulesByCreatedAt,
+    UpdateCapsuleButton,
+    SealCapsuleButton,
+    DeleteCapsuleButton,
+    CreateCapsuleButton,
 } from '@/components/capsuleUiHelpers';
 
 export function AuthoredCapsules({
@@ -97,8 +102,38 @@ export function AuthoredCapsules({
     );
 }
 
-const compareCapsulesByCreatedAt = (a: CapsuleWithUsers, b: CapsuleWithUsers) =>
-    a.createdAt < b.createdAt ? 1 : -1;
+function UpdateColorModal({
+    color,
+    setColor,
+    show,
+    setShow,
+}: {
+    color: string;
+    setColor: any;
+    show: boolean;
+    setShow: any;
+}) {
+    return (
+        <Modal show={show} onHide={() => setShow(false)}>
+            <Modal.Header closeButton>
+                <Modal.Title>Update Color</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                {palette.map((newColor) => (
+                    <div
+                        key={newColor}
+                        onClick={() => {
+                            setColor(newColor);
+                            setShow(false);
+                        }}
+                    >
+                        <Capsule primary={newColor} size={0.5} open={true} />
+                    </div>
+                ))}
+            </Modal.Body>
+        </Modal>
+    );
+}
 
 function CapsuleRow({
     capsule,
@@ -163,7 +198,6 @@ function CapsuleRow({
             }
         }
     }, [dirty, editedCapsuleMessage, editedCapsuleColor, toastId, setToastId]);
-    const sealed = !capsule.open && !!capsule.partnershipId;
 
     return (
         <tr>
@@ -194,12 +228,15 @@ function CapsuleRow({
                             capsule={capsule}
                             color={editedCapsuleColor}
                             message={editedCapsuleMessage}
+                            path="/author"
                         />
                     )}
                     {!dirty && !!user.partnershipId && (
-                        <SealCapsuleButton capsule={capsule} />
+                        <SealCapsuleButton capsule={capsule} path="/author" />
                     )}
-                    {!dirty && <DeleteCapsuleButton capsule={capsule} />}
+                    {!dirty && (
+                        <DeleteCapsuleButton capsule={capsule} path="/author" />
+                    )}
                 </ButtonGroup>
             </td>
             <UpdateColorModal
@@ -209,101 +246,6 @@ function CapsuleRow({
                 setShow={setShowColorPicker}
             />
         </tr>
-    );
-}
-
-function SealCapsuleButton({ capsule }: { capsule: CapsuleWithUsers }) {
-    const [submitting, setSubmitting] = useState(false);
-    return (
-        <SealButton
-            onClick={() => {
-                setSubmitting(true);
-                sealCapsule('/author', capsule)
-                    .then((response) => {
-                        setSubmitting(false);
-                        console.log('Sealed capsule: ', capsule);
-                        toast.success(
-                            'Sealed capsule! Visit "Capsules" to interact with it.',
-                        );
-                    })
-                    .catch((e) => {
-                        setSubmitting(false);
-                        console.error('Error sealing capsule: ', e);
-                        toast.error('Error sealing capsule');
-                    });
-            }}
-            submitting={submitting}
-        />
-    );
-}
-
-function UpdateCapsuleButton({
-    capsule,
-    color,
-    message,
-}: {
-    capsule: CapsuleWithUsers;
-    color: string;
-    message: string;
-}) {
-    const [submitting, setSubmitting] = useState(false);
-
-    return (
-        <CreateOrUpdateButton
-            onClick={() => {
-                setSubmitting(true);
-                const x = {
-                    capsule: capsule,
-                    color: color,
-                    message: message,
-                };
-                console.log(x);
-                updateCapsuleScalars('/author', capsule, color, message)
-                    .then((response) => {
-                        setSubmitting(false);
-                        console.log('Updated capsule: ', capsule);
-                        toast.success('Updated capsule!');
-                    })
-                    .catch((e) => {
-                        setSubmitting(false);
-                        console.error('Error updating capsule: ', e);
-                        toast.error('Error updating capsule');
-                    });
-            }}
-            submitting={submitting}
-        />
-    );
-}
-
-function DeleteCapsuleButton({ capsule }: { capsule: CapsuleWithUsers }) {
-    const [submitting, setSubmitting] = useState(false);
-    if (capsule.partnershipId) {
-        return <></>;
-    }
-    return (
-        <DeleteButton
-            onClick={() => {
-                if (
-                    !window.confirm(
-                        'Are you sure you want to delete this capsule?',
-                    )
-                ) {
-                    return;
-                }
-                setSubmitting(true);
-                deleteCapsule('/author', capsule)
-                    .then((response) => {
-                        console.log('DELETED CAPSULE!');
-                        setSubmitting(false);
-                        toast.success('Deleted capsule!');
-                    })
-                    .catch((e) => {
-                        console.error('Error deleting capsule: ', e);
-                        toast.error('Error deleting capsule');
-                    });
-            }}
-            submitting={submitting}
-        />
     );
 }
 
@@ -395,48 +337,5 @@ function CreateCapsuleRow({
                 setShow={setShowColorPicker}
             />
         </>
-    );
-}
-
-function CreateCapsuleButton({
-    onClick,
-    submitting,
-}: {
-    submitting: boolean;
-    onClick: any;
-}) {
-    return <CreateOrUpdateButton onClick={onClick} submitting={submitting} />;
-}
-
-function UpdateColorModal({
-    color,
-    setColor,
-    show,
-    setShow,
-}: {
-    color: string;
-    setColor: any;
-    show: boolean;
-    setShow: any;
-}) {
-    return (
-        <Modal show={show} onHide={() => setShow(false)}>
-            <Modal.Header closeButton>
-                <Modal.Title>Update Color</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                {palette.map((newColor) => (
-                    <div
-                        key={newColor}
-                        onClick={() => {
-                            setColor(newColor);
-                            setShow(false);
-                        }}
-                    >
-                        <Capsule primary={newColor} size={0.5} open={true} />
-                    </div>
-                ))}
-            </Modal.Body>
-        </Modal>
     );
 }
