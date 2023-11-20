@@ -265,19 +265,11 @@ export function DeleteCapsuleButton({
 export function CreateCapsuleButton({
     onClick,
     submitting,
-    ...buttonProps
 }: {
     submitting: boolean;
     onClick: any;
-    buttonProps: { [x: string]: any };
 }) {
-    return (
-        <CreateOrUpdateButton
-            onClick={onClick}
-            submitting={submitting}
-            {...buttonProps}
-        />
-    );
+    return <CreateOrUpdateButton onClick={onClick} submitting={submitting} />;
 }
 
 export function SealCapsuleButton({

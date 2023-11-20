@@ -335,8 +335,7 @@ function CreateCapsuleRow({
                                     toast.error('Error creating capsule');
                                 });
                         }}
-                        // @ts-ignore
-                        disabled={formInvalid}
+                        // disabled={formInvalid} // This is actually more confusing because it prevents the button click from showing validation warnings
                     />
                 </td>
             </tr>
