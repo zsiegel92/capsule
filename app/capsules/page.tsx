@@ -60,9 +60,6 @@ async function ShowPartnershipCapsules() {
     const unSealedCapsules = partnershipCapsules.filter(
         (capsule) => capsule.open,
     );
-    console.log(
-        `Showing ${sealedCapsules.length} sealed capsules and ${unSealedCapsules.length} unsealed capsules`,
-    );
     return (
         <div>
             <div>

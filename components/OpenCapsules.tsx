@@ -89,7 +89,7 @@ function CapsuleTodoListRow({ capsule }: { capsule: CapsuleWithUsers }) {
                     capsule={capsule}
                     capsuleOnRight={false}
                     capsuleSize={0.75}
-                    onClickRotatingCapsule={() => setShowModal(true)}
+                    onClickTable={() => setShowModal(true)}
                 />
                 <LowerRightIcon>
                     <span>Opened by {capsule.openedBy!.firstName}</span>
@@ -102,6 +102,7 @@ function CapsuleTodoListRow({ capsule }: { capsule: CapsuleWithUsers }) {
                 capsule={capsule}
                 show={showModal}
                 setShow={setShowModal}
+                refreshOnClose={false}
             />
         </tr>
     );
@@ -171,10 +172,12 @@ function OpenCapsuleModal({
     capsule,
     show,
     setShow,
+    refreshOnClose = true,
 }: {
     capsule: CapsuleWithUsers;
     show: boolean;
     setShow: any;
+    refreshOnClose?: boolean;
 }) {
     const router = useRouter();
     return (
@@ -182,7 +185,9 @@ function OpenCapsuleModal({
             show={show}
             onHide={() => {
                 setShow(false);
-                router.refresh();
+                if (refreshOnClose) {
+                    router.refresh();
+                }
             }}
         >
             <Modal.Header closeButton>
@@ -209,11 +214,13 @@ function CapsuleMessageTable({
     capsuleOnRight = true,
     capsuleSize = 1,
     onClickRotatingCapsule = () => {},
+    onClickTable = null,
 }: {
     capsule: CapsuleWithUsers;
     capsuleOnRight?: boolean;
     capsuleSize?: number;
     onClickRotatingCapsule?: () => void;
+    onClickTable?: (() => void) | null;
 }) {
     const capsuleTD = (
         <td>
@@ -236,7 +243,9 @@ function CapsuleMessageTable({
                 width: '100%',
                 marginBottom: '12px',
                 // paddingBottom: '3px',
+                ...(!!onClickTable && { cursor: 'pointer' }),
             }}
+            onClick={onClickTable}
         >
             <tbody>
                 <tr>
