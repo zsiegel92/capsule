@@ -27,6 +27,7 @@ import { shuffleArray } from '@/lib/utils';
 import { OpenCapsules, CapsuleTodoList } from '@/components/OpenCapsules';
 
 import {} from '@/lib/capsuleRelatedServerActions';
+import { redirect } from 'next/navigation';
 
 export default async function Connect({}: {}) {
     return (
@@ -48,7 +49,10 @@ async function ShowPartnershipCapsules() {
     if (!user) {
         return <div>Not logged in!</div>;
     }
-
+    if (!user.partner) {
+        // redirect('/author');
+        return <div>Without a partnership, you can only author capsules!</div>;
+    }
     // const authoredCapsules = user.authoredCapsules;
 
     // const partnership = user.partnership;
