@@ -234,8 +234,8 @@ function CapsuleMessageTable({
         <table
             style={{
                 width: '100%',
-                marginBottom: '3px',
-                paddingBottom: '3px',
+                marginBottom: '12px',
+                // paddingBottom: '3px',
             }}
         >
             <tbody>
