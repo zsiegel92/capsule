@@ -269,7 +269,7 @@ function CreateCapsuleRow({
     const [showColorPicker, setShowColorPicker] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [touched, setTouched] = useState(false);
-
+    const formInvalid = newCapsuleMessage.length == 0;
     return (
         <>
             <tr>
@@ -294,7 +294,7 @@ function CreateCapsuleRow({
                                 setTouched(true);
                                 setNewCapsuleMessage(e.target.value);
                             }}
-                            isInvalid={touched && newCapsuleMessage.length == 0}
+                            isInvalid={touched && formInvalid}
                             placeholder="New message :)"
                         />
                         <Form.Control.Feedback type="invalid" tooltip>
@@ -335,6 +335,8 @@ function CreateCapsuleRow({
                                     toast.error('Error creating capsule');
                                 });
                         }}
+                        // @ts-ignore
+                        disabled={formInvalid}
                     />
                 </td>
             </tr>
