@@ -49,7 +49,6 @@ export function CapsuleTodoList({
                 <thead>
                     <tr>
                         <th>Capsule</th>
-                        <th>Opened</th>
                         <th>
                             <ButtonGroup size="sm">
                                 {/* <CreateOrUpdateButton
@@ -79,15 +78,21 @@ function CapsuleTodoListRow({ capsule }: { capsule: CapsuleWithUsers }) {
     const [showModal, setShowModal] = useState(false);
     return (
         <tr key={capsule.id}>
-            <td>
+            <td
+                style={{
+                    position: 'relative',
+                }}
+            >
                 <CapsuleMessageTable
                     capsule={capsule}
                     capsuleOnRight={false}
                     capsuleSize={0.75}
                     onClickRotatingCapsule={() => setShowModal(true)}
                 />
+                <LowerRightIcon>
+                    <span>Opened by {capsule.openedBy!.firstName}</span>
+                </LowerRightIcon>
             </td>
-            <td>{capsule.openedBy!.firstName}</td>
             <td>
                 <SealCapsuleButton path="/capsules" capsule={capsule} />
             </td>

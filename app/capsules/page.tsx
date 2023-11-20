@@ -61,16 +61,11 @@ async function ShowPartnershipCapsules() {
     );
     return (
         <>
-            <div style={{ padding: '20px' }} className="partnership-capsules">
-                <h1 className="partnership-capsules-header">
-                    Partnership Capsules
-                </h1>
-                <div
-                    style={{ padding: '10px' }}
-                    className="partnership-capsules-container"
-                >
+            <div>
+                <h1>Partnership Capsules</h1>
+                <div>
                     <OpenCapsules capsules={sealedCapsules} user={user} />
-                    <div style={{ padding: '50px' }}>
+                    <div>
                         <CapsuleTodoList
                             capsules={unSealedCapsules}
                             user={user}
