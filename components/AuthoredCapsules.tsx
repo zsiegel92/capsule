@@ -20,6 +20,7 @@ import {
 import { Spinner } from 'react-bootstrap';
 
 import '@/styles/partnerStyles.css';
+import '@/styles/globals.css';
 import LoadingDots from '@/components/loading-dots';
 import { Capsule, CapsuleSpinner } from '@/components/capsule';
 import { wait } from '@/lib/wait';
@@ -86,6 +87,13 @@ export function AuthoredCapsules({
                 </thead>
                 <tbody>
                     <CreateCapsuleRow user={user} />
+                    <tr>
+                        <td colSpan={3} style={{ textAlign: 'center' }}>
+                            <b>
+                                <i>Edit</i>
+                            </b>
+                        </td>
+                    </tr>
                     {user.authoredCapsules
                         .filter((capsule) => !capsule.partnershipId)
                         .sort(compareCapsulesByCreatedAt)
@@ -200,7 +208,7 @@ function CapsuleRow({
     }, [dirty, editedCapsuleMessage, editedCapsuleColor, toastId, setToastId]);
     const formInvalid = dirty && editedCapsuleMessage.length == 0;
     return (
-        <tr>
+        <tr className="capsule-row">
             <td>
                 <Capsule
                     primary={editedCapsuleColor}

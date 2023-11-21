@@ -253,7 +253,7 @@ function CapsuleMessageTable({
             onClick={onClickTable}
         >
             <tbody>
-                <tr>
+                <tr className="capsule-row">
                     {!capsuleOnRight && capsuleTD}
                     <td style={{ width: '75%' }}>
                         <blockquote>

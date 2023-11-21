@@ -23,3 +23,34 @@ body {
 		background-attachment: fixed;
 	}
 }
+.grow-spin {
+	/* transition: all 0.1s ease-in-out 0s; */
+	animation: growSpinAnimation 0.5s;
+}
+
+@keyframes growSpinAnimation {
+	from {
+		transform: scale(0) rotate(0.5turn);
+	}
+
+	to {
+		transform: scale(1) rotate(0);
+
+	}
+}
+
+.capsule-row {
+	animation: slideRowAnimation 0.25s;
+	transition: all .5s ease-in;
+}
+
+@keyframes slideRowAnimation {
+	from {
+		transform: scale(0.5);
+	}
+
+	to {
+		transform: scale(1);
+
+	}
+}

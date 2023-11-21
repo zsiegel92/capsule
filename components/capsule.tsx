@@ -84,7 +84,7 @@ export function Capsule({
             }}
             onMouseEnter={() => setHoverOpenOffset(hoverSeparationOffset)}
             onMouseLeave={() => setHoverOpenOffset(0)}
-            className={`capsuleParent ${
+            className={`grow-spin capsuleParent ${
                 useSpinner
                     ? spinnerSlow
                         ? 'capsuleSpinnerSlow'
