@@ -65,7 +65,9 @@ export function AuthoredCapsules({
     // const nonAuthoredCapsulesInPartnership = user.partnership?.capsules.filter(
     //     (capsule) => capsule.authorId !== user.id,
     // );
-
+    const editableCapsules = user.authoredCapsules
+        .filter((capsule) => !capsule.partnershipId)
+        .sort(compareCapsulesByCreatedAt);
     return (
         <>
             <Table striped hover>
@@ -87,23 +89,22 @@ export function AuthoredCapsules({
                 </thead>
                 <tbody>
                     <CreateCapsuleRow user={user} />
-                    <tr>
-                        <td colSpan={3} style={{ textAlign: 'center' }}>
-                            <b>
-                                <i>Edit</i>
-                            </b>
-                        </td>
-                    </tr>
-                    {user.authoredCapsules
-                        .filter((capsule) => !capsule.partnershipId)
-                        .sort(compareCapsulesByCreatedAt)
-                        .map((capsule) => (
-                            <CapsuleRow
-                                key={capsule.id}
-                                capsule={capsule}
-                                user={user}
-                            />
-                        ))}
+                    {editableCapsules.length > 0 && (
+                        <tr>
+                            <td colSpan={3} style={{ textAlign: 'center' }}>
+                                <b>
+                                    <i>Edit</i>
+                                </b>
+                            </td>
+                        </tr>
+                    )}
+                    {editableCapsules.map((capsule) => (
+                        <CapsuleRow
+                            key={capsule.id}
+                            capsule={capsule}
+                            user={user}
+                        />
+                    ))}
                 </tbody>
             </Table>
         </>
