@@ -59,14 +59,8 @@ async function ShowPartnershipCapsules() {
 
     // const partnership = user.partnership;
 
-    const partnershipCapsules = shuffleArray(user?.partnership?.capsules || []);
-    const sealedCapsules = partnershipCapsules.filter(
-        (capsule) => !capsule.open,
-    );
-    const unSealedCapsules = partnershipCapsules.filter(
-        (capsule) => capsule.open,
-    );
-    if (sealedCapsules.length === 0 && unSealedCapsules.length === 0) {
+    const partnershipCapsules = user?.partnership?.capsules || [];
+    if (partnershipCapsules.length === 0) {
         return (
             <div
                 style={{
@@ -74,11 +68,24 @@ async function ShowPartnershipCapsules() {
                     padding: '50px',
                 }}
             >
-                <Link href="/author">Author capsules</Link>, then interact with
-                them here!
+                <Link
+                    className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+                    href="/author"
+                >
+                    Author capsules
+                </Link>{' '}
+                then interact with them here!
             </div>
         );
     }
+
+    const sealedCapsules = shuffleArray(
+        partnershipCapsules.filter((capsule) => !capsule.open),
+    );
+    const unSealedCapsules = partnershipCapsules.filter(
+        (capsule) => capsule.open,
+    );
+   
     return (
         <div>
             <h1 className="mb-4 text-4xl leading-none tracking-tight text-gray-900 md:text-4xl lg:text-5xl">
