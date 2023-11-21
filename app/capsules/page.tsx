@@ -5,6 +5,7 @@ import { User } from '@prisma/client';
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { Suspense } from 'react';
+import Link from 'next/link';
 
 import { CreatePartnerRequest } from '@/components/createPartnerRequest';
 import { AcceptPartnerRequest } from '@/components/acceptPartnerRequest';
@@ -65,7 +66,19 @@ async function ShowPartnershipCapsules() {
     const unSealedCapsules = partnershipCapsules.filter(
         (capsule) => capsule.open,
     );
-
+    if (sealedCapsules.length === 0 && unSealedCapsules.length === 0) {
+        return (
+            <div
+                style={{
+                    margin: '50px',
+                    padding: '50px',
+                }}
+            >
+                <Link href="/author">Author capsules</Link>, then interact with
+                them here!
+            </div>
+        );
+    }
     return (
         <div>
             <h1 className="mb-4 text-4xl leading-none tracking-tight text-gray-900 md:text-4xl lg:text-5xl">
