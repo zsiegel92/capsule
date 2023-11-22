@@ -68,7 +68,7 @@ export function Capsule({
 
     useInterval(() => {
         // setIntervalRotated(!intervalRotated);
-        setIntervalRotationAmount(exponentialSample(10));
+        setIntervalRotationAmount(exponentialSample(40));
         setRotateInterval(exponentialSample(2000));
     }, rotateInterval);
 
