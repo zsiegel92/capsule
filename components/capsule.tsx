@@ -55,9 +55,10 @@ export function Capsule({
     const [rotate, setRotate] = useState(
         useRandRotate ? randRotate() : rotation,
     );
-    const [intervalRotated, setIntervalRotated] = useState(false);
+    // const [intervalRotated, setIntervalRotated] = useState(false);
+    const [intervalRotationAmount, setIntervalRotationAmount] = useState(0);
     const [rotateInterval, setRotateInterval] = useState(
-        useRotateInterval ? exponentialSample(4000) : null,
+        useRotateInterval ? exponentialSample(2000) : null,
     );
     const [hoverOpenOffset, setHoverOpenOffset] = useState(0);
 
@@ -66,8 +67,9 @@ export function Capsule({
     }, [primary]);
 
     useInterval(() => {
-        setIntervalRotated(!intervalRotated);
-        setRotateInterval(useRotateInterval ? exponentialSample(4000) : null);
+        // setIntervalRotated(!intervalRotated);
+        setIntervalRotationAmount(exponentialSample(10));
+        setRotateInterval(exponentialSample(2000));
     }, rotateInterval);
 
     const height = 25 * size;
@@ -98,9 +100,7 @@ export function Capsule({
                     display: 'inline-block',
                     height: '100%',
                     width: '100%',
-                    transform: intervalRotated
-                        ? 'rotate(10deg)'
-                        : 'rotate(0deg)',
+                    transform: `rotate(${intervalRotationAmount}deg)`,
                 }}
                 className="capsuleParentInner"
                 suppressHydrationWarning
