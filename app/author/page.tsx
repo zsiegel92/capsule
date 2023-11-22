@@ -61,6 +61,26 @@ async function UserAuthoredCapsules() {
                 </h3>
             )}
             <AuthoredCapsules user={user} />{' '}
+            {authoredCapsules?.length &&
+            authoredCapsules.length > 0 &&
+            !partnership ? (
+                <div
+                    style={{
+                        margin: '50px',
+                        padding: '50px',
+                    }}
+                >
+                    <Link
+                        className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+                        href="/partner"
+                    >
+                        Find a partner
+                    </Link>{' '}
+                    to seal your capsules!
+                </div>
+            ) : (
+                <></>
+            )}
             {partnershipCapsules?.length && partnershipCapsules.length > 0 ? (
                 <div
                     style={{

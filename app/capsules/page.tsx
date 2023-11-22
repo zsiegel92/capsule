@@ -66,7 +66,7 @@ async function ShowPartnershipCapsules() {
                 >
                     Find a partner
                 </Link>{' '}
-                to author capsules!
+                to seal capsules!
             </div>
         );
     }
@@ -87,7 +87,7 @@ async function ShowPartnershipCapsules() {
                     className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
                     href="/author"
                 >
-                    Author capsules
+                    <i>Author</i> and <i>seal</i> capsules
                 </Link>{' '}
                 then interact with them here!
             </div>
