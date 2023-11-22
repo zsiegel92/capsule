@@ -136,7 +136,10 @@ export const sendPartnerRequest = async (
     ('use server');
     // const email = formData.get('searchedForPartnerEmail') as string;
     if (!email) {
-        throw new Error(`Error sending partner request: 'No email provided!'`);
+        throw new Error(`No email provided!`);
+    }
+    if (sending_user.email === email) {
+        throw new Error(`You cannot partner with yourself!`);
     }
     let partnerRequest;
     try {
