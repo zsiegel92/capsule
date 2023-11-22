@@ -30,7 +30,7 @@ export const metadata: Metadata = {
         title,
         description,
     },
-    // metadataBase: new URL("https://nextjs-postgres-auth.vercel.app"),
+    metadataBase: new URL('https://capsulepartner.vercel.app/'),
     // themeColor: "#FFF",
 };
 

@@ -7,6 +7,8 @@ import { toast } from 'react-hot-toast';
 import { Capsule } from '@/components/capsule';
 import { wait } from '@/lib/wait';
 import { User } from '@prisma/client';
+import { sendPartnerRequest } from '@/lib/partnerRequestServerActions';
+import { UserWithPartnershipAndAuthoredCapsules } from '@/lib/types';
 
 const initialState = {
     message: null,
@@ -39,9 +41,9 @@ function FormSubmitButton() {
 }
 
 export function CreatePartnerRequest({
-    sendPartnerRequestWithUser,
+    user,
 }: {
-    sendPartnerRequestWithUser: any;
+    user: UserWithPartnershipAndAuthoredCapsules;
 }) {
     const [searchedForPartnerEmail, setSearchedForPartnerEmail] = useState('');
 
@@ -49,7 +51,11 @@ export function CreatePartnerRequest({
         async (formData: any) => {
             // await wait(5000);
             try {
-                const response = await sendPartnerRequestWithUser(formData);
+                const response = await sendPartnerRequest(
+                    user,
+                    '/partner',
+                    searchedForPartnerEmail,
+                );
                 toast.success(response?.message);
                 setSearchedForPartnerEmail('');
             } catch (e: any) {
@@ -60,7 +66,7 @@ export function CreatePartnerRequest({
                 );
             }
         },
-        [sendPartnerRequestWithUser, setSearchedForPartnerEmail],
+        [user, searchedForPartnerEmail, setSearchedForPartnerEmail],
     );
 
     // sendPartnerRequestWithUserWithErrorHandlingAndToast,

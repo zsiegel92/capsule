@@ -9,15 +9,14 @@ import {
 import { BsXLg } from 'react-icons/bs';
 import { Capsule, CapsuleSpinner } from '@/components/capsule';
 import { wait } from '@/lib/wait';
+import { UserWithPartnershipAndAuthoredCapsules } from '@/lib/types';
 
 export function CancelPartnerRequest({
     partnerRequest,
     user,
-    cancelThisPartnerRequest,
 }: {
     partnerRequest: any;
-    user: User;
-    cancelThisPartnerRequest: any;
+    user: UserWithPartnershipAndAuthoredCapsules;
 }) {
     const [submitting, setSubmitting] = useState(false);
 
@@ -25,7 +24,10 @@ export function CancelPartnerRequest({
         useCallback(async () => {
             setSubmitting(true);
             try {
-                const response = await cancelThisPartnerRequest();
+                const response = await cancelPartnerRequest(
+                    '/partner',
+                    partnerRequest,
+                );
                 setSubmitting(false);
                 toast.success(response?.message);
             } catch (e: any) {
@@ -36,7 +38,7 @@ export function CancelPartnerRequest({
                         : 'Error deleting partner request.',
                 );
             }
-        }, [cancelThisPartnerRequest, setSubmitting]);
+        }, [partnerRequest, setSubmitting]);
 
     return (
         <button

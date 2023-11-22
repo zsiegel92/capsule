@@ -5,21 +5,21 @@ import { toast } from 'react-hot-toast';
 import {
     sendPartnerRequest,
     cancelPartnerRequest,
+    acceptPartnerRequest,
 } from '@/lib/partnerRequestServerActions';
 import { BsFillEmojiHeartEyesFill, BsFillHeartFill } from 'react-icons/bs';
 import { Spinner } from 'react-bootstrap';
 import LoadingDots from '@/components/loading-dots';
 import { Capsule, CapsuleSpinner } from '@/components/capsule';
 import { wait } from '@/lib/wait';
+import { UserWithPartnershipAndAuthoredCapsules } from '@/lib/types';
 
 export function AcceptPartnerRequest({
     partnerRequest,
     user,
-    acceptThisPartnerRequest,
 }: {
     partnerRequest: any;
-    user: any;
-    acceptThisPartnerRequest: any;
+    user: UserWithPartnershipAndAuthoredCapsules;
 }) {
     const [submitting, setSubmitting] = useState(false);
     let acceptThisPartnerRequestWithErrorHandlingAndToast =
@@ -27,7 +27,11 @@ export function AcceptPartnerRequest({
             setSubmitting(true);
             try {
                 // await wait(5000);
-                const response = await acceptThisPartnerRequest();
+                const response = await acceptPartnerRequest(
+                    '/partner',
+                    partnerRequest,
+                    user,
+                );
                 setSubmitting(false);
                 toast.success(response?.message);
             } catch (e: any) {
@@ -38,7 +42,7 @@ export function AcceptPartnerRequest({
                         : 'Error accepting partner request.',
                 );
             }
-        }, [acceptThisPartnerRequest, setSubmitting]);
+        }, [partnerRequest, user, setSubmitting]);
 
     return (
         <button

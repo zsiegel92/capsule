@@ -5,6 +5,7 @@ import { User } from '@prisma/client';
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { Suspense } from 'react';
+import Link from 'next/link';
 
 import { CreatePartnerRequest } from '@/components/createPartnerRequest';
 import { AcceptPartnerRequest } from '@/components/acceptPartnerRequest';
@@ -77,11 +78,6 @@ async function ShowPartner({
         return <div>Partner not found! (this is an error)</div>;
     }
 
-    const deleteThisPartnership = async () => {
-        'use server';
-        return deletePartnership('/app/partner', user);
-    };
-
     // console.log(partner);
 
     return (
@@ -101,14 +97,32 @@ async function ShowPartner({
                             </p>
                         </td>
                         <td>
-                            <DeletePartnership
-                                deleteThisPartnership={deleteThisPartnership}
-                                user={user}
-                            />
+                            <DeletePartnership user={user} />
                         </td>
                     </tr>
                 </tbody>
             </table>
+            <div
+                style={{
+                    margin: '50px',
+                    padding: '50px',
+                }}
+            >
+                <Link
+                    className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+                    href="/author"
+                >
+                    Author capsules
+                </Link>{' '}
+                then{' '}
+                <Link
+                    className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+                    href="/capsules"
+                >
+                    interact with them
+                </Link>
+                !
+            </div>
         </div>
     );
 }
@@ -118,19 +132,13 @@ async function NoPartner({
 }: {
     user: UserWithPartnershipAndAuthoredCapsules;
 }) {
-    const sendPartnerRequestWithUser = async (formData: FormData) => {
-        'use server';
-        return sendPartnerRequest(user, '/app/partner', formData);
-    };
     // revalidatePath('/app/partner')
     return (
         <div style={{ padding: '10px', minWidth: '300px', maxWidth: '800px' }}>
             <div>You do not have a partner, yet!</div>
             <IncomingPartnerRequests user={user} />
             <OutgoingPartnerRequests user={user} />
-            <CreatePartnerRequest
-                sendPartnerRequestWithUser={sendPartnerRequestWithUser}
-            />
+            <CreatePartnerRequest user={user} />
         </div>
     );
 }
@@ -175,10 +183,12 @@ async function IncomingPartnerRequest({
     partnerRequest: any;
     user: UserWithPartnershipAndAuthoredCapsules;
 }) {
-    const acceptThisPartnerRequest = async () => {
-        'use server';
-        return acceptPartnerRequest('/app/partner', partnerRequest, user);
-    };
+    // const acceptThisPartnerRequest = async () => {
+    //     'use server';
+    //     console.log('ACCEPT ACTION');
+    //     console.log(user);
+    //     return acceptPartnerRequest('/app/partner', partnerRequest, user);
+    // };
 
     return (
         <tr style={{ backgroundColor: 'rgba(0,0,0,0,0.5)' }}>
@@ -196,7 +206,6 @@ async function IncomingPartnerRequest({
             </td>
             <td>
                 <AcceptPartnerRequest
-                    acceptThisPartnerRequest={acceptThisPartnerRequest}
                     partnerRequest={partnerRequest}
                     user={user}
                 />
@@ -243,10 +252,6 @@ function OutgoingPartnerRequest({
     partnerRequest: any;
     user: UserWithPartnershipAndAuthoredCapsules;
 }) {
-    const cancelThisPartnerRequest = async () => {
-        'use server';
-        return cancelPartnerRequest('/app/partner', partnerRequest);
-    };
     return (
         <tr>
             <td>
@@ -263,7 +268,6 @@ function OutgoingPartnerRequest({
             </td>
             <td>
                 <CancelPartnerRequest
-                    cancelThisPartnerRequest={cancelThisPartnerRequest}
                     partnerRequest={partnerRequest}
                     user={user}
                 />

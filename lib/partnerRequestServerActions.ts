@@ -21,6 +21,7 @@ export async function getUserWithPartnershipByEmail(
             },
             ...PartnershipIncludePayload,
         });
+    console.log(user);
     return user;
 }
 
@@ -33,6 +34,8 @@ export const acceptPartnerRequest = async (
     // console.log('partnerRequest', partnerRequest)
     // console.log('user', user)
     // ${partnerRequest.from.email} wants to partner with you!
+    console.log('user: ', user);
+    console.log('partnerRequest: ', partnerRequest);
     try {
         const sendingUser = await prisma.user.findUnique({
             where: {
@@ -128,10 +131,10 @@ export const cancelPartnerRequest = async (
 export const sendPartnerRequest = async (
     sending_user: UserWithPartnershipAndAuthoredCapsules,
     path: string,
-    formData: FormData,
+    email: string,
 ) => {
-    'use server';
-    const email = formData.get('searchedForPartnerEmail') as string;
+    ('use server');
+    // const email = formData.get('searchedForPartnerEmail') as string;
     if (!email) {
         throw new Error(`Error sending partner request: 'No email provided!'`);
     }

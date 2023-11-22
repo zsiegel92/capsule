@@ -5,6 +5,7 @@ import { User } from '@prisma/client';
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { Suspense } from 'react';
+import Link from 'next/link';
 
 import { CreatePartnerRequest } from '@/components/createPartnerRequest';
 import { AcceptPartnerRequest } from '@/components/acceptPartnerRequest';
@@ -60,6 +61,24 @@ async function UserAuthoredCapsules() {
                 </h3>
             )}
             <AuthoredCapsules user={user} />{' '}
+            {partnershipCapsules?.length && partnershipCapsules.length > 0 ? (
+                <div
+                    style={{
+                        margin: '50px',
+                        padding: '50px',
+                    }}
+                >
+                    <Link
+                        className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+                        href="/capsules"
+                    >
+                        Interact with sealed capsules
+                    </Link>{' '}
+                    when you are ready :)
+                </div>
+            ) : (
+                <></>
+            )}
         </>
     );
 }

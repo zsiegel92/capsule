@@ -5,6 +5,7 @@ import { toast } from 'react-hot-toast';
 import {
     sendPartnerRequest,
     cancelPartnerRequest,
+    deletePartnership,
 } from '@/lib/partnerRequestServerActions';
 import { BsXLg, BsFillHeartbreakFill } from 'react-icons/bs';
 import { Capsule, CapsuleSpinner } from '@/components/capsule';
@@ -13,10 +14,8 @@ import { UserWithPartnershipAndAuthoredCapsules } from '@/lib/types';
 
 export function DeletePartnership({
     user,
-    deleteThisPartnership,
 }: {
     user: UserWithPartnershipAndAuthoredCapsules;
-    deleteThisPartnership: any;
 }) {
     const [submitting, setSubmitting] = useState(false);
 
@@ -29,7 +28,7 @@ export function DeletePartnership({
             }
             setSubmitting(true);
             try {
-                const response = await deleteThisPartnership();
+                const response = await deletePartnership('/partner', user);
                 setSubmitting(false);
                 toast.success(response?.message);
             } catch (e: any) {
@@ -40,7 +39,7 @@ export function DeletePartnership({
                         : 'Error deleting partnership.',
                 );
             }
-        }, [deleteThisPartnership, setSubmitting]);
+        }, [user, setSubmitting]);
 
     return (
         <button
