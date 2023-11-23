@@ -10,39 +10,17 @@ import {
     ButtonGroup,
 } from 'react-bootstrap';
 import { toast } from 'react-hot-toast';
-import {
-    BsFillEmojiHeartEyesFill,
-    BsFillHeartFill,
-    BsLink45Deg,
-    BsXLg,
-    BsArrowUpRight,
-} from 'react-icons/bs';
-import { Spinner } from 'react-bootstrap';
 
 import '@/styles/partnerStyles.css';
 import '@/styles/globals.css';
-import LoadingDots from '@/components/loading-dots';
 import { Capsule, CapsuleSpinner } from '@/components/capsule';
-import { wait } from '@/lib/wait';
-import { getPartnerFromUser } from '@/lib/db_utils';
 import {
     UserWithPartnershipAndAuthoredCapsules,
     CapsuleWithUsers,
 } from '@/lib/types';
 
 import { palette, randColor, randRotate } from '@/lib/capsule_utils';
-
-import {
-    sendPartnerRequest,
-    cancelPartnerRequest,
-} from '@/lib/partnerRequestServerActions';
-import {
-    // updateCapsuleOpen,
-    deleteCapsule,
-    updateCapsuleScalars,
-    createCapsule,
-    sealCapsule,
-} from '@/lib/capsuleRelatedServerActions';
+import { createCapsule } from '@/lib/capsuleRelatedServerActions';
 import {
     CreateOrUpdateButton,
     DeleteButton,

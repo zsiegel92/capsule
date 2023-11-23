@@ -17,19 +17,10 @@ import {
 import { Capsule } from '@/components/capsule';
 import { updateCapsuleOpen } from '@/lib/capsuleRelatedServerActions';
 import {
-    CreateOrUpdateButton,
-    DeleteButton,
-    CapsuleOrTextButton,
-    CapsuleForButton,
     LowerRightIcon,
-    UpperRightIcon,
     SealButton,
-    compareCapsulesByCreatedAt,
     compareCapsulesOpenedDate,
-    UpdateCapsuleButton,
     SealCapsuleButton,
-    DeleteCapsuleButton,
-    CreateCapsuleButton,
 } from '@/components/capsuleUiHelpers';
 import { getPartnerFromUser } from '@/lib/db_utils';
 

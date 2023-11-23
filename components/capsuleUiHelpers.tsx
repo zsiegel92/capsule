@@ -24,22 +24,16 @@ import {
     BsFillTrash3Fill,
     BsEnvelopeHeartFill,
 } from 'react-icons/bs';
-import { Spinner } from 'react-bootstrap';
 
 import '@/styles/partnerStyles.css';
-import LoadingDots from '@/components/loading-dots';
 import { Capsule, CapsuleSpinner } from '@/components/capsule';
-import { wait } from '@/lib/wait';
-import { getPartnerFromUser } from '@/lib/db_utils';
 import { Capsule as CapsuleType } from '@prisma/client';
 import {
     // updateCapsuleOpen,
     deleteCapsule,
     updateCapsuleScalars,
-    createCapsule,
     sealCapsule,
 } from '@/lib/capsuleRelatedServerActions';
-import { palette, randColor, randRotate } from '@/lib/capsule_utils';
 
 export function CreateOrUpdateButton(props: any) {
     return (

@@ -5,14 +5,8 @@ import { Form, Button, InputGroup } from 'react-bootstrap';
 import { toast } from 'react-hot-toast';
 
 import { Capsule } from '@/components/capsule';
-import { wait } from '@/lib/wait';
-import { User } from '@prisma/client';
 import { sendPartnerRequest } from '@/lib/partnerRequestServerActions';
 import { UserWithPartnershipAndAuthoredCapsules } from '@/lib/types';
-
-const initialState = {
-    message: null,
-};
 
 function FormSubmitButton() {
     const { pending, data, method, action } = useFormStatus();

@@ -1,15 +1,8 @@
 'use client';
 import { use, useEffect, useState, useCallback } from 'react';
-import { Form, Button } from 'react-bootstrap';
 import { toast } from 'react-hot-toast';
-import {
-    sendPartnerRequest,
-    cancelPartnerRequest,
-    deletePartnership,
-} from '@/lib/partnerRequestServerActions';
-import { BsXLg, BsFillHeartbreakFill } from 'react-icons/bs';
+import { deletePartnership } from '@/lib/partnerRequestServerActions';
 import { Capsule, CapsuleSpinner } from '@/components/capsule';
-import { wait } from '@/lib/wait';
 import { UserWithPartnershipAndAuthoredCapsules } from '@/lib/types';
 
 export function DeletePartnership({

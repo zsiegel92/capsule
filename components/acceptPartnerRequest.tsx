@@ -1,17 +1,9 @@
 'use client';
 import { use, useEffect, useState, useCallback } from 'react';
-import { Form, Button } from 'react-bootstrap';
 import { toast } from 'react-hot-toast';
-import {
-    sendPartnerRequest,
-    cancelPartnerRequest,
-    acceptPartnerRequest,
-} from '@/lib/partnerRequestServerActions';
-import { BsFillEmojiHeartEyesFill, BsFillHeartFill } from 'react-icons/bs';
-import { Spinner } from 'react-bootstrap';
-import LoadingDots from '@/components/loading-dots';
+import { acceptPartnerRequest } from '@/lib/partnerRequestServerActions';
+import { BsFillHeartFill } from 'react-icons/bs';
 import { Capsule, CapsuleSpinner } from '@/components/capsule';
-import { wait } from '@/lib/wait';
 import { UserWithPartnershipAndAuthoredCapsules } from '@/lib/types';
 
 export function AcceptPartnerRequest({
