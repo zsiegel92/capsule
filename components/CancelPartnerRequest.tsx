@@ -19,10 +19,7 @@ export function CancelPartnerRequest({
         useCallback(async () => {
             setSubmitting(true);
             try {
-                const response = await cancelPartnerRequest(
-                    '/partner',
-                    partnerRequest,
-                );
+                const response = await cancelPartnerRequest(partnerRequest);
                 setSubmitting(false);
                 toast.success(response?.message);
             } catch (e: any) {
