@@ -22,7 +22,6 @@ export function AcceptPartnerRequest({
                 const response = await acceptPartnerRequest(
                     '/partner',
                     partnerRequest,
-                    user,
                 );
                 setSubmitting(false);
                 toast.success(response?.message);
