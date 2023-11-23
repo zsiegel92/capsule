@@ -146,13 +146,7 @@ function ShowCapsule({
                 useRandRotate={true}
                 primary={capsule.color}
                 onClick={() => {
-                    updateCapsuleOpen(
-                        '/capsules',
-                        capsule,
-                        user,
-                        true,
-                        false,
-                    ).then((response) => {
+                    updateCapsuleOpen(capsule, true, false).then((response) => {
                         setShow(true);
                     });
                 }}

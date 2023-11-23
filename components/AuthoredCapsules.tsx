@@ -298,12 +298,7 @@ function CreateCapsuleRow({
                                 return;
                             }
                             setSubmitting(true);
-                            createCapsule(
-                                '/author',
-                                user,
-                                newCapsuleColor,
-                                newCapsuleMessage,
-                            )
+                            createCapsule(newCapsuleColor, newCapsuleMessage)
                                 .then((response) => {
                                     setTouched(false);
                                     setSubmitting(false);

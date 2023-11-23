@@ -29,7 +29,6 @@ import '@/styles/partnerStyles.css';
 import { Capsule, CapsuleSpinner } from '@/components/capsule';
 import { Capsule as CapsuleType } from '@prisma/client';
 import {
-    // updateCapsuleOpen,
     deleteCapsule,
     updateCapsuleScalars,
     sealCapsule,
@@ -199,7 +198,7 @@ export function UpdateCapsuleButton({
                     color: color,
                     message: message,
                 };
-                updateCapsuleScalars(path, capsule, color, message)
+                updateCapsuleScalars(capsule, color, message)
                     .then((response) => {
                         setSubmitting(false);
                         console.log('Updated capsule: ', capsule);
@@ -239,7 +238,7 @@ export function DeleteCapsuleButton({
                     return;
                 }
                 setSubmitting(true);
-                deleteCapsule(path, capsule)
+                deleteCapsule(capsule)
                     .then((response) => {
                         console.log('DELETED CAPSULE!');
                         setSubmitting(false);
@@ -277,7 +276,7 @@ export function SealCapsuleButton({
         <SealButton
             onClick={() => {
                 setSubmitting(true);
-                sealCapsule(path, capsule)
+                sealCapsule(capsule)
                     .then((response) => {
                         setSubmitting(false);
                         // console.log('Sealed capsule: ', capsule);
