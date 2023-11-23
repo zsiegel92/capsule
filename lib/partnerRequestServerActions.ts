@@ -5,41 +5,31 @@ import { User, PartnerRequest } from '@prisma/client';
 import prisma from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
 
-import {
-    UserWithPartnershipAndAuthoredCapsules,
-    PartnershipIncludePayload,
-} from '@/lib/types';
 import { getPartnerFromUser } from '@/lib/db_utils';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/auth';
 import { getUserWithPartnershipByEmail } from '@/lib/dbActions';
 
-export const acceptPartnerRequest = async (
-    path: string,
-    partnerRequest: PartnerRequest,
-    user: UserWithPartnershipAndAuthoredCapsules,
-) => {
-    'use server';
+export const acceptPartnerRequest = async (partnerRequest: PartnerRequest) => {
+    ('use server');
     // console.log('partnerRequest', partnerRequest)
     // console.log('user', user)
 
     const session = await getServerSession(authOptions);
+
     if (!session?.user?.email) {
         throw new Error('No user found in session');
     }
-    if (session.user.email !== user.email) {
-        throw new Error(
-            `User in session (${session.user.email}) does not match user in request (${user.email})`,
-        );
+    const user = await getUserWithPartnershipByEmail(session.user.email);
+    if (!user) {
+        throw new Error('Session does not correspond to a real user!');
     }
-    if (session.user.email !== partnerRequest.toEmail) {
+
+    if (user.email !== partnerRequest.toEmail) {
         throw new Error(
             `User in session (${session.user.email}) does not match partnerRequest.toEmail (${partnerRequest.toEmail})`,
         );
     }
-
-    console.log('user: ', user);
-    console.log('partnerRequest: ', partnerRequest);
 
     try {
         const sendingUser = await prisma.user.findUnique({
@@ -77,7 +67,7 @@ export const acceptPartnerRequest = async (
                 },
             },
         });
-        revalidatePath(path);
+        revalidatePath('/', 'layout');
         return {
             message: `Accepted partner request to '${partnerRequest.toEmail}'!`,
         };
@@ -87,26 +77,23 @@ export const acceptPartnerRequest = async (
     }
 };
 
-export const deletePartnership = async (
-    path: string,
-    user: UserWithPartnershipAndAuthoredCapsules,
-) => {
+export const deletePartnership = async () => {
     'use server';
 
     const session = await getServerSession(authOptions);
     if (!session?.user?.email) {
         throw new Error('No user found in session');
     }
-    if (session.user.email !== user.email) {
-        throw new Error(
-            `User in session (${session.user.email}) does not match user in request (${user.email})`,
-        );
+    const user = await getUserWithPartnershipByEmail(session.user.email);
+    if (!user) {
+        throw new Error('Session does not correspond to a real user!');
     }
 
     console.log('user', user);
     if (!user.partnershipId) {
         throw new Error(`Error deleting partnership: 'No partnership found!'`);
     }
+
     try {
         const partner = getPartnerFromUser(user)!;
         const partnership = await prisma.partnership.delete({
@@ -114,7 +101,7 @@ export const deletePartnership = async (
                 id: user.partnershipId,
             },
         });
-        revalidatePath(path);
+        revalidatePath('/', 'layout');
         return { message: `Deleted partnership with '${partner.firstName}'!` };
     } catch (e: any) {
         throw new Error(e.message);
@@ -122,10 +109,7 @@ export const deletePartnership = async (
     }
 };
 
-export const cancelPartnerRequest = async (
-    path: string,
-    partnerRequest: PartnerRequest,
-) => {
+export const cancelPartnerRequest = async (partnerRequest: PartnerRequest) => {
     'use server';
 
     const session = await getServerSession(authOptions);
@@ -149,7 +133,7 @@ export const cancelPartnerRequest = async (
                 id: partnerRequest.id,
             },
         });
-        revalidatePath(path);
+        revalidatePath('/', 'layout');
         return {
             message: `Deleted partner request to '${partnerRequest.toEmail}'!`,
         };
@@ -159,19 +143,18 @@ export const cancelPartnerRequest = async (
     }
 };
 
-export const sendPartnerRequest = async (
-    sending_user: UserWithPartnershipAndAuthoredCapsules,
-    path: string,
-    email: string,
-) => {
+export const sendPartnerRequest = async (email: string) => {
     ('use server');
     // const email = formData.get('searchedForPartnerEmail') as string;
     const session = await getServerSession(authOptions);
     if (!session?.user?.email) {
         throw new Error('No user found in session');
     }
-    if (sending_user.email !== session.user.email) {
-        throw new Error(`User in session does not match sending user!`);
+    const sending_user = await getUserWithPartnershipByEmail(
+        session.user.email,
+    );
+    if (!sending_user) {
+        throw new Error(`No user found with email '${session.user.email}'`);
     }
 
     if (!email) {
@@ -192,7 +175,7 @@ export const sendPartnerRequest = async (
                 toEmail: email,
             },
         });
-        revalidatePath(path);
+        revalidatePath('/', 'layout');
         return { message: `Partner request sent to '${email}'!` };
     } catch (e: any) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {

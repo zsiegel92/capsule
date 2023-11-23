@@ -1,27 +1,16 @@
-import { getServerSession } from "next-auth/next"
-import { toast } from 'react-hot-toast';
-import { Prisma } from '@prisma/client';
-import { User } from '@prisma/client';
+import { getServerSession } from 'next-auth/next';
 import prisma from '@/lib/prisma';
-import { revalidatePath } from 'next/cache';
 import { Suspense } from 'react';
 import Link from 'next/link';
 
-import { CreatePartnerRequest } from '@/components/createPartnerRequest';
-import { AcceptPartnerRequest } from '@/components/acceptPartnerRequest';
+import { CreatePartnerRequest } from '@/components/CreatePartnerRequest';
+import { AcceptPartnerRequest } from '@/components/AcceptPartnerRequest';
 import { getPartnerFromUser } from '@/lib/db_utils';
 import { UserWithPartnershipAndAuthoredCapsules } from '@/lib/types';
 import '@/styles/partnerStyles.css';
 import { CancelPartnerRequest } from '@/components/CancelPartnerRequest';
 import { DeletePartnership } from '@/components/DeletePartnership';
-import { Capsule } from '@/components/capsule';
-import { CapsuleServer, CapsuleServerGrid } from '@/components/capsule_server';
-import {
-    sendPartnerRequest,
-    cancelPartnerRequest,
-    acceptPartnerRequest,
-    deletePartnership,
-} from '@/lib/partnerRequestServerActions';
+import { CapsuleServerGrid } from '@/components/capsule_server';
 import { getUserWithPartnershipByEmail } from '@/lib/dbActions';
 // TODO:
 // in NoPartner, show a search box to send a partner request.
@@ -274,4 +263,3 @@ function OutgoingPartnerRequest({
         </tr>
     );
 }
-

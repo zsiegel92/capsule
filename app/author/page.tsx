@@ -1,26 +1,9 @@
 import { getServerSession } from 'next-auth/next';
-import { toast } from 'react-hot-toast';
-import { Prisma } from '@prisma/client';
-import { User } from '@prisma/client';
-import prisma from '@/lib/prisma';
-import { revalidatePath } from 'next/cache';
 import { Suspense } from 'react';
 import Link from 'next/link';
 
-import { CreatePartnerRequest } from '@/components/createPartnerRequest';
-import { AcceptPartnerRequest } from '@/components/acceptPartnerRequest';
 import { getPartnerFromUser } from '@/lib/db_utils';
 import '@/styles/partnerStyles.css';
-import { CancelPartnerRequest } from '@/components/CancelPartnerRequest';
-import { DeletePartnership } from '@/components/DeletePartnership';
-import { Capsule } from '@/components/capsule';
-import { CapsuleServer, CapsuleServerGrid } from '@/components/capsule_server';
-import {
-    sendPartnerRequest,
-    cancelPartnerRequest,
-    acceptPartnerRequest,
-    deletePartnership,
-} from '@/lib/partnerRequestServerActions';
 import { AuthoredCapsules } from '@/components/AuthoredCapsules';
 import { getUserWithPartnershipByEmail } from '@/lib/dbActions';
 

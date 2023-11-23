@@ -1,10 +1,7 @@
-import Image from "next/image";
-import Link from "next/link";
 import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/auth';
-import { CapsuleServer, CapsuleServerGrid } from '@/components/capsule_server';
 import { InfiniteCapsules } from '@/components/capsule';
 
 // return <pre>{JSON.stringify(session, null, 2)}</pre>

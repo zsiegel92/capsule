@@ -15,50 +15,35 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/auth';
 import { getUserWithPartnershipByEmail } from '@/lib/dbActions';
 
-// import { getUserWithPartnershipByEmail } from '@/lib/capsuleRelatedServerActions';
 
-export async function createCapsule(
-    path: string,
-    user: UserWithPartnershipAndAuthoredCapsules,
-    color: string | null,
-    message: string,
-) {
+export async function createCapsule(color: string | null, message: string) {
     const session = await getServerSession(authOptions);
-    if (!session?.user) {
+    if (!session?.user?.email) {
         throw new Error('No user found in session');
     }
-    if (session.user.email !== user.email) {
-        throw new Error(
-            `User in session (${session.user.email}) does not match user in request (${user.email})`,
-        );
+    const user = await getUserWithPartnershipByEmail(session.user.email);
+    if (!user) {
+        throw new Error(`No user found with email '${session.user.email}'`);
     }
+
     const data = {
         message: message,
         color: color || randColor(),
         nTimesOpened: 0,
-        // lastOpened:  null,
-        // authorId: user.id, // not necessary with connect
         author: {
             connect: {
                 id: user.id,
             },
         },
-        // ...(partnershipId && {
-        //     partnership: {
-        //         connect: {
-        //             id: partnershipId,
-        //         },
-        //     },
-        // }),
         open: true, //partnershipId == null, // "Seal & share"
     };
     const capsule = await prisma.capsule.create({
         data: data,
     });
-    revalidatePath(path);
+    revalidatePath('/', 'layout');
 }
 
-export async function deleteCapsule(path: string, capsule: CapsuleWithUsers) {
+export async function deleteCapsule(capsule: CapsuleWithUsers) {
     const session = await getServerSession(authOptions);
     if (!session?.user) {
         throw new Error('No user found in session');
@@ -75,11 +60,10 @@ export async function deleteCapsule(path: string, capsule: CapsuleWithUsers) {
         },
     });
     console.log('DELETION RESPONSE: ', response);
-    revalidatePath(path);
+    revalidatePath('/', 'layout');
 }
 
 export async function updateCapsuleScalars(
-    path: string,
     capsule: CapsuleWithUsers,
     color: string | null,
     message: string,
@@ -105,25 +89,23 @@ export async function updateCapsuleScalars(
         data: data,
     });
     console.log('UPDATED WITH RESPONSE: ', response);
-    revalidatePath(path);
+    revalidatePath('/', 'layout');
 }
 
 export async function updateCapsuleOpen(
-    path: string,
     capsule: CapsuleWithUsers,
-    user: UserWithPartnershipAndAuthoredCapsules,
     open: boolean = true,
     revalidate: boolean = true,
 ) {
     const session = await getServerSession(authOptions);
-    if (!session?.user) {
+    if (!session?.user?.email) {
         throw new Error('No user found in session');
     }
-    if (user.email !== session.user.email) {
-        throw new Error(
-            `User in session (${session.user.email}) does not match user in request (${user.email})`,
-        );
+    const user = await getUserWithPartnershipByEmail(session.user.email);
+    if (!user) {
+        throw new Error(`No user found with email '${session.user.email}'`);
     }
+
     if (
         !(capsule?.partnership?.partners || []).some(
             (partner) => partner.email === user.email,
@@ -153,11 +135,11 @@ export async function updateCapsuleOpen(
     });
     console.log('UPDATED WITH RESPONSE: ', response);
     if (revalidate) {
-        revalidatePath(path);
+        revalidatePath('/', 'layout');
     }
 }
 
-export async function sealCapsule(path: string, capsule: CapsuleWithUsers) {
+export async function sealCapsule(capsule: CapsuleWithUsers) {
     const session = await getServerSession(authOptions);
     if (!session?.user?.email) {
         throw new Error('No user found in session');
@@ -166,7 +148,7 @@ export async function sealCapsule(path: string, capsule: CapsuleWithUsers) {
         throw new Error('Cannot seal a capsule without a partnership');
     }
 
-    const user = await getUserWithPartnershipByEmail(session.user.email);
+    // const user = await getUserWithPartnershipByEmail(session.user.email);
     if (capsule.author.email !== session.user.email) {
         if (!capsule.partnershipId) {
             throw new Error(
@@ -198,5 +180,5 @@ export async function sealCapsule(path: string, capsule: CapsuleWithUsers) {
         },
     });
     console.log('UPDATED WITH RESPONSE: ', response);
-    revalidatePath(path);
+    revalidatePath('/', 'layout');
 }

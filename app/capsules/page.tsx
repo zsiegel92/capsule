@@ -1,33 +1,12 @@
 import { getServerSession } from 'next-auth/next';
-import { toast } from 'react-hot-toast';
-import { Prisma } from '@prisma/client';
-import { User } from '@prisma/client';
-import prisma from '@/lib/prisma';
-import { revalidatePath } from 'next/cache';
 import { Suspense } from 'react';
 import Link from 'next/link';
-
-import { CreatePartnerRequest } from '@/components/createPartnerRequest';
-import { AcceptPartnerRequest } from '@/components/acceptPartnerRequest';
 import { getPartnerFromUser } from '@/lib/db_utils';
 import '@/styles/partnerStyles.css';
 import '@/styles/globals.css';
-import { CancelPartnerRequest } from '@/components/CancelPartnerRequest';
-import { DeletePartnership } from '@/components/DeletePartnership';
-import { Capsule } from '@/components/capsule';
-import { CapsuleServer } from '@/components/capsule_server';
-import {
-    sendPartnerRequest,
-    cancelPartnerRequest,
-    acceptPartnerRequest,
-    deletePartnership,
-} from '@/lib/partnerRequestServerActions';
 import { shuffleArray } from '@/lib/utils';
 import { getUserWithPartnershipByEmail } from '@/lib/dbActions';
 import { OpenCapsules, CapsuleTodoList } from '@/components/OpenCapsules';
-
-import {} from '@/lib/capsuleRelatedServerActions';
-import { redirect } from 'next/navigation';
 
 export default async function Connect({}: {}) {
     return (
@@ -114,4 +93,3 @@ async function ShowPartnershipCapsules() {
         </div>
     );
 }
-
