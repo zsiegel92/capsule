@@ -66,7 +66,7 @@ export function AuthoredCapsules({
                     </tr>
                 </thead>
                 <tbody>
-                    <CreateCapsuleRow user={user} />
+                    <CreateCapsuleRow />
                     {editableCapsules.length > 0 && (
                         <tr>
                             <td colSpan={3} style={{ textAlign: 'center' }}>
@@ -114,7 +114,19 @@ function UpdateColorModal({
                             setShow(false);
                         }}
                     >
-                        <Capsule primary={newColor} size={0.5} open={true} />
+                        <div
+                            style={{
+                                border:
+                                    color == newColor ? '1px solid black' : '',
+                                borderRadius: '5px',
+                            }}
+                        >
+                            <Capsule
+                                primary={newColor}
+                                size={0.5}
+                                open={true}
+                            />
+                        </div>
                     </div>
                 ))}
             </Modal.Body>
@@ -223,17 +235,14 @@ function CapsuleRow({
                             capsule={capsule}
                             color={editedCapsuleColor}
                             message={editedCapsuleMessage}
-                            path="/author"
                             // @ts-ignore
                             disabled={formInvalid}
                         />
                     )}
                     {!dirty && !!user.partnershipId && (
-                        <SealCapsuleButton capsule={capsule} path="/author" />
+                        <SealCapsuleButton capsule={capsule} />
                     )}
-                    {!dirty && (
-                        <DeleteCapsuleButton capsule={capsule} path="/author" />
-                    )}
+                    {!dirty && <DeleteCapsuleButton capsule={capsule} />}
                 </ButtonGroup>
             </td>
             <UpdateColorModal
@@ -246,11 +255,7 @@ function CapsuleRow({
     );
 }
 
-function CreateCapsuleRow({
-    user,
-}: {
-    user: UserWithPartnershipAndAuthoredCapsules;
-}) {
+function CreateCapsuleRow({}: {}) {
     const [newCapsuleColor, setNewCapsuleColor] = useState(randColor());
     const [newCapsuleMessage, setNewCapsuleMessage] = useState('');
     const [showColorPicker, setShowColorPicker] = useState(false);
@@ -263,6 +268,7 @@ function CreateCapsuleRow({
                 <td>
                     <Capsule
                         primary={newCapsuleColor}
+                        useRandColor={false}
                         size={0.5}
                         open={true}
                         onClick={() => {

@@ -88,7 +88,7 @@ function CapsuleTodoListRow({ capsule }: { capsule: CapsuleWithUsers }) {
                 </LowerRightIcon>
             </td>
             <td>
-                <SealCapsuleButton path="/capsules" capsule={capsule} />
+                <SealCapsuleButton capsule={capsule} />
             </td>
             <OpenCapsuleModal
                 capsule={capsule}

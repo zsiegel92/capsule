@@ -178,13 +178,11 @@ export function UpdateCapsuleButton({
     capsule,
     color,
     message,
-    path,
     ...buttonProps
 }: {
     capsule: CapsuleWithUsers;
     color: string;
     message: string;
-    path: string;
     buttonProps: { [x: string]: any };
 }) {
     const [submitting, setSubmitting] = useState(false);
@@ -216,13 +214,7 @@ export function UpdateCapsuleButton({
     );
 }
 
-export function DeleteCapsuleButton({
-    capsule,
-    path,
-}: {
-    capsule: CapsuleWithUsers;
-    path: string;
-}) {
+export function DeleteCapsuleButton({ capsule }: { capsule: CapsuleWithUsers }) {
     const [submitting, setSubmitting] = useState(false);
     if (capsule.partnershipId) {
         return <></>;
@@ -264,13 +256,7 @@ export function CreateCapsuleButton({
     return <CreateOrUpdateButton onClick={onClick} submitting={submitting} />;
 }
 
-export function SealCapsuleButton({
-    capsule,
-    path,
-}: {
-    capsule: CapsuleWithUsers;
-    path: string;
-}) {
+export function SealCapsuleButton({ capsule }: { capsule: CapsuleWithUsers }) {
     const [submitting, setSubmitting] = useState(false);
     return (
         <SealButton
