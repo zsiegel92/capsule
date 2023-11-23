@@ -21,7 +21,7 @@ export function DeletePartnership({
             }
             setSubmitting(true);
             try {
-                const response = await deletePartnership('/partner', user);
+                const response = await deletePartnership();
                 setSubmitting(false);
                 toast.success(response?.message);
             } catch (e: any) {
