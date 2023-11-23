@@ -19,10 +19,7 @@ export function AcceptPartnerRequest({
             setSubmitting(true);
             try {
                 // await wait(5000);
-                const response = await acceptPartnerRequest(
-                    '/partner',
-                    partnerRequest,
-                );
+                const response = await acceptPartnerRequest(partnerRequest);
                 setSubmitting(false);
                 toast.success(response?.message);
             } catch (e: any) {
