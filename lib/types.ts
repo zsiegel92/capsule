@@ -41,6 +41,15 @@ const capsuleIncludes = {
                 ...scalarsExcludingPassword,
             },
         },
+        partnership: {
+            include: {
+                partners: {
+                    select: {
+                        ...scalarsExcludingPassword,
+                    },
+                },
+            },
+        },
     },
 };
 export type CapsuleWithUsers = Prisma.CapsuleGetPayload<typeof capsuleIncludes>;

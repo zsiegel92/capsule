@@ -205,7 +205,6 @@ export function UpdateCapsuleButton({
                     color: color,
                     message: message,
                 };
-                console.log(x);
                 updateCapsuleScalars(path, capsule, color, message)
                     .then((response) => {
                         setSubmitting(false);
