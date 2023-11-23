@@ -13,7 +13,7 @@ import {
 import { getPartnerFromUser } from '@/lib/db_utils';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/auth';
-import { getUserWithPartnershipByEmail } from '@/lib/partnerRequestServerActions';
+import { getUserWithPartnershipByEmail } from '@/lib/dbActions';
 
 // import { getUserWithPartnershipByEmail } from '@/lib/capsuleRelatedServerActions';
 

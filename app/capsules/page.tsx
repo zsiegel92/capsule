@@ -20,11 +20,10 @@ import {
     sendPartnerRequest,
     cancelPartnerRequest,
     acceptPartnerRequest,
-    getUserWithPartnershipByEmail,
     deletePartnership,
 } from '@/lib/partnerRequestServerActions';
 import { shuffleArray } from '@/lib/utils';
-
+import { getUserWithPartnershipByEmail } from '@/lib/dbActions';
 import { OpenCapsules, CapsuleTodoList } from '@/components/OpenCapsules';
 
 import {} from '@/lib/capsuleRelatedServerActions';

@@ -19,11 +19,10 @@ import {
     sendPartnerRequest,
     cancelPartnerRequest,
     acceptPartnerRequest,
-    getUserWithPartnershipByEmail,
     deletePartnership,
 } from '@/lib/partnerRequestServerActions';
 import { AuthoredCapsules } from '@/components/AuthoredCapsules';
-import {} from '@/lib/capsuleRelatedServerActions';
+import { getUserWithPartnershipByEmail } from '@/lib/dbActions';
 
 export default async function Author() {
     return (

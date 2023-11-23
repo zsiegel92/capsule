@@ -12,19 +12,7 @@ import {
 import { getPartnerFromUser } from '@/lib/db_utils';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/auth';
-
-export async function getUserWithPartnershipByEmail(
-    email: string,
-): Promise<UserWithPartnershipAndAuthoredCapsules | null> {
-    const user: UserWithPartnershipAndAuthoredCapsules | null =
-        await prisma.user.findUnique({
-            where: {
-                email,
-            },
-            ...PartnershipIncludePayload,
-        });
-    return user;
-}
+import { getUserWithPartnershipByEmail } from '@/lib/dbActions';
 
 export const acceptPartnerRequest = async (
     path: string,

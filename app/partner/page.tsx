@@ -20,10 +20,9 @@ import {
     sendPartnerRequest,
     cancelPartnerRequest,
     acceptPartnerRequest,
-    getUserWithPartnershipByEmail,
     deletePartnership,
 } from '@/lib/partnerRequestServerActions';
-
+import { getUserWithPartnershipByEmail } from '@/lib/dbActions';
 // TODO:
 // in NoPartner, show a search box to send a partner request.
 // In Partner, show a list of partner requests.
