@@ -46,8 +46,6 @@ export function CreatePartnerRequest({
             // await wait(5000);
             try {
                 const response = await sendPartnerRequest(
-                    user,
-                    '/partner',
                     searchedForPartnerEmail,
                 );
                 toast.success(response?.message);
