@@ -3,7 +3,7 @@ import prisma from '@/lib/prisma';
 import { Suspense } from 'react';
 import Link from 'next/link';
 
-import { CreatePartnerRequest } from '@/components/CreatePartnerRequest';
+import { CreatePartnerRequest } from '@/components/CreateAPartnerRequest';
 import { AcceptPartnerRequest } from '@/components/AcceptPartnerRequest';
 import { getPartnerFromUser } from '@/lib/db_utils';
 import { UserWithPartnershipAndAuthoredCapsules } from '@/lib/types';
