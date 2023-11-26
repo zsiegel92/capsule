@@ -4,12 +4,12 @@ import { Suspense } from 'react';
 import Link from 'next/link';
 
 import { CreatePartnerRequest } from '@/components/CreateAPartnerRequest';
-import { AcceptPartnerRequest } from '@/components/AcceptPartnerRequest';
+import { AcceptPartnerRequest } from '@/components/AcceptAPartnerRequest';
 import { getPartnerFromUser } from '@/lib/db_utils';
 import { UserWithPartnershipAndAuthoredCapsules } from '@/lib/types';
 import '@/styles/partnerStyles.css';
-import { CancelPartnerRequest } from '@/components/CancelPartnerRequest';
-import { DeletePartnership } from '@/components/DeletePartnership';
+import { CancelPartnerRequest } from '@/components/CancelAPartnerRequest';
+import { DeletePartnership } from '@/components/DeleteAPartnership';
 import { CapsuleServerGrid } from '@/components/capsule_server';
 import { getUserWithPartnershipByEmail } from '@/lib/dbActions';
 // TODO:
