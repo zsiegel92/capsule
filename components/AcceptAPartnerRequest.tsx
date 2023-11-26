@@ -8,10 +8,8 @@ import { UserWithPartnershipAndAuthoredCapsules } from '@/lib/types';
 
 export function AcceptPartnerRequest({
     partnerRequest,
-    user,
 }: {
     partnerRequest: any;
-    user: UserWithPartnershipAndAuthoredCapsules;
 }) {
     const [submitting, setSubmitting] = useState(false);
     let acceptThisPartnerRequestWithErrorHandlingAndToast =
@@ -30,7 +28,7 @@ export function AcceptPartnerRequest({
                         : 'Error accepting partner request.',
                 );
             }
-        }, [partnerRequest, user, setSubmitting]);
+        }, [partnerRequest, setSubmitting]);
 
     return (
         <button

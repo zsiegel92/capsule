@@ -34,11 +34,7 @@ function FormSubmitButton() {
     );
 }
 
-export function CreatePartnerRequest({
-    user,
-}: {
-    user: UserWithPartnershipAndAuthoredCapsules;
-}) {
+export function CreatePartnerRequest({}: {}) {
     const [searchedForPartnerEmail, setSearchedForPartnerEmail] = useState('');
 
     const sendPartnerRequestWithUserWithErrorHandlingAndToast = useCallback(
@@ -58,7 +54,7 @@ export function CreatePartnerRequest({
                 );
             }
         },
-        [user, searchedForPartnerEmail, setSearchedForPartnerEmail],
+        [searchedForPartnerEmail, setSearchedForPartnerEmail],
     );
 
     // sendPartnerRequestWithUserWithErrorHandlingAndToast,

@@ -85,7 +85,7 @@ async function ShowPartner({
                             </p>
                         </td>
                         <td>
-                            <DeletePartnership user={user} />
+                            <DeletePartnership />
                         </td>
                     </tr>
                 </tbody>
@@ -126,7 +126,7 @@ async function NoPartner({
             <div>You do not have a partner, yet!</div>
             <IncomingPartnerRequests user={user} />
             <OutgoingPartnerRequests user={user} />
-            <CreatePartnerRequest user={user} />
+            <CreatePartnerRequest />
         </div>
     );
 }
@@ -156,7 +156,6 @@ async function IncomingPartnerRequests({
                     <IncomingPartnerRequest
                         key={partnerRequest.id}
                         partnerRequest={partnerRequest}
-                        user={user}
                     />
                 ))}
             </tbody>
@@ -166,10 +165,8 @@ async function IncomingPartnerRequests({
 
 async function IncomingPartnerRequest({
     partnerRequest,
-    user,
 }: {
     partnerRequest: any;
-    user: UserWithPartnershipAndAuthoredCapsules;
 }) {
     // const acceptThisPartnerRequest = async () => {
     //     'use server';
@@ -193,10 +190,7 @@ async function IncomingPartnerRequest({
                 </p>
             </td>
             <td>
-                <AcceptPartnerRequest
-                    partnerRequest={partnerRequest}
-                    user={user}
-                />
+                <AcceptPartnerRequest partnerRequest={partnerRequest} />
             </td>
         </tr>
     );
@@ -225,7 +219,6 @@ async function OutgoingPartnerRequests({
                     <OutgoingPartnerRequest
                         key={partnerRequest.id}
                         partnerRequest={partnerRequest}
-                        user={user}
                     />
                 ))}
             </tbody>
@@ -233,13 +226,7 @@ async function OutgoingPartnerRequests({
     );
 }
 
-function OutgoingPartnerRequest({
-    partnerRequest,
-    user,
-}: {
-    partnerRequest: any;
-    user: UserWithPartnershipAndAuthoredCapsules;
-}) {
+function OutgoingPartnerRequest({ partnerRequest }: { partnerRequest: any }) {
     return (
         <tr>
             <td>
@@ -255,10 +242,7 @@ function OutgoingPartnerRequest({
                 </p>
             </td>
             <td>
-                <CancelPartnerRequest
-                    partnerRequest={partnerRequest}
-                    user={user}
-                />
+                <CancelPartnerRequest partnerRequest={partnerRequest} />
             </td>
         </tr>
     );

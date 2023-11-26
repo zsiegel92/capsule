@@ -87,7 +87,7 @@ async function ShowPartnershipCapsules() {
             <div>
                 <OpenCapsules capsules={sealedCapsules} user={user} />
                 <div>
-                    <CapsuleTodoList capsules={unSealedCapsules} user={user} />
+                    <CapsuleTodoList capsules={unSealedCapsules} />
                 </div>
             </div>
         </div>

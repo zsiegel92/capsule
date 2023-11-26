@@ -25,10 +25,8 @@ import {
 import { getPartnerFromUser } from '@/lib/db_utils';
 
 export function CapsuleTodoList({
-    user,
     capsules,
 }: {
-    user: UserWithPartnershipAndAuthoredCapsules;
     capsules: CapsuleWithUsers[];
 }) {
     if (capsules.length === 0) {
@@ -120,19 +118,13 @@ export function OpenCapsules({
                 Sealed Capsules
             </h2>
             {capsules.map((capsule) => (
-                <ShowCapsule key={capsule.id} capsule={capsule} user={user} />
+                <ShowCapsule key={capsule.id} capsule={capsule} />
             ))}
         </>
     );
 }
 
-function ShowCapsule({
-    capsule,
-    user,
-}: {
-    capsule: CapsuleWithUsers;
-    user: UserWithPartnershipAndAuthoredCapsules;
-}) {
+function ShowCapsule({ capsule }: { capsule: CapsuleWithUsers }) {
     const [show, setShow] = useState(false);
     const [hovered, setHovered] = useState(false);
     return (

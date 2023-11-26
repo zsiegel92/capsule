@@ -3,13 +3,8 @@ import { use, useEffect, useState, useCallback } from 'react';
 import { toast } from 'react-hot-toast';
 import { deletePartnership } from '@/lib/partnerRequestServerActions';
 import { Capsule, CapsuleSpinner } from '@/components/capsule';
-import { UserWithPartnershipAndAuthoredCapsules } from '@/lib/types';
 
-export function DeletePartnership({
-    user,
-}: {
-    user: UserWithPartnershipAndAuthoredCapsules;
-}) {
+export function DeletePartnership({}: {}) {
     const [submitting, setSubmitting] = useState(false);
 
     let deleteThisPartnershipWithErrorHandlingAndToast =
@@ -32,7 +27,7 @@ export function DeletePartnership({
                         : 'Error deleting partnership.',
                 );
             }
-        }, [user, setSubmitting]);
+        }, [setSubmitting]);
 
     return (
         <button
