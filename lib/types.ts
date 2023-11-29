@@ -81,6 +81,19 @@ export type UserWithPartnershipAndAuthoredCapsules = Prisma.UserGetPayload<
 >;
 
 
+export const PartnerRequestIncludeUserPayload = {
+    include: {
+        from: {
+            select: {
+                ...scalarsExcludingPassword,
+            },
+        },
+    },
+};
+export type PartnerRequestWithFromUser = Prisma.PartnerRequestGetPayload<
+    typeof PartnerRequestIncludeUserPayload
+>;
+
 // https://www.prisma.io/docs/concepts/components/prisma-client/advanced-type-safety/operating-against-partial-structures-of-model-types 
 // for improved `select` type safety, may want to use
 // const Prisma.validator<Prisma.UserDefaultArgs>()({

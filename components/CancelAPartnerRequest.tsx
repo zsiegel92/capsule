@@ -4,8 +4,13 @@ import { toast } from 'react-hot-toast';
 import { cancelPartnerRequest } from '@/lib/partnerRequestServerActions';
 import { BsXLg } from 'react-icons/bs';
 import { Capsule, CapsuleSpinner } from '@/components/capsule';
+import { PartnerRequestWithFromUser } from '@/lib/types';
 
-export function CancelPartnerRequest({ partnerRequest }: { partnerRequest: any }) {
+export function CancelPartnerRequest({
+    partnerRequest,
+}: {
+    partnerRequest: PartnerRequestWithFromUser;
+}) {
     const [submitting, setSubmitting] = useState(false);
 
     let cancelThisPartnerRequestWithErrorHandlingAndToast =

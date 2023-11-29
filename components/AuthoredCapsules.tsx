@@ -71,7 +71,7 @@ export function AuthoredCapsules({
                         <tr>
                             <td colSpan={3} style={{ textAlign: 'center' }}>
                                 <b>
-                                    <i>Edit</i>
+                                    <i>Drafts</i>
                                 </b>
                             </td>
                         </tr>
@@ -96,9 +96,9 @@ function UpdateColorModal({
     setShow,
 }: {
     color: string;
-    setColor: any;
+    setColor: Function;
     show: boolean;
-    setShow: any;
+    setShow: Function;
 }) {
     return (
         <Modal show={show} onHide={() => setShow(false)}>

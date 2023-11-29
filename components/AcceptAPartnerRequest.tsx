@@ -4,12 +4,16 @@ import { toast } from 'react-hot-toast';
 import { acceptPartnerRequest } from '@/lib/partnerRequestServerActions';
 import { BsFillHeartFill } from 'react-icons/bs';
 import { Capsule, CapsuleSpinner } from '@/components/capsule';
-import { UserWithPartnershipAndAuthoredCapsules } from '@/lib/types';
+import {
+    UserWithPartnershipAndAuthoredCapsules,
+    PartnerRequestWithFromUser,
+    PartnerRequestIncludeUserPayload,
+} from '@/lib/types';
 
 export function AcceptPartnerRequest({
     partnerRequest,
 }: {
-    partnerRequest: any;
+    partnerRequest: PartnerRequestWithFromUser;
 }) {
     const [submitting, setSubmitting] = useState(false);
     let acceptThisPartnerRequestWithErrorHandlingAndToast =

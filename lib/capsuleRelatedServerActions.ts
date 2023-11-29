@@ -78,7 +78,7 @@ export async function updateCapsuleScalars(
         );
     }
 
-    const data: any = {
+    const data = {
         message: message,
         ...(!!color && { color: color }),
     };

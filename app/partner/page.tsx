@@ -3,10 +3,16 @@ import prisma from '@/lib/prisma';
 import { Suspense } from 'react';
 import Link from 'next/link';
 
+import { User, PartnerRequest } from '@prisma/client';
+
 import { CreatePartnerRequest } from '@/components/CreateAPartnerRequest';
 import { AcceptPartnerRequest } from '@/components/AcceptAPartnerRequest';
 import { getPartnerFromUser } from '@/lib/db_utils';
-import { UserWithPartnershipAndAuthoredCapsules } from '@/lib/types';
+import {
+    UserWithPartnershipAndAuthoredCapsules,
+    PartnerRequestWithFromUser,
+    PartnerRequestIncludeUserPayload,
+} from '@/lib/types';
 import '@/styles/partnerStyles.css';
 import { CancelPartnerRequest } from '@/components/CancelAPartnerRequest';
 import { DeletePartnership } from '@/components/DeleteAPartnership';
@@ -140,9 +146,7 @@ async function IncomingPartnerRequests({
         where: {
             toEmail: user.email,
         },
-        include: {
-            from: true,
-        },
+        ...PartnerRequestIncludeUserPayload,
     });
     // console.log('incomingPartnerRequests', incomingPartnerRequests)
     if (incomingPartnerRequests.length === 0) {
@@ -166,7 +170,7 @@ async function IncomingPartnerRequests({
 async function IncomingPartnerRequest({
     partnerRequest,
 }: {
-    partnerRequest: any;
+    partnerRequest: PartnerRequestWithFromUser;
 }) {
     // const acceptThisPartnerRequest = async () => {
     //     'use server';
@@ -207,9 +211,7 @@ async function OutgoingPartnerRequests({
                 email: user.email,
             },
         },
-        // include: {
-        // 	toEmail: true,
-        // }
+        ...PartnerRequestIncludeUserPayload,
     });
     // console.log('outgoingPartnerRequests', outgoingPartnerRequests)
     return (
@@ -226,7 +228,11 @@ async function OutgoingPartnerRequests({
     );
 }
 
-function OutgoingPartnerRequest({ partnerRequest }: { partnerRequest: any }) {
+function OutgoingPartnerRequest({
+    partnerRequest,
+}: {
+    partnerRequest: PartnerRequestWithFromUser;
+}) {
     return (
         <tr>
             <td>

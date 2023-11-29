@@ -158,7 +158,7 @@ function OpenCapsuleModal({
 }: {
     capsule: CapsuleWithUsers;
     show: boolean;
-    setShow: any;
+    setShow: Function;
     refreshOnClose?: boolean;
 }) {
     const router = useRouter();
