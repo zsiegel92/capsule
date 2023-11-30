@@ -13,6 +13,9 @@
       "@/styles/*": [
         "styles/*"
       ],
+      "@/emails/*":[
+        "emails/*",
+      ],
       "@/auth": [
         "app/api/auth/[...nextauth]/route.ts"
       ]

@@ -39,3 +39,5 @@ yarn-error.log*
 
 # Python virtual environments
 **/venv/
+
+.react-email
