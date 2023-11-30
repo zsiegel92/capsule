@@ -31,4 +31,4 @@ My [FastRPC](https://github.com/zsiegel92/fastRPC) project yields with something
 <br/>
 <br/>
 <br/>
-<svg viewBox="-4.5 -4.5 39 16.5" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(64deg)"><a class="capsule"><ellipse cx="7.5" cy="3.75" rx="3.75" ry="3.75" style="fill:green;stroke:black;stroke-width:0.6"></ellipse><rect x="7.5" y="0" width="7.5" height="7.5" style="fill:green;stroke:black;stroke-width:0.6"></rect><rect x="7.35" y="0.6" width="7.8" height="6.3" style="fill:green;stroke:green;stroke-width:0.6"></rect><rect x="15" y="0" width="7.5" height="7.5" style="fill:white;stroke:black;stroke-width:0.6"></rect><ellipse cx="22.5" cy="3.75" rx="3.75" ry="3.75" style="fill:white;stroke:black;stroke-width:0.6"></ellipse><rect x="15" y="0.6" width="7.5" height="6.3" style="fill:white;stroke:white;stroke-width:0.6"></rect></a></svg>
+![Rendered green capsule](public/rendered_green_capsule.png)
