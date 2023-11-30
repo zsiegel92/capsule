@@ -15,13 +15,17 @@ export default async function Home() {
 
 async function UserHome() {
     const session = await getServerSession(authOptions);
-    if (!session?.user) {
-        redirect('/login');
-    }
+    // if (!session?.user) {
+    //     redirect('/login');
+    // }
     return (
         <div>
             <h1 className="mb-4 text-4xl leading-none tracking-tight text-gray-900 md:text-4xl lg:text-5xl">
-                Welcome to CAPSULE, {session?.user.email}
+                {session?.user?.email ? (
+                    <>Welcome to CAPSULE, {session?.user?.email}</>
+                ) : (
+                    <>Welcome to CAPSULE</>
+                )}
             </h1>
             {/* <CapsuleServerGrid n={100} /> */}
             <div
