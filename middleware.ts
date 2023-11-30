@@ -1,7 +1,7 @@
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
-const PROTECTED_ROUTES = ['/partner', '/author', 'capsules'];
+const PROTECTED_ROUTES = ['/partner', '/author', '/capsules'];
 // const UNPROTECTED_ROUTES = ['/', '/login', '/register']
 
 const PROTECTED_ROUTES_SET = new Set(PROTECTED_ROUTES);
@@ -11,9 +11,9 @@ export default async function middleware(req: NextRequest) {
     // Get the pathname of the request (e.g. /, /protected)
     const path = req.nextUrl.pathname;
     // If it's the root path, just render it
-    if (path === '/') {
-        return NextResponse.next();
-    }
+    // if (path === '/') {
+    //     return NextResponse.next();
+    // }
 
     const session = await getToken({
         req,
