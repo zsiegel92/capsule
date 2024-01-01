@@ -6,6 +6,7 @@ import { getPartnerFromUser } from '@/lib/db_utils';
 import '@/styles/partnerStyles.css';
 import { AuthoredCapsules } from '@/components/AuthoredCapsules';
 import { getUserWithPartnershipByEmail } from '@/lib/dbActions';
+import { py } from '@/py';
 
 export default async function Author() {
     return (

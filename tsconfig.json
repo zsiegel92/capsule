@@ -18,6 +18,12 @@
       ],
       "@/auth": [
         "app/api/auth/[...nextauth]/route.ts"
+      ],
+      "@/py_client/*": [
+        "./py_client/*"
+      ],
+      "@/py" : [
+        "app/api/py/fastRPC.ts"
       ]
     },
     "strict": true,
