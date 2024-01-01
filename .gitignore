@@ -41,3 +41,5 @@ yarn-error.log*
 **/venv/
 
 .react-email
+**/__pycache__
+**/*.pyc

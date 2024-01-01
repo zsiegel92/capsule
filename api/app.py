@@ -24,6 +24,13 @@ async def hello2(message: MessageData) -> MessageData:
     return MessageData(message=message.message)
 
 
+@app.RPC
+async def hello3(message: str) -> MessageData:
+    '''Retuns a message depending on the route.'''
+    return MessageData(message=message)
+
+
+
 if __name__ == '__main__':
     import uvicorn
     uvicorn.run(

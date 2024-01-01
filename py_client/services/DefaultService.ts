@@ -55,4 +55,27 @@ export class DefaultService {
         });
     }
 
+    /**
+     * Hello3
+     * Retuns a message depending on the route.
+     * @returns MessageData Successful Response
+     * @throws ApiError
+     */
+    public postHello3({
+        message,
+    }: {
+        message: string,
+    }): CancelablePromise<MessageData> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/py/hello3',
+            query: {
+                'message': message,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+
 }

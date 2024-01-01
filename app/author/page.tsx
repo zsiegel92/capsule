@@ -7,6 +7,7 @@ import '@/styles/partnerStyles.css';
 import { AuthoredCapsules } from '@/components/AuthoredCapsules';
 import { getUserWithPartnershipByEmail } from '@/lib/dbActions';
 import { py } from '@/py';
+import { MessageData } from '@/py_client/models/MessageData';
 
 export default async function Author() {
     return (
@@ -16,7 +17,17 @@ export default async function Author() {
     );
 }
 
+async function testPython() {
+    let messageData: MessageData = { message: 'hello' };
+    const response = await py.postHello({ requestBody: messageData });
+    console.log(`Got response '${response.message}' from Python!`);
+
+    const response2 = await py.postHello3({ message: 'hello2' });
+    console.log(`Got response '${response2.message}' from Python!`);
+}
+
 async function UserAuthoredCapsules() {
+    await testPython();
     const session = await getServerSession();
     const email = session?.user?.email;
     if (!email) {
