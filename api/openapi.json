@@ -144,6 +144,11 @@
           "message": {
             "type": "string",
             "title": "Message"
+          },
+          "currentTime": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Currenttime"
           }
         },
         "type": "object",

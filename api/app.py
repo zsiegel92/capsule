@@ -1,16 +1,14 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from datetime import datetime
+# from prisma import Prisma
 from .FastRPC import FastRPC
-
-from fastapi import FastAPI, Query
-from typing import Annotated
-import json
 
 app = FastRPC(prefix='/api/py')
 
 
 class MessageData(BaseModel):
     message: str
-
+    currentTime: datetime = Field(default_factory=datetime.now)
 
 @app.RPC
 async def hello(message: MessageData) -> MessageData:

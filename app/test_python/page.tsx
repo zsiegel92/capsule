@@ -8,91 +8,52 @@ import { AuthoredCapsules } from '@/components/AuthoredCapsules';
 import { getUserWithPartnershipByEmail } from '@/lib/dbActions';
 import { py } from '@/py';
 import { MessageData } from '@/py_client/models/MessageData';
+import { getToken } from 'next-auth/jwt';
+import { headers, cookies } from 'next/headers';
+import { decode } from 'next-auth/jwt';
 
-export default async function Author() {
-    return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <UserAuthoredCapsules />
-        </Suspense>
-    );
-}
+const secret = process.env.NEXTAUTH_SECRET || '';
 
-async function testPython() {
+async function testPython(): Promise<MessageData[]> {
+    let resps = [];
     let messageData: MessageData = { message: 'hello' };
     const response = await py.postHello({ requestBody: messageData });
     console.log(`Got response '${response.message}' from Python!`);
+    resps.push(response);
 
     const response2 = await py.postHello3({ message: 'hello2' });
     console.log(`Got response '${response2.message}' from Python!`);
+    resps.push(response2);
+    return resps;
 }
 
-async function UserAuthoredCapsules() {
-    await testPython();
+export default async function TestPython() {
+    let messages = await testPython();
     const session = await getServerSession();
     const email = session?.user?.email;
     if (!email) {
         return <div>Not logged in!</div>;
     }
     const user = await getUserWithPartnershipByEmail(email);
-
     if (!user) {
         return <div>Not logged in!</div>;
     }
+    // console.log(secret);
 
-    const authoredCapsules = user.authoredCapsules;
+    const token = cookies().get('next-auth.session-token')?.value || '';
+    const session_diy = await decode({ token, secret });
+    // const token = await getToken({ req, secret });
+    console.log('session_diy\n');
+    console.log(session_diy);
 
-    const partnership = user.partnership;
-    const partner = getPartnerFromUser(user);
-    const partnershipCapsules = user?.partnership?.capsules || [];
+    // console.log('JSON Web Token', token);
+    // const { Auth, API } = withSSRContext({ req });
     return (
         <>
-            <h2 className="mb-3 text-3xl leading-none tracking-tight text-gray-900 md:text-3xl lg:text-4xl">
-                Author Capsules
-            </h2>
-            {partner && (
-                <h3 className="mb-2 text-2xl leading-none tracking-tight text-gray-900 md:text-2xl lg:text-3xl">
-                    Seal a capsule to share it with {partner.firstName}!
-                </h3>
-            )}
-            <AuthoredCapsules user={user} />{' '}
-            {authoredCapsules?.length &&
-            authoredCapsules.length > 0 &&
-            !partnership ? (
-                <div
-                    style={{
-                        margin: '50px',
-                        padding: '50px',
-                    }}
-                >
-                    <Link
-                        className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
-                        href="/partner"
-                    >
-                        Find a partner
-                    </Link>{' '}
-                    to seal your capsules!
-                </div>
-            ) : (
-                <></>
-            )}
-            {partnershipCapsules?.length && partnershipCapsules.length > 0 ? (
-                <div
-                    style={{
-                        margin: '50px',
-                        padding: '50px',
-                    }}
-                >
-                    <Link
-                        className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
-                        href="/capsules"
-                    >
-                        Interact with sealed capsules
-                    </Link>{' '}
-                    when you are ready :)
-                </div>
-            ) : (
-                <></>
-            )}
+            <h2>Responses from Python</h2>
+            <pre>
+                <code>{JSON.stringify(messages, null, 2)}</code>
+            </pre>
         </>
     );
 }

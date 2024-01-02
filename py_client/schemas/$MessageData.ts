@@ -8,5 +8,9 @@ export const $MessageData = {
             type: 'string',
             isRequired: true,
         },
+        currentTime: {
+            type: 'string',
+            format: 'date-time',
+        },
     },
 } as const;

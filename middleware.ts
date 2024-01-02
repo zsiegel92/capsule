@@ -32,7 +32,7 @@ export default async function middleware(req: NextRequest) {
         req,
         secret: process.env.NEXTAUTH_SECRET,
     });
-
+    // console.log('***SESSION***', session);
     // if (!session) { //&& (path.startsWith(PROTECTED_PREFIX) || PROTECTED_ROUTES_SET.has(path))
     if (!session && PROTECTED_ROUTES_SET.has(path)) {
         //&& (path.startsWith(PROTECTED_PREFIX) || PROTECTED_ROUTES_SET.has(path))

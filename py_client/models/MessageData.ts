@@ -5,5 +5,6 @@
 
 export type MessageData = {
     message: string;
+    currentTime?: string;
 };
 
