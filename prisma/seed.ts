@@ -3,20 +3,33 @@ import { hash } from 'bcrypt';
 
 const prisma = new PrismaClient();
 async function main() {
-    const z1password = process.env.Z1PASSWORD || 'testPassword';
-    const hashed = await hash(z1password, 10);
-    console.log(`Seeding with password ${z1password} hashed to ${hashed}`);
-    const z1 = await prisma.user.upsert({
-        where: { email: 'zsiegel92@gmail.com' },
+	
+    const testUserPassword = process.env.TESTUSERPASSWORD || 'testPassword';
+    const hashedTestUserPassword = await hash(testUserPassword, 10);
+
+    const email1 = process.env.EMAIL1 || 'test@test.com';
+    const testUser1 = await prisma.user.upsert({
+        where: { email: email1 },
         update: {},
         create: {
-            email: 'zsiegel92@gmail.com',
+            email: email1,
             firstName: 'Zach',
-            password: hashed,
+            password: hashedTestUserPassword,
         },
     });
 
-    console.log({ z1 });
+    const email2 = process.env.EMAIL2 || 'test@test.com';
+    const testUser2 = await prisma.user.upsert({
+        where: { email: email2 },
+        update: {},
+        create: {
+            email: email2,
+            firstName: 'Zach2',
+            password: hashedTestUserPassword,
+        },
+    });
+
+    console.log({ testUser1, testUser2 });
 }
 main()
     .then(async () => {

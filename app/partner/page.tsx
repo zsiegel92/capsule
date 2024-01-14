@@ -189,8 +189,11 @@ async function IncomingPartnerRequest({
                         borderRadius: '5px',
                     }}
                 >
-                    <code>{partnerRequest.from.email}</code> wants to be your
-                    partner!
+                    <code>
+                        {partnerRequest.fromUser.firstName} (
+                        {partnerRequest.fromUser.email})
+                    </code>{' '}
+                    wants to be your partner!
                 </p>
             </td>
             <td>
