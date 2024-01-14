@@ -2,7 +2,8 @@
   "private": true,
   "scripts": {
     "dev": "prisma generate && next dev",
-    "build": "prisma generate && prisma db push && next build",
+    "build": "prisma generate && next build",
+    "dbpush": "prisma db push",
     "start": "next start",
     "lint": "next lint",
     "email": "email dev --port=3001"
