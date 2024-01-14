@@ -2,7 +2,8 @@
   "private": true,
   "scripts": {
     "dev": "prisma generate && next dev",
-    "build": "prisma generate && prisma db push && next build",
+    "build": "prisma db push && prisma generate && next build",
+    "dbpush": "prisma db push",
     "start": "next start",
     "lint": "next lint",
     "email": "email dev --port=3001",
@@ -23,7 +24,6 @@
     "@react-email/render": "0.0.9",
     "@react-email/section": "^0.0.10",
     "@react-email/text": "^0.0.6",
-    "@types/node": "^18.11.9",
     "@vercel/analytics": "^1.1.1",
     "bcrypt": "^5.1.0",
     "bootstrap": "^5.3.2",
@@ -42,6 +42,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
+    "@types/node": "^20.11.0",
     "@types/nodemailer": "^6.4.14",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
@@ -53,7 +54,8 @@
     "openapi-typescript-codegen": "^0.25.0",
     "postcss": "^8.4.12",
     "prisma": "^5.5.2",
-    "typescript": "^5.2.2"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   },
   "watch": {
     "gen-client": {
@@ -62,5 +64,8 @@
       ],
       "extensions": "json"
     }
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   }
 }

@@ -189,8 +189,11 @@ async function IncomingPartnerRequest({
                         borderRadius: '5px',
                     }}
                 >
-                    <code>{partnerRequest.from.email}</code> wants to be your
-                    partner!
+                    <code>
+                        {partnerRequest.fromUser.firstName} (
+                        {partnerRequest.fromUser.email})
+                    </code>{' '}
+                    wants to be your partner!
                 </p>
             </td>
             <td>
@@ -207,7 +210,7 @@ async function OutgoingPartnerRequests({
 }) {
     const outgoingPartnerRequests = await prisma.partnerRequest.findMany({
         where: {
-            from: {
+            fromUser: {
                 email: user.email,
             },
         },

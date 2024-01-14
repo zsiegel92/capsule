@@ -83,7 +83,7 @@ export type UserWithPartnershipAndAuthoredCapsules = Prisma.UserGetPayload<
 
 export const PartnerRequestIncludeUserPayload = {
     include: {
-        from: {
+        fromUser: {
             select: {
                 ...scalarsExcludingPassword,
             },

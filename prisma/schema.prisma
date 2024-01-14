@@ -31,7 +31,7 @@ model PartnerRequest {
   toEmail   String
   fromId    Int
   createdAt DateTime @default(now())
-  from      User     @relation("PartnerRequest", fields: [fromId], references: [id])
+  fromUser      User     @relation("PartnerRequest", fields: [fromId], references: [id])
 
   @@unique([toEmail, fromId])
 }
