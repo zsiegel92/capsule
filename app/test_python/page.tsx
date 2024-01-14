@@ -6,7 +6,7 @@ import { getPartnerFromUser } from '@/lib/db_utils';
 import '@/styles/partnerStyles.css';
 import { AuthoredCapsules } from '@/components/AuthoredCapsules';
 import { getUserWithPartnershipByEmail } from '@/lib/dbActions';
-import { py } from '@/py';
+import { PythonClient } from '@/py_client/PythonClient';
 import { MessageData } from '@/py_client/models/MessageData';
 import { getToken } from 'next-auth/jwt';
 import { headers, cookies } from 'next/headers';
@@ -15,6 +15,14 @@ import { decode } from 'next-auth/jwt';
 const secret = process.env.NEXTAUTH_SECRET || '';
 
 async function testPython(): Promise<MessageData[]> {
+    // TODO:
+    // BASE comes from env variable OR header
+    // TOKEN comes from header, FastAPI handles it as a dep.
+    const py = new PythonClient({
+        BASE: 'http://localhost:8000',
+        TOKEN: '1234',
+    }).default;
+
     let resps = [];
     let messageData: MessageData = { message: 'hello' };
     const response = await py.postHello({ requestBody: messageData });
@@ -24,6 +32,9 @@ async function testPython(): Promise<MessageData[]> {
     const response2 = await py.postHello3({ message: 'hello2' });
     console.log(`Got response '${response2.message}' from Python!`);
     resps.push(response2);
+
+    const response3 = await py.postGetUser();
+    console.log(`Got response '${response3}' from Python!`);
     return resps;
 }
 

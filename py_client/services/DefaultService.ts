@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { MessageData } from '../models/MessageData';
+import type { User } from '../models/User';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
@@ -75,6 +76,19 @@ export class DefaultService {
             errors: {
                 422: `Validation Error`,
             },
+        });
+    }
+
+    /**
+     * Getuser
+     * Retuns a message depending on the route.
+     * @returns User Successful Response
+     * @throws ApiError
+     */
+    public postGetUser(): CancelablePromise<User> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/py/getUser',
         });
     }
 
