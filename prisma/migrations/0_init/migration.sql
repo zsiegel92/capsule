@@ -63,3 +63,4 @@ ALTER TABLE "Capsule" ADD CONSTRAINT "Capsule_authorId_fkey" FOREIGN KEY ("autho
 
 -- AddForeignKey
 ALTER TABLE "Capsule" ADD CONSTRAINT "Capsule_partnershipId_fkey" FOREIGN KEY ("partnershipId") REFERENCES "Partnership"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
