@@ -167,7 +167,7 @@ export const sendPartnerRequest = async (email: string) => {
     try {
         partnerRequest = await prisma.partnerRequest.create({
             data: {
-                from: {
+                fromUser: {
                     connect: {
                         id: sending_user.id,
                     },

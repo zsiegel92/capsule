@@ -210,7 +210,7 @@ async function OutgoingPartnerRequests({
 }) {
     const outgoingPartnerRequests = await prisma.partnerRequest.findMany({
         where: {
-            from: {
+            fromUser: {
                 email: user.email,
             },
         },
