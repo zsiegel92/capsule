@@ -1,5 +1,6 @@
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
+import { headers, cookies } from 'next/headers';
 
 // https://nextjs.org/docs/pages/building-your-application/routing/middleware#matcher
 export const config = {
@@ -16,7 +17,6 @@ export const config = {
     //   ]
 };
 
-
 const PROTECTED_ROUTES_SET = new Set(config.matcher);
 // const PROTECTED_PREFIX = '/app'
 
@@ -27,11 +27,13 @@ export default async function middleware(req: NextRequest) {
     // if (path === '/') {
     //     return NextResponse.next();
     // }
-
+    return NextResponse.next();
     const session = await getToken({
         req,
         secret: process.env.NEXTAUTH_SECRET,
     });
+    console.log('GOT TOKEN');
+    console.log(session);
     // console.log('***SESSION***', session);
     // if (!session) { //&& (path.startsWith(PROTECTED_PREFIX) || PROTECTED_ROUTES_SET.has(path))
     if (!session && PROTECTED_ROUTES_SET.has(path)) {
