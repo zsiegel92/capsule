@@ -24,6 +24,7 @@ const secret = process.env.NEXTAUTH_SECRET || '';
 //     return session_diy;
 // };
 
+// TODO: write `getEncodedPythonSession` that is agnostic to client/server
 const getEncodedPythonServerSession = async (): Promise<string> => {
     const secret = process.env.NEXTAUTH_SECRET || '';
     const token = cookies().get('next-auth.session-token')?.value || '';
