@@ -18,9 +18,16 @@ async function testPython(): Promise<MessageData[]> {
     // TODO:
     // BASE comes from env variable OR header
     // TOKEN comes from header, FastAPI handles it as a dep.
+    // let secret = process.env.NEXTAUTH_SECRET;
+
+    // const decodedToken = jwt.verify(tk, secret, {
+    //     algorithms: ['HS256'],
+    // });
+    // return Promise.resolve(decodedToken);
     const py = new PythonClient({
         BASE: 'http://localhost:8000',
-        TOKEN: '1234',
+        TOKEN: cookies().get('next-auth.session-token')?.value || '',
+        // TOKEN: '1234',
     }).default;
 
     let resps = [];
