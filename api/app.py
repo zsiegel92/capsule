@@ -37,7 +37,7 @@ async def getUser() -> User:
     prisma = Prisma()
     await prisma.connect()
     user = await prisma.user.find_first(where={'id': 1})
-    # print(f'PRINTING USER FROM PYTHON: {user}')
+    print(f'PRINTING USER FROM PYTHON: {user}')
     # user = User(id=1, name='test', email='test', password='test')
     # print(f'PRINTING USER FROM PYTHON: {user}')
     return user
