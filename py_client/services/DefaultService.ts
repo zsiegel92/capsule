@@ -3,7 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { MessageData } from '../models/MessageData';
-import type { User } from '../models/User';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
@@ -82,10 +81,10 @@ export class DefaultService {
     /**
      * Getuser
      * Retuns a message depending on the route.
-     * @returns User Successful Response
+     * @returns any Successful Response
      * @throws ApiError
      */
-    public postGetUser(): CancelablePromise<User> {
+    public postGetUser(): CancelablePromise<any> {
         return this.httpRequest.request({
             method: 'POST',
             url: '/api/py/getUser',

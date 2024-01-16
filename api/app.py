@@ -10,9 +10,8 @@ from prisma.models import Capsule, User
 from passlib.context import CryptContext
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-import jwt as pyjwt
 
-from .FastRPC import FastRPC
+from .FastRPC import FastRPC, CurrentUser
 
 app = FastRPC(prefix='/api/py')
 
@@ -40,13 +39,6 @@ async def hello3(message: str) -> MessageData:
     return MessageData(message=message)
 
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-ALGORITHM = "HS256"  # "HS512"  #"HS256" # next-auth uses "A256GCM" by default
-SECRET_KEY = os.environ.get('NEXTAUTH_SECRET')
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
 # class User(BaseModel):
 #     username: str
 #     email: Union[str, None] = None
@@ -54,47 +46,8 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 #     disabled: Union[bool, None] = None
 
 
-class BasicUser(BaseModel):
-    email: str
-    # sub: str
-
-
-class Session(BaseModel):
-    user: BasicUser
-    iat: int
-
-
-async def decode_token(token: str) -> Session:
-    payload = pyjwt.decode(
-        token,
-        key=SECRET_KEY,
-        algorithms=[ALGORITHM],
-        options={
-            #     "verify_signature": False,
-            'verify_exp': False,
-            #     'verify_nbf': False,
-            'verify_iat': False,
-            #     'verify_aud': False,
-        },
-    )
-    return Session(**payload)
-
-
-async def get_current_user(
-        token: Annotated[str, Depends(oauth2_scheme)]) -> User:
-    session = await decode_token(token)
-    prisma = Prisma()
-    await prisma.connect()
-    user = await prisma.user.find_first(where={
-        'email': session.user.email,
-        # 'id': session['user']['sub'],
-    })
-    return user
-
-
 @app.RPC
-async def getUser(
-        current_user: Annotated[User, Depends(get_current_user)]) -> User:
+async def getUser(current_user: CurrentUser):
     '''Retuns a message depending on the route.'''
     print('PRINTING CURRENT USER FROM PYTHON!')
     print(current_user)

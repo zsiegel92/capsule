@@ -10,6 +10,7 @@ import re
 from fastapi.routing import APIRoute
 from fastapi.utils import generate_unique_id as default_generate_unique_id
 
+from .Auth import CurrentUser
 
 class FastRPC(FastAPI):
 
