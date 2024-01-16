@@ -11,8 +11,41 @@ import { MessageData } from '@/py_client/models/MessageData';
 import { getToken } from 'next-auth/jwt';
 import { headers, cookies } from 'next/headers';
 import { decode } from 'next-auth/jwt';
+import { get } from 'http';
+var jwt = require('jsonwebtoken');
 
 const secret = process.env.NEXTAUTH_SECRET || '';
+
+// // `getServerSession` only returns name, email, and image for some reason.
+// // this includes `'sub'`, `'iat'`, `'exp'`, and `'jti'`.
+// const getServerSession = async () => {
+//     const token = cookies().get('next-auth.session-token')?.value || '';
+//     const session_diy = await decode({ token, secret });
+//     return session_diy;
+// };
+
+const getEncodedPythonServerSession = async (): Promise<string> => {
+    const secret = process.env.NEXTAUTH_SECRET || '';
+    const token = cookies().get('next-auth.session-token')?.value || '';
+    const session = await decode({ token, secret });
+    // const session = await getServerSession();
+
+    const jwtClaims = {
+        user: session,
+    };
+    const encodedToken = jwt.sign(jwtClaims, secret, {
+        algorithm: 'HS256',
+    });
+    return encodedToken;
+};
+
+// const decodePythonSession = (token: string) => {
+//     const secret = process.env.NEXTAUTH_SECRET;
+//     const decodedToken = jwt.verify(token, secret, {
+//         algorithms: ['HS256'],
+//     });
+//     return decodedToken;
+// };
 
 async function testPython(): Promise<MessageData[]> {
     // TODO:
@@ -26,7 +59,8 @@ async function testPython(): Promise<MessageData[]> {
     // return Promise.resolve(decodedToken);
     const py = new PythonClient({
         BASE: 'http://localhost:8000',
-        TOKEN: cookies().get('next-auth.session-token')?.value || '',
+        TOKEN: await getEncodedPythonServerSession(),
+        // cookies().get('next-auth.session-token')?.value || '',
         // TOKEN: '1234',
     }).default;
 
@@ -42,6 +76,7 @@ async function testPython(): Promise<MessageData[]> {
 
     const response3 = await py.postGetUser();
     console.log(`Got response '${response3}' from Python!`);
+    resps.push(response3);
     return resps;
 }
 
