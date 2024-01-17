@@ -14,14 +14,11 @@ import jwt as pyjwt
 from prisma.models import User
 
 
-class BasicUser(BaseModel):
-    email: str
-    # sub: str
-
-
 class Session(BaseModel):
-    user: BasicUser
-    iat: int
+    email: str
+    sub: str | int
+    iat: int | float
+    exp: int | float
 
 
 async def decode_token(token: str) -> Session:
@@ -37,6 +34,8 @@ async def decode_token(token: str) -> Session:
             #     'verify_aud': False,
         },
     )
+    print("PAYLOAD")
+    print(payload)
     return Session(**payload)
 
 
@@ -50,6 +49,11 @@ async def get_current_user(
         'email': session.user.email,
         # 'id': session['user']['sub'],
     })
+    if not user:
+        raise HTTPException(
+            status_code=400,
+            detail="Incorrect username or password",
+        )
     return user
 
 

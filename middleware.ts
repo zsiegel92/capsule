@@ -21,6 +21,7 @@ const PROTECTED_ROUTES_SET = new Set(config.matcher);
 // const PROTECTED_PREFIX = '/app'
 
 export default async function middleware(req: NextRequest) {
+    // return NextResponse.next();
     // Get the pathname of the request (e.g. /, /protected)
     const path = req.nextUrl.pathname;
     // If it's the root path, just render it

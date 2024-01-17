@@ -11,6 +11,7 @@ import { User } from "@prisma/client"
 import { Analytics } from '@vercel/analytics/react';
 
 import { NavBar } from '@/components/nav';
+import { authOptions } from '@/auth';
 
 import 'bootstrap/dist/css/bootstrap.css';
 
@@ -39,7 +40,7 @@ export default async function RootLayout({
 }: {
     children: React.ReactNode;
 }) {
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
     return (
         <html lang="en" suppressHydrationWarning>
             <body className={inter.variable}>

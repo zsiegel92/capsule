@@ -14,6 +14,8 @@ import { decode } from 'next-auth/jwt';
 import { get } from 'http';
 var jwt = require('jsonwebtoken');
 
+import { authOptions } from '@/auth';
+
 const secret = process.env.NEXTAUTH_SECRET || '';
 
 // // `getServerSession` only returns name, email, and image for some reason.
@@ -48,7 +50,7 @@ const getEncodedPythonServerSession = async (): Promise<string> => {
 //     return decodedToken;
 // };
 
-async function testPython(): Promise<MessageData[]> {
+async function testPython(): Promise<any[]> {
     // TODO:
     // BASE comes from env variable OR header
     // TOKEN comes from header, FastAPI handles it as a dep.
@@ -66,8 +68,7 @@ async function testPython(): Promise<MessageData[]> {
         // TOKEN: '1234',
     }).default;
 
-
-    let resps = [];
+    let resps: any[] = [];
     let messageData: MessageData = { message: 'hello' };
     const response = await py.postHello({ requestBody: messageData });
     console.log(`Got response '${response.message}' from Python!`);
@@ -84,23 +85,26 @@ async function testPython(): Promise<MessageData[]> {
 }
 
 export default async function TestPython() {
-    let messages = await testPython();
-    const session = await getServerSession();
+    // let messages = await testPython();
+    let messages: any[] = [];
+    const session = await getServerSession(authOptions);
     const email = session?.user?.email;
-    if (!email) {
-        return <div>Not logged in!</div>;
-    }
-    const user = await getUserWithPartnershipByEmail(email);
-    if (!user) {
-        return <div>Not logged in!</div>;
-    }
+    console.log('LOGGING SESSION FROM test_python');
+    console.log(session);
+    // if (!email) {
+    //     return <div>Not logged in!</div>;
+    // }
+    // const user = await getUserWithPartnershipByEmail(email);
+    // if (!user) {
+    //     return <div>Not logged in!</div>;
+    // }
     // console.log(secret);
 
-    const token = cookies().get('next-auth.session-token')?.value || '';
-    const session_diy = await decode({ token, secret });
+    // const token = cookies().get('next-auth.session-token')?.value || '';
+    // const session_diy = await decode({ token, secret });
     // const token = await getToken({ req, secret });
-    console.log('session_diy\n');
-    console.log(session_diy);
+    // console.log('session_diy\n');
+    // console.log(session_diy);
 
     // console.log('JSON Web Token', token);
     // const { Auth, API } = withSSRContext({ req });
