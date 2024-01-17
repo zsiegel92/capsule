@@ -133,7 +133,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
               }
             }
           }
@@ -144,10 +146,136 @@
           }
         ]
       }
+    },
+    "/api/py/hello4": {
+      "get": {
+        "summary": "Hello4",
+        "description": "Retuns a hello message.",
+        "operationId": "get_hello4",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "Capsule": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "open": {
+            "type": "boolean",
+            "title": "Open"
+          },
+          "openedBy": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/User"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "openedById": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Openedbyid"
+          },
+          "color": {
+            "type": "string",
+            "title": "Color"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "authorId": {
+            "type": "integer",
+            "title": "Authorid"
+          },
+          "partnershipId": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Partnershipid"
+          },
+          "lastOpened": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastopened"
+          },
+          "nTimesOpened": {
+            "type": "integer",
+            "title": "Ntimesopened"
+          },
+          "author": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/User"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "partnership": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Partnership"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "createdAt",
+          "open",
+          "color",
+          "message",
+          "authorId",
+          "nTimesOpened"
+        ],
+        "title": "Capsule",
+        "description": "Represents a Capsule record"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -178,6 +306,186 @@
           "message"
         ],
         "title": "MessageData"
+      },
+      "PartnerRequest": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "toEmail": {
+            "type": "string",
+            "title": "Toemail"
+          },
+          "fromId": {
+            "type": "integer",
+            "title": "Fromid"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "fromUser": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/User"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "toEmail",
+          "fromId",
+          "createdAt"
+        ],
+        "title": "PartnerRequest",
+        "description": "Represents a PartnerRequest record"
+      },
+      "Partnership": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "capsules": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/Capsule"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Capsules"
+          },
+          "partners": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/User"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Partners"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "createdAt"
+        ],
+        "title": "Partnership",
+        "description": "Represents a Partnership record"
+      },
+      "User": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          },
+          "firstName": {
+            "type": "string",
+            "title": "Firstname"
+          },
+          "partnershipId": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Partnershipid"
+          },
+          "authoredCapsules": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/Capsule"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Authoredcapsules"
+          },
+          "partnerRequests": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PartnerRequest"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Partnerrequests"
+          },
+          "partnership": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Partnership"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "openedCapsules": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/Capsule"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Openedcapsules"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "email",
+          "password",
+          "firstName"
+        ],
+        "title": "User",
+        "description": "Represents a User record"
       },
       "ValidationError": {
         "properties": {

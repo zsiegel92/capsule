@@ -31,9 +31,9 @@ async def decode_token(token: str) -> Session:
         algorithms=["HS256"],
         options={
             #     "verify_signature": False,
-            'verify_exp': False,
+            'verify_exp': True,
             #     'verify_nbf': False,
-            'verify_iat': False,
+            'verify_iat': True,
             #     'verify_aud': False,
         },
     )

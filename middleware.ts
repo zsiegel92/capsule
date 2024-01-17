@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 // https://nextjs.org/docs/pages/building-your-application/routing/middleware#matcher
 export const config = {
-    matcher: ['/partner', '/author', '/capsules'], // This cannot be an expression except a literal! Very weird way this file is parsed: https://nextjs.org/docs/messages/invalid-page-config
+    matcher: ['/partner', '/author', '/capsules', '/test_python'], // This cannot be an expression except a literal! Very weird way this file is parsed: https://nextjs.org/docs/messages/invalid-page-config
     //   matcher: [
     //     /*
     //  * Match all request paths except for the ones starting with:

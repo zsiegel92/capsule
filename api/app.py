@@ -47,12 +47,22 @@ async def hello3(message: str) -> MessageData:
 
 
 @app.RPC
-async def getUser(current_user: CurrentUser):
+async def getUser(current_user: CurrentUser) -> User:
     '''Retuns a message depending on the route.'''
     print('PRINTING CURRENT USER FROM PYTHON!')
     print(current_user)
 
     return current_user
+
+
+@app.get_RPC
+async def hello4():
+    '''Retuns a hello message.'''
+    return 'hello 4'
+
+
+
+
 
 if __name__ == '__main__':
     import uvicorn

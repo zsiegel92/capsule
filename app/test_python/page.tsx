@@ -58,12 +58,14 @@ async function testPython(): Promise<MessageData[]> {
     //     algorithms: ['HS256'],
     // });
     // return Promise.resolve(decodedToken);
+
     const py = new PythonClient({
         BASE: 'http://localhost:8000',
         TOKEN: await getEncodedPythonServerSession(),
         // cookies().get('next-auth.session-token')?.value || '',
         // TOKEN: '1234',
     }).default;
+
 
     let resps = [];
     let messageData: MessageData = { message: 'hello' };
