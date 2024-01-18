@@ -11,13 +11,11 @@ import {
     CapsuleWithUsers,
 } from '@/lib/types';
 import { getPartnerFromUser } from '@/lib/db_utils';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/auth';
 import { getUserWithPartnershipByEmail } from '@/lib/dbActions';
-
+import { getServerSession } from '@/auth';
 
 export async function createCapsule(color: string | null, message: string) {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession();
     if (!session?.user?.email) {
         throw new Error('No user found in session');
     }
@@ -44,7 +42,7 @@ export async function createCapsule(color: string | null, message: string) {
 }
 
 export async function deleteCapsule(capsule: CapsuleWithUsers) {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession();
     if (!session?.user) {
         throw new Error('No user found in session');
     }
@@ -68,7 +66,7 @@ export async function updateCapsuleScalars(
     color: string | null,
     message: string,
 ) {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession();
     if (!session?.user) {
         throw new Error('No user found in session');
     }
@@ -97,7 +95,7 @@ export async function updateCapsuleOpen(
     open: boolean = true,
     revalidate: boolean = true,
 ) {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession();
     if (!session?.user?.email) {
         throw new Error('No user found in session');
     }
@@ -140,7 +138,7 @@ export async function updateCapsuleOpen(
 }
 
 export async function sealCapsule(capsule: CapsuleWithUsers) {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession();
     if (!session?.user?.email) {
         throw new Error('No user found in session');
     }

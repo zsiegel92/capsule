@@ -5,13 +5,12 @@ import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import AuthStatus from "@/components/auth-status";
 import { Suspense } from "react";
-import { SessionProvider } from 'next-auth/react'
-import { getServerSession } from "next-auth/next"
-import { User } from "@prisma/client"
+import { SessionProvider } from 'next-auth/react';
+import { User } from '@prisma/client';
 import { Analytics } from '@vercel/analytics/react';
 
 import { NavBar } from '@/components/nav';
-import { authOptions } from '@/auth';
+import { getServerSession } from '@/auth';
 
 import 'bootstrap/dist/css/bootstrap.css';
 
@@ -40,7 +39,7 @@ export default async function RootLayout({
 }: {
     children: React.ReactNode;
 }) {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession();
     return (
         <html lang="en" suppressHydrationWarning>
             <body className={inter.variable}>

@@ -23,19 +23,13 @@ class MessageData(BaseModel):
 
 @app.RPC
 async def hello(message: MessageData) -> MessageData:
-    '''Retuns a message depending on the route.'''
+    '''Retuns a message depending on the message body.'''
     return MessageData(message=message.message)
 
 
 @app.RPC
-async def hello2(message: MessageData) -> MessageData:
-    '''Retuns a message depending on the route.'''
-    return MessageData(message=message.message)
-
-
-@app.RPC
-async def hello3(message: str) -> MessageData:
-    '''Retuns a message depending on the route.'''
+async def hello2(message: str) -> MessageData:
+    '''Retuns a message depending on the message body.'''
     return MessageData(message=message)
 
 
@@ -46,19 +40,20 @@ async def hello3(message: str) -> MessageData:
 #     disabled: Union[bool, None] = None
 
 
-@app.RPC
-async def getUser(current_user: CurrentUser) -> User:
-    '''Retuns a message depending on the route.'''
-    print('PRINTING CURRENT USER FROM PYTHON!')
-    print(current_user)
-
-    return current_user
-
-
 @app.get_RPC
-async def hello4():
+async def hello4() -> str:
     '''Retuns a hello message.'''
     return 'hello 4'
+
+
+@app.RPC
+async def getUser(current_user: CurrentUser) -> User:
+    '''Retuns the current user.'''
+    print('PRINTING CURRENT USER FROM PYTHON!')
+    print(current_user)
+    current_user.password = None
+    return current_user
+
 
 
 

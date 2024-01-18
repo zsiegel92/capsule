@@ -1,21 +1,10 @@
-import { getServerSession } from 'next-auth/next';
-import { Suspense } from 'react';
-import Link from 'next/link';
-
-import { getPartnerFromUser } from '@/lib/db_utils';
 import '@/styles/partnerStyles.css';
-import { AuthoredCapsules } from '@/components/AuthoredCapsules';
-import { getUserWithPartnershipByEmail } from '@/lib/dbActions';
+import { headers, cookies } from 'next/headers';
+import { getServerSession } from '@/auth';
+
 import { PythonClient } from '@/py_client/PythonClient';
 import { MessageData } from '@/py_client/models/MessageData';
-import { getToken } from 'next-auth/jwt';
-import { headers, cookies } from 'next/headers';
-import { decode } from 'next-auth/jwt';
-import { get } from 'http';
-var jwt = require('jsonwebtoken');
-
-import { authOptions } from '@/auth';
-
+import { getClient } from '@/fastRPC';
 const secret = process.env.NEXTAUTH_SECRET || '';
 
 // // `getServerSession` only returns name, email, and image for some reason.
@@ -25,22 +14,6 @@ const secret = process.env.NEXTAUTH_SECRET || '';
 //     const session_diy = await decode({ token, secret });
 //     return session_diy;
 // };
-
-// TODO: write `getEncodedPythonSession` that is agnostic to client/server
-const getEncodedPythonServerSession = async (): Promise<string> => {
-    const secret = process.env.NEXTAUTH_SECRET || '';
-    const token = cookies().get('next-auth.session-token')?.value || '';
-    const session = await decode({ token, secret });
-    // const session = await getServerSession();
-
-    const jwtClaims = {
-        user: session,
-    };
-    const encodedToken = jwt.sign(jwtClaims, secret, {
-        algorithm: 'HS256',
-    });
-    return encodedToken;
-};
 
 // const decodePythonSession = (token: string) => {
 //     const secret = process.env.NEXTAUTH_SECRET;
@@ -60,34 +33,28 @@ async function testPython(): Promise<any[]> {
     //     algorithms: ['HS256'],
     // });
     // return Promise.resolve(decodedToken);
-
-    const py = new PythonClient({
-        BASE: 'http://localhost:8000',
-        TOKEN: await getEncodedPythonServerSession(),
-        // cookies().get('next-auth.session-token')?.value || '',
-        // TOKEN: '1234',
-    }).default;
+    const py = getClient();
 
     let resps: any[] = [];
     let messageData: MessageData = { message: 'hello' };
-    const response = await py.postHello({ requestBody: messageData });
+    const response = await py.hello({ requestBody: messageData });
     console.log(`Got response '${response.message}' from Python!`);
     resps.push(response);
 
-    const response2 = await py.postHello3({ message: 'hello2' });
+    const response2 = await py.hello2({ message: 'hello2' });
     console.log(`Got response '${response2.message}' from Python!`);
     resps.push(response2);
 
-    const response3 = await py.postGetUser();
+    const response3 = await py.getUser();
     console.log(`Got response '${response3}' from Python!`);
     resps.push(response3);
     return resps;
 }
 
 export default async function TestPython() {
-    // let messages = await testPython();
-    let messages: any[] = [];
-    const session = await getServerSession(authOptions);
+    let messages = await testPython();
+    // let messages: any[] = [];
+    const session = await getServerSession();
     const email = session?.user?.email;
     console.log('LOGGING SESSION FROM test_python');
     console.log(session);

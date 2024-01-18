@@ -28,6 +28,8 @@
     "bcrypt": "^5.1.0",
     "bootstrap": "^5.3.2",
     "concurrently": "^8.2.2",
+    "jsonwebtoken": "^9.0.2",
+    "mapbox": "^1.0.0-beta10",
     "next": "^14.0.2",
     "next-auth": "^4.22.1",
     "nodemailer": "^6.9.7",
@@ -42,6 +44,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.5",
     "@types/node": "^20.11.0",
     "@types/nodemailer": "^6.4.14",
     "@types/react": "^18.2.37",

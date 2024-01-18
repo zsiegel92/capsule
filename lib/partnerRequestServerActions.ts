@@ -6,16 +6,15 @@ import prisma from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
 
 import { getPartnerFromUser } from '@/lib/db_utils';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/auth';
 import { getUserWithPartnershipByEmail } from '@/lib/dbActions';
+import { getServerSession } from '@/auth';
 
 export const acceptPartnerRequest = async (partnerRequest: PartnerRequest) => {
     ('use server');
     // console.log('partnerRequest', partnerRequest)
     // console.log('user', user)
 
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession();
 
     if (!session?.user?.email) {
         throw new Error('No user found in session');
@@ -80,7 +79,7 @@ export const acceptPartnerRequest = async (partnerRequest: PartnerRequest) => {
 export const deletePartnership = async () => {
     'use server';
 
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession();
     if (!session?.user?.email) {
         throw new Error('No user found in session');
     }
@@ -112,7 +111,7 @@ export const deletePartnership = async () => {
 export const cancelPartnerRequest = async (partnerRequest: PartnerRequest) => {
     'use server';
 
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession();
     if (!session?.user?.email) {
         throw new Error('No user found in session');
     }
@@ -146,7 +145,7 @@ export const cancelPartnerRequest = async (partnerRequest: PartnerRequest) => {
 export const sendPartnerRequest = async (email: string) => {
     ('use server');
     // const email = formData.get('searchedForPartnerEmail') as string;
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession();
     if (!session?.user?.email) {
         throw new Error('No user found in session');
     }
