@@ -4,10 +4,9 @@ from datetime import datetime
 from pydantic import BaseModel, Field
 from typing import Annotated, Union
 
-from prisma import Prisma
-from prisma.models import Capsule, User
+from .prisma.models import Capsule, User
+from .prisma.client import Prisma  # from prisma import Prisma if client in site_libs
 
-from passlib.context import CryptContext
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 

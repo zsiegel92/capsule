@@ -3,15 +3,13 @@ import os
 from pydantic import BaseModel, Field
 from typing import Annotated, Union, Optional
 
-from prisma import Prisma
-
-from passlib.context import CryptContext
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 import jwt as pyjwt
 from starlette.requests import Request
 
+from .prisma.client import Prisma  # from prisma import Prisma if client in site_libs
 from .prisma.models import User  # can use prisma.models
 # by default Prisma client generates to site_libs/prisma/models.py
 # schema.prisma specifies to generate to this version-controlled repo, so that Python client does not have to be built on deployment.
@@ -19,9 +17,9 @@ from .prisma.models import User  # can use prisma.models
 
 class Session(BaseModel):
     email: str
-    sub: str | int
-    iat: int | float
-    exp: int | float | None = None
+    sub: Union[str, int]
+    iat: Union[int, float]
+    exp: Union[int, float, None] = None
 
 
 async def decode_token(token: str) -> Session:

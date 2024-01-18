@@ -39,7 +39,7 @@ yarn-error.log*
 
 # Python virtual environments
 **/venv/
-
+**/venv*/
 .react-email
 **/__pycache__
 **/*.pyc
