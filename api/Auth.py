@@ -12,7 +12,9 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 import jwt as pyjwt
 from starlette.requests import Request
 
-from prisma.models import User
+from .prisma.models import User  # can use prisma.models
+# by default Prisma client generates to site_libs/prisma/models.py
+# schema.prisma specifies to generate to this version-controlled repo, so that Python client does not have to be built on deployment.
 
 
 class Session(BaseModel):
