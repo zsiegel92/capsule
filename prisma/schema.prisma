@@ -2,11 +2,13 @@ generator client {
   provider = "prisma-client-js"
 }
 
-generator py_client {
-  provider             = "prisma-client-py"
-  recursive_type_depth = 5
-  output = "../api/prisma"
-}
+// uncomment and run `prisma generate --generator py_client`
+// to generate python client
+// generator py_client {
+//   provider             = "prisma-client-py"
+//   recursive_type_depth = 5
+//   output = "../api/prisma"
+// }
 
 datasource db {
   provider          = "postgresql"
