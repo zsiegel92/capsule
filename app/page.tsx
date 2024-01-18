@@ -1,8 +1,7 @@
 import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/auth';
 import { InfiniteCapsules } from '@/components/capsule';
+import { authOptions, getServerSession } from '@/auth';
 
 // return <pre>{JSON.stringify(session, null, 2)}</pre>
 export default async function Home() {
@@ -14,7 +13,7 @@ export default async function Home() {
 }
 
 async function UserHome() {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession();
     // if (!session?.user) {
     //     redirect('/login');
     // }

@@ -1,4 +1,3 @@
-import { getServerSession } from 'next-auth/next';
 import { Suspense } from 'react';
 import Link from 'next/link';
 
@@ -6,6 +5,10 @@ import { getPartnerFromUser } from '@/lib/db_utils';
 import '@/styles/partnerStyles.css';
 import { AuthoredCapsules } from '@/components/AuthoredCapsules';
 import { getUserWithPartnershipByEmail } from '@/lib/dbActions';
+
+import { getServerSession } from '@/auth';
+// import { getServerSession } from 'next-auth/next';
+// import { authOptions } from '@/auth';
 
 export default async function Author() {
     return (
@@ -17,6 +20,7 @@ export default async function Author() {
 
 async function UserAuthoredCapsules() {
     const session = await getServerSession();
+    // console.log('SESSION', session);
     const email = session?.user?.email;
     if (!email) {
         return <div>Not logged in!</div>;

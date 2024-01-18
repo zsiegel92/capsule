@@ -1,4 +1,3 @@
-import { getServerSession } from 'next-auth/next';
 import prisma from '@/lib/prisma';
 import { Suspense } from 'react';
 import Link from 'next/link';
@@ -18,6 +17,8 @@ import { CancelPartnerRequest } from '@/components/CancelAPartnerRequest';
 import { DeletePartnership } from '@/components/DeleteAPartnership';
 import { CapsuleServerGrid } from '@/components/capsule_server';
 import { getUserWithPartnershipByEmail } from '@/lib/dbActions';
+import { getServerSession } from '@/auth';
+
 // TODO:
 // in NoPartner, show a search box to send a partner request.
 // In Partner, show a list of partner requests.

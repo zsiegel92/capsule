@@ -5,11 +5,11 @@
     "version": "0.1.0"
   },
   "paths": {
-    "/api/py/hello": {
+    "/api/hello": {
       "post": {
         "summary": "Hello",
-        "description": "Retuns a message depending on the route.",
-        "operationId": "post_hello",
+        "description": "Retuns a message depending on the message body.",
+        "operationId": "hello",
         "requestBody": {
           "content": {
             "application/json": {
@@ -44,50 +44,11 @@
         }
       }
     },
-    "/api/py/hello2": {
+    "/api/hello2": {
       "post": {
         "summary": "Hello2",
-        "description": "Retuns a message depending on the route.",
-        "operationId": "post_hello2",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MessageData"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MessageData"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/py/hello3": {
-      "post": {
-        "summary": "Hello3",
-        "description": "Retuns a message depending on the route.",
-        "operationId": "post_hello3",
+        "description": "Retuns a message depending on the message body.",
+        "operationId": "hello2",
         "parameters": [
           {
             "name": "message",
@@ -123,11 +84,31 @@
         }
       }
     },
-    "/api/py/getUser": {
+    "/api/hello4": {
+      "get": {
+        "summary": "Hello4",
+        "description": "Retuns a hello message.",
+        "operationId": "hello4",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "title": "Response Hello4"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/getUser": {
       "post": {
         "summary": "Getuser",
-        "description": "Retuns a message depending on the route.",
-        "operationId": "post_getUser",
+        "description": "Retuns the current user.",
+        "operationId": "getUser",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -145,23 +126,6 @@
             "OAuth2PasswordBearer": []
           }
         ]
-      }
-    },
-    "/api/py/hello4": {
-      "get": {
-        "summary": "Hello4",
-        "description": "Retuns a hello message.",
-        "operationId": "get_hello4",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          }
-        }
       }
     }
   },

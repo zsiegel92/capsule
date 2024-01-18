@@ -48,7 +48,11 @@ class FastRPC(FastAPI):
     # TODO: improve this! It determines the name of the TS RPC function
     # must be unique, should be as succinct as possible
     # TODO: remove "argument" path params - ones surrounded by `{}`
-    def get_route_unique_id(self, route: "APIRoute") -> str:
+    def get_route_unique_id(
+        self,
+        route: APIRoute,
+        include_method: bool = False,
+    ) -> str:
         default_uid = default_generate_unique_id(route)
         # operation_id = route.path_format.removeprefix(self._prefix)
         # operation_id = re.sub(r"\W", "_", operation_id).lstrip("_").rstrip("_")
@@ -58,7 +62,8 @@ class FastRPC(FastAPI):
                 not route_part.endswith('}'))) else '__'
             for route_part in trimmed_path.split('/') if route_part)
         # assert route.methods
-        operation_id = list(route.methods)[0].lower() + "_" + operation_id
+        if include_method:
+            operation_id = list(route.methods)[0].lower() + "_" + operation_id
         # route.endpoint.__name__
         RPC_uses = 1
         base_id = operation_id

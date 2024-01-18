@@ -22,7 +22,7 @@
       "@/py_client/*": [
         "./py_client/*"
       ],
-      "@/py" : [
+      "@/fastRPC" : [
         "app/api/py/fastRPC.ts"
       ]
     },

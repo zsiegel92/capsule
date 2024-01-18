@@ -1,39 +1,27 @@
-import { getToken } from "next-auth/jwt";
-import { NextRequest, NextResponse } from "next/server";
-import { headers, cookies } from 'next/headers';
+// import { getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from 'next/server';
 
-// https://nextjs.org/docs/pages/building-your-application/routing/middleware#matcher
+// // https://nextjs.org/docs/pages/building-your-application/routing/middleware#matcher
 export const config = {
     matcher: ['/partner', '/author', '/capsules', '/test_python'], // This cannot be an expression except a literal! Very weird way this file is parsed: https://nextjs.org/docs/messages/invalid-page-config
-    //   matcher: [
-    //     /*
-    //  * Match all request paths except for the ones starting with:
-    //  * - api (API routes)
-    //  * - _next/static (static files)
-    //  * - _next/image (image optimization files)
-    //  * - favicon.ico (favicon file)
-    //  */
-    //     '/((?!login|register|_next/static|_next/image|favicon.ico).*)',
-    //   ]
 };
 
 const PROTECTED_ROUTES_SET = new Set(config.matcher);
-// const PROTECTED_PREFIX = '/app'
 
 export default async function middleware(req: NextRequest) {
+    // return NextResponse.next();
     // Get the pathname of the request (e.g. /, /protected)
     const path = req.nextUrl.pathname;
     // If it's the root path, just render it
     // if (path === '/') {
     //     return NextResponse.next();
     // }
-    return NextResponse.next();
-    const session = await getToken({
-        req,
-        secret: process.env.NEXTAUTH_SECRET,
-    });
-    console.log('GOT TOKEN');
-    console.log(session);
+    const session = !!req.cookies.get('next-auth.session-token');
+
+    // const session = await getToken({
+    //     req,
+    //     secret: process.env.NEXTAUTH_SECRET,
+    // });
     // console.log('***SESSION***', session);
     // if (!session) { //&& (path.startsWith(PROTECTED_PREFIX) || PROTECTED_ROUTES_SET.has(path))
     if (!session && PROTECTED_ROUTES_SET.has(path)) {
@@ -46,5 +34,3 @@ export default async function middleware(req: NextRequest) {
     // }
     return NextResponse.next();
 }
-
-

@@ -14,18 +14,18 @@ export class DefaultService {
 
     /**
      * Hello
-     * Retuns a message depending on the route.
+     * Retuns a message depending on the message body.
      * @returns MessageData Successful Response
      * @throws ApiError
      */
-    public postHello({
+    public hello({
         requestBody,
     }: {
         requestBody: MessageData,
     }): CancelablePromise<MessageData> {
         return this.httpRequest.request({
             method: 'POST',
-            url: '/api/py/hello',
+            url: '/api/hello',
             body: requestBody,
             mediaType: 'application/json',
             errors: {
@@ -36,40 +36,18 @@ export class DefaultService {
 
     /**
      * Hello2
-     * Retuns a message depending on the route.
+     * Retuns a message depending on the message body.
      * @returns MessageData Successful Response
      * @throws ApiError
      */
-    public postHello2({
-        requestBody,
-    }: {
-        requestBody: MessageData,
-    }): CancelablePromise<MessageData> {
-        return this.httpRequest.request({
-            method: 'POST',
-            url: '/api/py/hello2',
-            body: requestBody,
-            mediaType: 'application/json',
-            errors: {
-                422: `Validation Error`,
-            },
-        });
-    }
-
-    /**
-     * Hello3
-     * Retuns a message depending on the route.
-     * @returns MessageData Successful Response
-     * @throws ApiError
-     */
-    public postHello3({
+    public hello2({
         message,
     }: {
         message: string,
     }): CancelablePromise<MessageData> {
         return this.httpRequest.request({
             method: 'POST',
-            url: '/api/py/hello3',
+            url: '/api/hello2',
             query: {
                 'message': message,
             },
@@ -80,28 +58,28 @@ export class DefaultService {
     }
 
     /**
-     * Getuser
-     * Retuns a message depending on the route.
-     * @returns User Successful Response
+     * Hello4
+     * Retuns a hello message.
+     * @returns string Successful Response
      * @throws ApiError
      */
-    public postGetUser(): CancelablePromise<User> {
+    public hello4(): CancelablePromise<string> {
         return this.httpRequest.request({
-            method: 'POST',
-            url: '/api/py/getUser',
+            method: 'GET',
+            url: '/api/hello4',
         });
     }
 
     /**
-     * Hello4
-     * Retuns a hello message.
-     * @returns any Successful Response
+     * Getuser
+     * Retuns the current user.
+     * @returns User Successful Response
      * @throws ApiError
      */
-    public getHello4(): CancelablePromise<any> {
+    public getUser(): CancelablePromise<User> {
         return this.httpRequest.request({
-            method: 'GET',
-            url: '/api/py/hello4',
+            method: 'POST',
+            url: '/api/getUser',
         });
     }
 

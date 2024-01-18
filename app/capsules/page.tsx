@@ -1,4 +1,3 @@
-import { getServerSession } from 'next-auth/next';
 import { Suspense } from 'react';
 import Link from 'next/link';
 import { getPartnerFromUser } from '@/lib/db_utils';
@@ -7,6 +6,7 @@ import '@/styles/globals.css';
 import { shuffleArray } from '@/lib/utils';
 import { getUserWithPartnershipByEmail } from '@/lib/dbActions';
 import { OpenCapsules, CapsuleTodoList } from '@/components/OpenCapsules';
+import { getServerSession } from '@/auth';
 
 export default async function Connect({}: {}) {
     return (
