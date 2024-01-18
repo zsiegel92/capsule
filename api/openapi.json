@@ -5,7 +5,7 @@
     "version": "0.1.0"
   },
   "paths": {
-    "/api/py/hello": {
+    "/api/hello": {
       "post": {
         "summary": "Hello",
         "description": "Retuns a message depending on the message body.",
@@ -44,7 +44,7 @@
         }
       }
     },
-    "/api/py/hello2": {
+    "/api/hello2": {
       "post": {
         "summary": "Hello2",
         "description": "Retuns a message depending on the message body.",
@@ -84,7 +84,7 @@
         }
       }
     },
-    "/api/py/hello4": {
+    "/api/hello4": {
       "get": {
         "summary": "Hello4",
         "description": "Retuns a hello message.",
@@ -104,7 +104,7 @@
         }
       }
     },
-    "/api/py/getUser": {
+    "/api/getUser": {
       "post": {
         "summary": "Getuser",
         "description": "Retuns the current user.",

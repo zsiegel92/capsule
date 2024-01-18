@@ -25,7 +25,7 @@ export class DefaultService {
     }): CancelablePromise<MessageData> {
         return this.httpRequest.request({
             method: 'POST',
-            url: '/api/py/hello',
+            url: '/api/hello',
             body: requestBody,
             mediaType: 'application/json',
             errors: {
@@ -47,7 +47,7 @@ export class DefaultService {
     }): CancelablePromise<MessageData> {
         return this.httpRequest.request({
             method: 'POST',
-            url: '/api/py/hello2',
+            url: '/api/hello2',
             query: {
                 'message': message,
             },
@@ -66,7 +66,7 @@ export class DefaultService {
     public hello4(): CancelablePromise<string> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/api/py/hello4',
+            url: '/api/hello4',
         });
     }
 
@@ -79,7 +79,7 @@ export class DefaultService {
     public getUser(): CancelablePromise<User> {
         return this.httpRequest.request({
             method: 'POST',
-            url: '/api/py/getUser',
+            url: '/api/getUser',
         });
     }
 

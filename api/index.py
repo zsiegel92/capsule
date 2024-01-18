@@ -13,7 +13,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from .FastRPC import FastRPC, CurrentUser
 
-app = FastRPC(prefix='/api/py')
+app = FastRPC(prefix='/api')
 
 
 class MessageData(BaseModel):
