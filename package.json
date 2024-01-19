@@ -7,7 +7,7 @@
     "start": "next start",
     "lint": "next lint",
     "email": "email dev --port=3001",
-    "serve-python": "venv/bin/python3 -m uvicorn api.index:app --reload",
+    "serve-python": "venv2/bin/python3 -m uvicorn api.index:app --reload",
     "watch-gen-client": "npm-watch gen-client",
     "gen-client": "npx openapi-typescript-codegen -i api/openapi.json -o py_client --name PythonClient --useOptions --exportSchemas true",
     "fastRPC": "concurrently \"npm run watch-gen-client\" \"npm run serve-python\"",
